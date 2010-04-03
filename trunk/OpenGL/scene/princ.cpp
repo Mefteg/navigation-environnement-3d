@@ -232,6 +232,9 @@ int main(int argc, char *argv[]){
     vector<Forme> vFormes;
     parser( argv[1], &vFormes );
 
+    vFormes.at(0).generateGraph();
+    cout << vFormes.at(0).printGraph() << "." << endl;
+
     //dessiner( &vFormes );
 
 	Forme forme;
@@ -277,6 +280,9 @@ int main(int argc, char *argv[]){
 
 /*	forme.setVertices( &vv );*/
 	forme.addFace( face2 );
+
+    v5.findVoisins( &face2 );
+/*    cout << v5.printVoisins() << endl;*/
 
     while (continuer)
     {
