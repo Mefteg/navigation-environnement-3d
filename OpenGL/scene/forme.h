@@ -8,6 +8,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+using namespace std;
+
 class Forme {
 	private:
 		int num;
@@ -34,9 +36,12 @@ class Forme {
 		//void removeVertex( int n );
 		//void removeFace( int n );
 
+        void generateGraph();
+
 		void draw();
 		//void drawFace( int num_face );
 		//string toString();
+        string printGraph();
 };
 
 #endif

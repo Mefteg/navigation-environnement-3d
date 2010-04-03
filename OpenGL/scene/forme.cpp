@@ -52,6 +52,20 @@ void Forme::addFace(Face f){
 	this->faces.push_back(f);
 }
 
+void Forme::generateGraph() {
+    //pour chaque face de la forme
+    for ( int i=0; i<this->getFaces()->size(); i++ ) {
+        Face * f = &(this->getFaces()->at(i));
+        //pour chaque sommet de la face
+        for ( int j=0; j<f->getSommets()->size(); j++ ) {
+            //on recupere le sommet correspondant
+            Vertex * v = this->getVertex( f->getSommets()->at(j) );
+            //on cherche ses voisins
+            v->findVoisins( f );
+        }
+    }
+}
+
 void Forme::draw() {
 	//pour chaque face de cette forme
 	for ( int i=0; i<this->faces.size(); i++ ) {
@@ -73,4 +87,15 @@ void Forme::draw() {
 		}
 		glEnd();
 	}
+}
+
+string Forme::printGraph() {
+    string str;
+    for ( int i=0; i<this->getVertices()->size(); i++ ) {
+        Vertex * v = &(this->getVertices()->at(i));
+        str.append(v->printVoisins());
+        str.append("\n");
+    }
+
+    return str;
 }
