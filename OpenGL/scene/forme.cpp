@@ -61,7 +61,8 @@ void Forme::generateGraph() {
             //on recupere le sommet correspondant
             Vertex * v = this->getVertex( f->getSommets()->at(j) );
             //on cherche ses voisins
-            v->findVoisins( f );
+            Forme * tmp = this;
+            v->findVoisins( f, tmp );
         }
     }
 }

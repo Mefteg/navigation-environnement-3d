@@ -30,7 +30,7 @@ float Vertex::getZ() {
 	return this->z;
 }
 
-vector<int> * Vertex::getVoisins() {
+vector<Vertex *> * Vertex::getVoisins() {
     return &(this->voisins);
 }
 
@@ -50,26 +50,26 @@ void Vertex::setZ( float z ) {
 	this->z = z;
 }
 
-void Vertex::addVoisin( int n ) {
-    this->voisins.push_back( n );
+void Vertex::addVoisin( Vertex * v ) {
+    this->voisins.push_back( v );
 }
 
 void Vertex::removeVoisin( int n ) {
     int i=0;
     int continuer=1;
     //tant qu'on a rien trouvé et qu'on n'a pas vu tous les voisins
-    while ( i < this->voisins.size() && continuer ) {
+    while ( i < this->getVoisins()->size() && continuer ) {
         //si c'est le voisin à supprimer
-        if ( this->voisins.at(i) == n ) {
+        if ( this->getVoisins()->at(i)->getNum() == n ) {
             //on le supprime
-            this->voisins.erase(this->voisins.begin()+i);
+            this->getVoisins()->erase(this->getVoisins()->begin()+i);
             //et on arrete la recherche
             continuer=0;
         }
     }
 }
 
-void Vertex::findVoisins( Face * f ) {
+void Vertex::findVoisins( Face * f, Forme * maForme ) {
     vector<int> * sommets = f->getSommets();
     for ( int i=0; i<sommets->size(); i++ ) {
         //si je suis sur le sommet qui me correspond
@@ -84,7 +84,7 @@ void Vertex::findVoisins( Face * f ) {
 
             //si je n'ai pas deja ce voisin
             if ( !this->dejaVoisin( p ) ) {
-                this->addVoisin( p );
+                this->addVoisin( maForme->getVertex( p ) );
             }
 
             //j'ajoute le sommet suivant
@@ -97,7 +97,7 @@ void Vertex::findVoisins( Face * f ) {
 
             //si je n'ai pas deja ce voisin
             if ( !this->dejaVoisin( s ) ) {
-                this->addVoisin( s );
+                this->addVoisin( maForme->getVertex( s ) );
             }
         }
     }
@@ -105,7 +105,7 @@ void Vertex::findVoisins( Face * f ) {
 
 bool Vertex::dejaVoisin( int p ) {
     for ( int i=0; i<this->getVoisins()->size(); i++ ) {
-        if ( this->getVoisins()->at(i) == p )
+        if ( this->getVoisins()->at(i)->getNum() == p )
             return true;
     }
 
@@ -117,7 +117,7 @@ string Vertex::printVoisins() {
     cout << "nb de voisins: " << this->getVoisins()->size() << endl;
     for ( int i=0; i<this->getVoisins()->size(); i++ ) {
         ostringstream sin;
-        sin << this->getVoisins()->at(i);
+        sin << this->getVoisins()->at(i)->getNum();
         str.append(sin.str());
         str.append(" ");
     }

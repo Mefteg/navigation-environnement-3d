@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include "face.h"
+#include "forme.h"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ class Vertex {
 		float x;
 		float y;
 		float z;
-        vector<int> voisins;
+        vector<Vertex *> voisins;
 
 	public:
 		Vertex();
@@ -26,16 +27,16 @@ class Vertex {
 		float getX();
 		float getY();
 		float getZ();
-        vector<int> * getVoisins();
+        vector<Vertex *> * getVoisins();
 
 		void setNum(int n);
 		void setX(float x);
 		void setY(float y);
 		void setZ(float z);
 
-        void addVoisin( int n );
+        void addVoisin( Vertex * v );
         void removeVoisin( int n );
-        void findVoisins( Face * f );
+        void findVoisins( Face * f, Forme * maForme );
         bool dejaVoisin( int p );
         string printVoisins();
 };
