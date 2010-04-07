@@ -2,6 +2,7 @@
 #define FACE_H
 
 #include <vector>
+#include "vertex.h"
 
 using namespace std;
 

@@ -281,7 +281,7 @@ int main(int argc, char *argv[]){
 /*	forme.setVertices( &vv );*/
 	forme.addFace( face2 );
 
-    v5.findVoisins( &face2 );
+    v5.findVoisins( &face2, &forme );
 /*    cout << v5.printVoisins() << endl;*/
 
     while (continuer)
