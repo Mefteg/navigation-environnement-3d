@@ -6,8 +6,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+
 #include "face.h"
-#include "forme.h"
 
 using namespace std;
 
@@ -36,7 +36,6 @@ class Vertex {
 
         void addVoisin( Vertex * v );
         void removeVoisin( int n );
-        void findVoisins( Face * f, Forme * maForme );
         bool dejaVoisin( int p );
         string printVoisins();
 };

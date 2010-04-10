@@ -69,40 +69,6 @@ void Vertex::removeVoisin( int n ) {
     }
 }
 
-void Vertex::findVoisins( Face * f, Forme * maForme ) {
-    vector<int> * sommets = f->getSommets();
-    for ( int i=0; i<sommets->size(); i++ ) {
-        //si je suis sur le sommet qui me correspond
-        if ( sommets->at(i) == this->getNum() ) {
-            //j'ajoute le sommet précedent
-            int p;
-            //si i est le premier, il faut choisir le dernier
-            if ( i == 0 )
-                p = sommets->at(sommets->size()-1);
-            else
-                p = sommets->at(i-1);
-
-            //si je n'ai pas deja ce voisin
-            if ( !this->dejaVoisin( p ) ) {
-                this->addVoisin( maForme->getVertex( p ) );
-            }
-
-            //j'ajoute le sommet suivant
-            int s;
-            //si i est le dernier, il faut choisir le premier
-            if ( i == sommets->size()-1 )
-                s = sommets->at(0);
-            else
-                s = sommets->at(i+1);
-
-            //si je n'ai pas deja ce voisin
-            if ( !this->dejaVoisin( s ) ) {
-                this->addVoisin( maForme->getVertex( s ) );
-            }
-        }
-    }
-}
-
 bool Vertex::dejaVoisin( int p ) {
     for ( int i=0; i<this->getVoisins()->size(); i++ ) {
         if ( this->getVoisins()->at(i)->getNum() == p )

@@ -1,12 +1,13 @@
 #ifndef FORME_H
 #define FORME_H
 
-#include "vertex.h"
-#include "face.h"
 #include <vector>
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+
+#include "vertex.h"
+#include "face.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ class Forme {
 		//void removeVertex( int n );
 		//void removeFace( int n );
 
+        void findVoisinsVertex( Vertex * v, Face * f );
         void generateGraph();
 
 		void draw();

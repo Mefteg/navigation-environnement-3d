@@ -52,6 +52,40 @@ void Forme::addFace(Face f){
 	this->faces.push_back(f);
 }
 
+void Forme::findVoisinsVertex( Vertex * v, Face * f ) {
+    vector<int> * sommets = f->getSommets();
+    for ( int i=0; i<sommets->size(); i++ ) {
+        //si je suis sur le sommet qui correspond au vertex
+        if ( sommets->at(i) == v->getNum() ) {
+            //j'ajoute le sommet précedent
+            int p;
+            //si i est le premier, il faut choisir le dernier
+            if ( i == 0 )
+                p = sommets->at(sommets->size()-1);
+            else
+                p = sommets->at(i-1);
+
+            //si je n'ai pas deja ce voisin
+            if ( !v->dejaVoisin( p ) ) {
+                v->addVoisin( this->getVertex( p ) );
+            }
+
+            //j'ajoute le sommet suivant
+            int s;
+            //si i est le dernier, il faut choisir le premier
+            if ( i == sommets->size()-1 )
+                s = sommets->at(0);
+            else
+                s = sommets->at(i+1);
+
+            //si je n'ai pas deja ce voisin
+            if ( !v->dejaVoisin( s ) ) {
+                v->addVoisin( this->getVertex( s ) );
+            }
+        }
+    }
+}
+
 void Forme::generateGraph() {
     //pour chaque face de la forme
     for ( int i=0; i<this->getFaces()->size(); i++ ) {
@@ -61,8 +95,7 @@ void Forme::generateGraph() {
             //on recupere le sommet correspondant
             Vertex * v = this->getVertex( f->getSommets()->at(j) );
             //on cherche ses voisins
-            Forme * tmp = this;
-            v->findVoisins( f, tmp );
+            this->findVoisinsVertex( v, f );
         }
     }
 }
