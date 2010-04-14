@@ -5,6 +5,7 @@ Vertex::Vertex() {
 	this->x = 0;
 	this->y = 0;
 	this->z = 0;
+	this->visite = 0;
 }
 
 Vertex::Vertex( int num, float x, float y, float z ) {
@@ -12,6 +13,7 @@ Vertex::Vertex( int num, float x, float y, float z ) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+	this->visite = 0;
 }
 
 int Vertex::getNum() {
@@ -34,6 +36,10 @@ vector<Vertex *> * Vertex::getVoisins() {
     return &(this->voisins);
 }
 
+int Vertex::getVisite() {
+	return visite;
+}
+
 void Vertex::setNum( int n ) {
 	this->num = n;
 }
@@ -52,6 +58,10 @@ void Vertex::setZ( float z ) {
 
 void Vertex::addVoisin( Vertex * v ) {
     this->voisins.push_back( v );
+}
+
+void Vertex::setVisite( int i ) {
+	this->visite = i;
 }
 
 void Vertex::removeVoisin( int n ) {
@@ -78,6 +88,18 @@ bool Vertex::dejaVoisin( int p ) {
     return false;
 }
 
+void Vertex::parcoursVoisins() {
+	//si le sommet n'a pas deja été visité
+	if ( !this->getVisite() ) {
+		cout << this->getNum() << endl;
+		this->setVisite( 1 );
+		this->draw( 255, 0, 0 );
+		for ( int i=0; i<this->voisins.size(); i++ ) {
+			this->voisins.at(i)->parcoursVoisins();
+		}
+	}
+}
+
 string Vertex::printVoisins() {
     string str;
     cout << "nb de voisins: " << this->getVoisins()->size() << endl;
@@ -89,4 +111,16 @@ string Vertex::printVoisins() {
     }
 
     return str;
+}
+
+void Vertex::draw( int r, int g, int b ) {
+	float x = this->getX();
+	float y = this->getY();
+	float z = this->getZ();
+	//on crée un glVert
+	glBegin( GL_POINTS );
+	glColor3ub( r, g, b );
+	glPointSize( 2.5 );
+	glVertex3d( x, y, z );
+	glEnd();
 }

@@ -100,6 +100,45 @@ void Forme::generateGraph() {
     }
 }
 
+void Forme::removeSommet( Vertex * v ) {
+	vector<Vertex *> * voisins = v->getVoisins();
+	//pour chaque voisin du sommet à supprimer
+	for ( int i=0; i<voisins->size(); i++ ) {
+		//on l'enlève de la liste de voisins
+		voisins->at(i)->removeVoisin( v->getNum() );
+	}
+
+	//on supprime sa liste de voisin, il est isolé
+	//donc plus jamais parcouru, pas besoin de le supprimer en réalité
+	voisins->clear();
+}
+
+void Forme::parcoursGraph() {
+	Vertex * v = NULL;
+	int i=0;
+	//on récupère un sommet non isolé pour commencer le parcours
+	while ( v == NULL && i < this->vertices.size() ) {
+		//si le sommet à au moins un voisin
+		if ( !this->vertices.at(i).getVoisins()->empty() ) {
+			v = &(this->vertices.at(i));
+		}
+		i++;
+	}
+
+	//si on en a trouver un
+	if ( v != NULL ) {
+		v->parcoursVoisins();
+	}
+
+	cout << "-- Fin du parcours" << endl;
+
+	//une fois que le parcours a été fait, on remet tout à 0
+	//pour pouvoir refaire un autre parcours
+	for ( int i=0; i<this->vertices.size(); i++ ) {
+		this->vertices.at(i).setVisite( 0 );
+	}
+}
+
 void Forme::draw() {
 	//pour chaque face de cette forme
 	for ( int i=0; i<this->faces.size(); i++ ) {
