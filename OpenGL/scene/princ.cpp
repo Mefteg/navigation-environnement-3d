@@ -179,7 +179,8 @@ void dessiner( vector<Forme> * vFormes ) {
     //le y définit la verticale
     gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
 
-    dessinerScene( vFormes );
+/*    dessinerScene( vFormes );*/
+	vFormes->at(0).parcoursGraph();
 
     //on s'assure que toutes les commandes OpenGL ont été exécutées
     glFlush();
@@ -233,9 +234,8 @@ int main(int argc, char *argv[]){
     parser( argv[1], &vFormes );
 
     vFormes.at(0).generateGraph();
-    cout << vFormes.at(0).printGraph();
-
-    //dessiner( &vFormes );
+/*    vFormes.at(0).parcoursGraph();*/
+/*    cout << vFormes.at(0).printGraph();*/
 
 	Forme forme;
 
@@ -286,6 +286,9 @@ int main(int argc, char *argv[]){
 
     while (continuer)
     {
+        dessiner( &vFormes );
+/*		dessinerForme( forme );*/
+
         //attente d'évènement bloquante
         SDL_WaitEvent(&event);
         switch(event.type) {
@@ -310,10 +313,6 @@ int main(int argc, char *argv[]){
                 }
                 break;
         }
-
-        dessiner( &vFormes );
-
-/*		dessinerForme( forme );*/
 
     }
 

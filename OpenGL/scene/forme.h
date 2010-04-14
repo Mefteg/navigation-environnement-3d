@@ -39,6 +39,8 @@ class Forme {
 
         void findVoisinsVertex( Vertex * v, Face * f );
         void generateGraph();
+		void removeSommet( Vertex * v );
+		void parcoursGraph();
 
 		void draw();
 		//void drawFace( int num_face );
