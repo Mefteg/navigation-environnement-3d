@@ -76,6 +76,7 @@ void Vertex::removeVoisin( int n ) {
             //et on arrete la recherche
             continuer=0;
         }
+		i++;
     }
 }
 
@@ -88,10 +89,10 @@ bool Vertex::dejaVoisin( int p ) {
     return false;
 }
 
+//parcours tous les voisins de maniere recursive
 void Vertex::parcoursVoisins() {
 	//si le sommet n'a pas deja été visité
 	if ( !this->getVisite() ) {
-		cout << this->getNum() << endl;
 		this->setVisite( 1 );
 		this->draw( 255, 0, 0 );
 		for ( int i=0; i<this->voisins.size(); i++ ) {
@@ -117,10 +118,10 @@ void Vertex::draw( int r, int g, int b ) {
 	float x = this->getX();
 	float y = this->getY();
 	float z = this->getZ();
+	glPointSize( 5.0 );
 	//on crée un glVert
 	glBegin( GL_POINTS );
 	glColor3ub( r, g, b );
-	glPointSize( 2.5 );
 	glVertex3d( x, y, z );
 	glEnd();
 }

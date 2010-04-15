@@ -130,8 +130,6 @@ void Forme::parcoursGraph() {
 		v->parcoursVoisins();
 	}
 
-	cout << "-- Fin du parcours" << endl;
-
 	//une fois que le parcours a été fait, on remet tout à 0
 	//pour pouvoir refaire un autre parcours
 	for ( int i=0; i<this->vertices.size(); i++ ) {
