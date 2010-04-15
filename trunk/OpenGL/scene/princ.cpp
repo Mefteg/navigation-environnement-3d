@@ -68,7 +68,7 @@ int parser( string chemin, vector<Forme> * vFormes ) {
                             //on enregistre la dernière forme
                             vFormes->push_back( forme );
                             //On va passer à la nouvelle forme
-                            cout << "Nouvelle forme" << endl;
+/*                            cout << "Nouvelle forme" << endl;*/
                             forme = Forme( 1 );
                             //on signale qu'on traite une nouvelle forme
                             nv_forme = 1;
@@ -179,7 +179,7 @@ void dessiner( vector<Forme> * vFormes ) {
     //le y définit la verticale
     gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
 
-/*    dessinerScene( vFormes );*/
+    dessinerScene( vFormes );
 	vFormes->at(0).parcoursGraph();
 
     //on s'assure que toutes les commandes OpenGL ont été exécutées
@@ -234,6 +234,8 @@ int main(int argc, char *argv[]){
     parser( argv[1], &vFormes );
 
     vFormes.at(0).generateGraph();
+	Vertex * vsuppr = vFormes.at(0).getVertex( 3 );
+	vFormes.at(0).removeSommet( vsuppr );
 /*    vFormes.at(0).parcoursGraph();*/
 /*    cout << vFormes.at(0).printGraph();*/
 
