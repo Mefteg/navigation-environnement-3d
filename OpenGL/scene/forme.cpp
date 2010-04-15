@@ -140,7 +140,7 @@ void Forme::parcoursGraph() {
 void Forme::draw() {
 	//pour chaque face de cette forme
 	for ( int i=0; i<this->faces.size(); i++ ) {
-		glBegin( GL_POLYGON );
+		glBegin( GL_TRIANGLE_FAN );
 		//face courante
 		vector<int> * f = this->faces.at(i).getSommets();
 		//pour chaque vertex de cette face
