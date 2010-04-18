@@ -14,10 +14,11 @@
 
 using namespace std;
 
-
+// Taille de la fenêtre
 const int SCREEN_WIDTH=640;
 const int SCREEN_HEIGHT=480;
 
+// Position de la caméra
 int xCam=5;
 int yCam=5;
 
@@ -250,6 +251,7 @@ int main(int argc, char *argv[]){
     vector<Forme> vFormes;
     parser( argv[1], &vFormes );
 
+    // On suppose que la première forme trouvé est le sol, comme le sol = notre maillage => on créé le graphe à partir du sol. 
     vFormes.at(0).generateGraph();
 
 
