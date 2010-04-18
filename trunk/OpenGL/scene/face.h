@@ -7,25 +7,25 @@
 using namespace std;
 
 class Face {
-	private:
-		int num;
-		vector<int> sommets;
-		
-	public:
-		Face();
-		Face( int n );
+    private:
+	int num;
+	vector<int> sommets;
 
-		int getNum();
-		vector<int> * getSommets();
+    public:
+	Face();
+	Face( int n );
 
-		void setNum( int n );
-		void setSommets( vector<int> * vSommets );
+	int getNum();
+	vector<int> * getSommets();
 
-		void addSommet( int num_vertex );
+	void setNum( int n );
+	void setSommets( vector<int> * vSommets );
 
-		void removeSommet( int num_vertex );
+	void addSommet( int num_vertex );
 
-		//string toString();
+	void removeSommet( int num_vertex );
+
+	//string toString();
 
 };
 

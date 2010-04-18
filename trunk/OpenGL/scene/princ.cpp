@@ -47,26 +47,26 @@ int yCam=5;
 
 int parser( string chemin, vector<Forme> * vFormes ) {
 
-    int pos; // sert à rien ?
-    string l; // idem on peut s'en passer
+    int pos; // Sert à rien ?
+    string l; // Idem on peut s'en passer
     vector<int> vFaces;
-    int nv_forme=1; // nouvelle forme mais il faudrait utiliser un booléen ici puisque nv_forme = 1 ou 0
+    int nv_forme=1; // Nouvelle forme mais il faudrait utiliser un booléen ici puisque nv_forme = 1 ou 0
     Forme forme( 1 );
-    int cpt_vertex=1; // sert à compter le nombre de vertex trouvé
+    int cpt_vertex=1; // Sert à compter le nombre de vertex trouvé
 
-    //on ouvre le fichier
+    //On ouvre le fichier
     ifstream fichier( chemin.c_str(), ios::in );
 
-    //si l'ouverture du fichier s'est bien passée
+    //Si l'ouverture du fichier s'est bien passée
     if ( fichier ) {
 	string ligne;
-	//tant qu'on est pas arrivé à la fin du fichier
+	//Tant qu'on est pas arrivé à la fin du fichier
 	while ( !fichier.eof() ) {
-	    //on récupère toute la ligne
+	    //On récupère toute la ligne
 	    getline( fichier, ligne );
-	    //on teste la première lettre de la ligne
+	    //On teste la première lettre de la ligne
 	    switch ( ligne[0] ) {
-		//s'il s'agit d'un vertex
+		//S'il s'agit d'un vertex
 		case 'v':
 		    {
 			//s'il s'agit d'une nouvelle forme
@@ -80,7 +80,7 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 			    nv_forme = 1;
 			}
 
-			/*                        int num_vertice=obj.vertices.size();*/
+			/*  int num_vertice=obj.vertices.size();*/
 
 			//je récupère la position du premier espace
 			pos = ligne.find_first_of(' ');
@@ -103,10 +103,12 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 			cpt_vertex++;
 
 			forme.addVertex( v );
-			/*                        cout << "vertex = ( " << v.coord[0] << ", " << v.coord[1] << ", " << v.coord[2] << " )" << endl;*/
+			/*  cout << "vertex = ( " << v.coord[0] << ", " << v.coord[1] << ", " << v.coord[2] << " )" << endl;*/
 			break;
 		    }
-		    //s'il s'agit d'une face
+
+
+		    //S'il s'agit d'une face
 		case 'f':
 		    {
 			//une fois les faces terminées, on passera à une nouvelle forme
