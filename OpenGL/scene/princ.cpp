@@ -51,7 +51,7 @@ int parser( string chemin, vector<Forme> * vFormes ) {
     string l; // Idem on peut s'en passer
     vector<int> vFaces;
     int nv_forme=1; // Nouvelle forme mais il faudrait utiliser un booléen ici puisque nv_forme = 1 ou 0
-    Forme forme( 1 );
+    Forme forme( 1 ); // Forme numéro 1
     int cpt_vertex=1; // Sert à compter le nombre de vertex trouvé
 
     //On ouvre le fichier
@@ -69,37 +69,36 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 		//S'il s'agit d'un vertex
 		case 'v':
 		    {
-			//s'il s'agit d'une nouvelle forme
+			//S'il s'agit d'une nouvelle forme
 			if ( nv_forme == 0 ) {
-			    //on enregistre la dernière forme
+			    //On enregistre la dernière forme
 			    vFormes->push_back( forme );
 			    //On va passer à la nouvelle forme
-			    /*                            cout << "Nouvelle forme" << endl;*/
+			    /*  cout << "Nouvelle forme" << endl;*/
 			    forme = Forme( 1 );
-			    //on signale qu'on traite une nouvelle forme
+			    //On signale qu'on traite une nouvelle forme
 			    nv_forme = 1;
 			}
 
 			/*  int num_vertice=obj.vertices.size();*/
 
-			//je récupère la position du premier espace
+			//On récupère la position du premier espace
 			pos = ligne.find_first_of(' ');
 			ligne = ligne.substr( pos+1, ligne.length() );
-			//je récupère la position du x
+			//On récupère la position du x
 			pos = ligne.find_first_of(' '); // copier coller ???
 			string l = ligne.substr( 0, pos );
 			float x = atof(l.c_str());
 			ligne = ligne.substr( pos+1, ligne.length() );
-			//je récupère la position du y
+			//On récupère la position du y
 			pos = ligne.find_first_of(' ');
 			l = ligne.substr( 0, pos );
 			float y = atof(l.c_str());
 			ligne = ligne.substr( pos+1, ligne.length() );
-			//ce qu'il reste ( c'est le z )
+			//Ce qu'il reste ( c'est le z )
 			float z = atof(ligne.c_str());
 
 			Vertex v( cpt_vertex, x, y, z );
-
 			cpt_vertex++;
 
 			forme.addVertex( v );
@@ -111,34 +110,34 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 		    //S'il s'agit d'une face
 		case 'f':
 		    {
-			//une fois les faces terminées, on passera à une nouvelle forme
+			//Une fois les faces terminées, on passera à une nouvelle forme
 			nv_forme = 0;
 
-			//on ajoute une face
+			//On ajoute une face
 			Face f( 1 );
 
-			//on enleve le "f "
+			//On enleve le "f "
 			pos = ligne.find_first_of(' ');
 			ligne = ligne.substr( pos+1, ligne.length() );
 			pos = ligne.find_first_of(' ');
-			//tant qu'il y a des espaces
+			//Tant qu'il y a des espaces
 			while ( pos > 0 ) {
-			    //je recupere le debut de la ligne jusqu'au premier espace
+			    //On recupère le debut de la ligne jusqu'au premier espace
 			    string l = ligne.substr( 0, pos ); // on redéfinit l ?
-			    //je transforme le résultat en flottant
+			    //On transforme le résultat en flottant
 			    f.addSommet( atoi(l.c_str()) );
-			    //je découpe la ligne
+			    //On découpe la ligne
 			    ligne = ligne.substr( pos+1, ligne.length() );
-			    //et je cherche l'emplacement du premier espace
+			    //Et je cherche l'emplacement du premier espace
 			    pos = ligne.find_first_of(' ');
 			}
-			//ce qu'il reste
+			//Ce qu'il reste
 			f.addSommet( atoi(ligne.c_str()) );
 
 			forme.addFace( f );
 			break;
 		    }
-		    //autrement
+		    //Autrement
 		default:
 		    {
 			break;
@@ -159,15 +158,15 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 }
 
 /**
- * dessine une scène précédemment parser
+ * Dessine une scène précédemment parsée
  *
- * On dessine pour chaque forme, chacun de ses points
- * On decide du mode de dessin (par exemple GL_LINE_LOOP)
+ * On dessine pour chaque forme, chacuns de ses points
+ * On décide du mode de dessin (par exemple GL_LINE_LOOP)
  */
 
 void dessinerScene( vector<Forme> * vFormes ) {
 
-    //pour chaque forme
+    //Pour chaque forme
     for ( int i=0; i<vFormes->size(); i++ ) {
 	vFormes->at(i).draw();
     }
@@ -196,7 +195,7 @@ void dessiner( vector<Forme> * vFormes ) {
     SDL_GL_SwapBuffers();
 }
 
-void dessinerForme( Forme forme ) {
+/*void dessinerForme( Forme forme ) {
 
     //efface le tampon d'affichage ( ? )
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -213,26 +212,26 @@ void dessinerForme( Forme forme ) {
     glFlush();
     //mise à jour de l'écran
     SDL_GL_SwapBuffers();
-}
+}*/
 
 int main(int argc, char *argv[]){
-    //on vérifie qu'il y est une carte à charger
+    //On vérifie qu'il y est une carte à charger
     if ( argv[1] == NULL ) {
 	cout << "xx Erreur: Il n'y a pas de carte à charger" << endl;
 	return -1;
     }
 
-    //lance SDL
+    //On lance SDL
     SDL_Init(SDL_INIT_VIDEO);
     atexit(SDL_Quit);
-    //affiche un titre dans la Fenetre
+    //On affiche un titre dans la Fenetre
     SDL_WM_SetCaption("HeadCrabs ~ TER", NULL);
     SDL_WM_SetIcon(SDL_LoadBMP("./img/headcrabs2.bmp"), NULL);
 
-    //fixe la taille de la Fenetre et indique le rendu openGL
+    //On fixe la taille de la Fenetre et indique le rendu openGL
     SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL);
 
-    /*    SDL_EnableKeyRepeat(10,10);*/
+    /* SDL_EnableKeyRepeat(10,10);*/
 
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity( );
@@ -241,7 +240,7 @@ int main(int argc, char *argv[]){
 
 
     bool continuer = true;
-    //évènement SDL
+    //Les évènement SDL
     SDL_Event event;
 
     vector<Forme> vFormes;
