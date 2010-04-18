@@ -230,29 +230,29 @@ int main(int argc, char *argv[]){
 
     //On fixe la taille de la Fenetre et indique le rendu openGL
     SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL);
-
-    /* SDL_EnableKeyRepeat(10,10);*/
-
+    //On indique le rendu openGL
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity( );
     gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
     glEnable(GL_DEPTH_TEST);
+    
+    /* SDL_EnableKeyRepeat(10,10);*/
 
-
-    bool continuer = true;
-    //Les évènement SDL
-    SDL_Event event;
-
+    // On appelle le parser :
     vector<Forme> vFormes;
     parser( argv[1], &vFormes );
 
     vFormes.at(0).generateGraph();
-    Vertex * vsuppr = vFormes.at(0).getVertex( 3 );
-    vFormes.at(0).removeSommet( vsuppr );
+
+
+    // DEBUT DES TESTS 
+
+    /*Vertex * vsuppr = vFormes.at(0).getVertex( 3 );
+    vFormes.at(0).removeSommet( vsuppr );*/
     /*    vFormes.at(0).parcoursGraph();*/
     /*    cout << vFormes.at(0).printGraph();*/
 
-    Forme forme;
+    /*Forme forme;
 
     vector<Vertex> v;
     Vertex v1( 1, 1, 0, 0 );
@@ -292,19 +292,27 @@ int main(int argc, char *argv[]){
     s2.push_back(8);
     Face face2( 2 );
     face2.setSommets( &s2 );
-
+*/
     /*	forme.setVertices( &vv );*/
-    forme.addFace( face2 );
+    //forme.addFace( face2 );
 
     /*    v5.findVoisins( &face2, &forme );*/
     /*    cout << v5.printVoisins() << endl;*/
+
+
+    // FIN DES TESTS
+
+    bool continuer = true;
+    //Les évènements SDL
+    SDL_Event event;
+
 
     while (continuer)
     {
 	dessiner( &vFormes );
 	/* dessinerForme( forme );*/
 
-	//Attente d'évènement bloquante
+	//Attente d'évènement méthode bloquante
 	SDL_WaitEvent(&event);	
 	switch(event.type) {
 	    // Permet de fermer la fenêtre
