@@ -36,9 +36,6 @@ int yCam=5;
 
 
 
-
-
-
 /**
  * Parse un fichier .obj passé en paramètre (selon son chemin)
  *	
@@ -47,8 +44,8 @@ int yCam=5;
 
 int parser( string chemin, vector<Forme> * vFormes ) {
 
-    int pos; // Sert à rien ?
-    string l; // Idem on peut s'en passer
+    int pos; 
+    string l; 
     vector<int> vFaces;
     int nv_forme=1; // Nouvelle forme mais il faudrait utiliser un booléen ici puisque nv_forme = 1 ou 0
     Forme forme( 1 ); // Forme numéro 1
@@ -86,7 +83,7 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 			pos = ligne.find_first_of(' ');
 			ligne = ligne.substr( pos+1, ligne.length() );
 			//On récupère la position du x
-			pos = ligne.find_first_of(' '); // copier coller ???
+			pos = ligne.find_first_of(' '); 
 			string l = ligne.substr( 0, pos );
 			float x = atof(l.c_str());
 			ligne = ligne.substr( pos+1, ligne.length() );
@@ -144,6 +141,7 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 		    }
 	    }
 	}
+
 	//on enregistre la dernière forme
 	vFormes->push_back( forme );
 
@@ -164,13 +162,17 @@ int parser( string chemin, vector<Forme> * vFormes ) {
  * On décide du mode de dessin (par exemple GL_LINE_LOOP)
  */
 
-void dessinerScene( vector<Forme> * vFormes ) {
+/**
+  * Je l'ai mise en commentaire car cette fonction n'a pas vraiment lieu d'être si on la met on sous entend qu'on peut charger plusieurs scènes. 
+  *
+   void dessinerScene( vector<Forme> * vFormes ) {
 
     //Pour chaque forme
     for ( int i=0; i<vFormes->size(); i++ ) {
 	vFormes->at(i).draw();
     }
 }
+*/
 
 /**
  * Fonction pour tout initialiser correctement et utiliser la fenetre 
@@ -186,32 +188,38 @@ void dessiner( vector<Forme> * vFormes ) {
     //le y définit la verticale
     gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
 
-    dessinerScene( vFormes );
+    //dessinerScene( vFormes );
+    // On dessine la scène
+    for ( int i=0; i<vFormes->size(); i++ ) {
+	vFormes->at(i).draw();
+    }
+
+    // Parcours du sol ?
     vFormes->at(0).parcoursGraph();
 
-    //on s'assure que toutes les commandes OpenGL ont été exécutées
+    //On s'assure que toutes les commandes OpenGL ont été exécutées
     glFlush();
-    //mise à jour de l'écran
+    //Mise à jour de l'écran
     SDL_GL_SwapBuffers();
 }
 
 /*void dessinerForme( Forme forme ) {
 
-    //efface le tampon d'affichage ( ? )
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+//efface le tampon d'affichage ( ? )
+glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    glMatrixMode( GL_MODELVIEW );
-    glLoadIdentity( );
+glMatrixMode( GL_MODELVIEW );
+glLoadIdentity( );
 
-    //le y définit la verticale
-    gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
+//le y définit la verticale
+gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
 
-    forme.draw();
+forme.draw();
 
-    //on s'assure que toutes les commandes OpenGL ont été exécutées
-    glFlush();
-    //mise à jour de l'écran
-    SDL_GL_SwapBuffers();
+//on s'assure que toutes les commandes OpenGL ont été exécutées
+glFlush();
+//mise à jour de l'écran
+SDL_GL_SwapBuffers();
 }*/
 
 int main(int argc, char *argv[]){
@@ -224,7 +232,7 @@ int main(int argc, char *argv[]){
     //On lance SDL
     SDL_Init(SDL_INIT_VIDEO);
     atexit(SDL_Quit);
-    //On affiche un titre dans la Fenetre
+    //On affiche un titre et une icone dans la Fenetre
     SDL_WM_SetCaption("HeadCrabs ~ TER", NULL);
     SDL_WM_SetIcon(SDL_LoadBMP("./img/headcrabs2.bmp"), NULL);
 
@@ -235,7 +243,7 @@ int main(int argc, char *argv[]){
     glLoadIdentity( );
     gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
     glEnable(GL_DEPTH_TEST);
-    
+
     /* SDL_EnableKeyRepeat(10,10);*/
 
     // On appelle le parser :
@@ -248,51 +256,51 @@ int main(int argc, char *argv[]){
     // DEBUT DES TESTS 
 
     /*Vertex * vsuppr = vFormes.at(0).getVertex( 3 );
-    vFormes.at(0).removeSommet( vsuppr );*/
+      vFormes.at(0).removeSommet( vsuppr );*/
     /*    vFormes.at(0).parcoursGraph();*/
     /*    cout << vFormes.at(0).printGraph();*/
 
     /*Forme forme;
 
-    vector<Vertex> v;
-    Vertex v1( 1, 1, 0, 0 );
-    v.push_back(v1);
-    Vertex v3( 3, 0, 0, 1 );
-    v.push_back(v3);
-    Vertex v4( 4, 0, 0, 0 );
-    v.push_back(v4);
-    Vertex v2( 2, 1, 0, 1 );
-    v.push_back(v2);
+      vector<Vertex> v;
+      Vertex v1( 1, 1, 0, 0 );
+      v.push_back(v1);
+      Vertex v3( 3, 0, 0, 1 );
+      v.push_back(v3);
+      Vertex v4( 4, 0, 0, 0 );
+      v.push_back(v4);
+      Vertex v2( 2, 1, 0, 1 );
+      v.push_back(v2);
 
-    vector<int> sommets;
-    sommets.push_back(1);
-    sommets.push_back(2);
-    sommets.push_back(3);
-    sommets.push_back(4);
-    Face face( 1 );
-    face.setSommets( &sommets );
+      vector<int> sommets;
+      sommets.push_back(1);
+      sommets.push_back(2);
+      sommets.push_back(3);
+      sommets.push_back(4);
+      Face face( 1 );
+      face.setSommets( &sommets );
 
-    forme.setVertices( &v );
-    forme.addFace( face );
+      forme.setVertices( &v );
+      forme.addFace( face );
 
-    vector<Vertex> vv;
-    Vertex v5( 5, 0, 0, 0 );
-    forme.addVertex(v5);
-    Vertex v6( 6, 0, 1, 0 );
-    forme.addVertex(v6);
-    Vertex v7( 7, 0, 1, 1 );
-    forme.addVertex(v7);
-    Vertex v8( 8, 0, 0, 1 );
-    forme.addVertex(v8);
+      vector<Vertex> vv;
+      Vertex v5( 5, 0, 0, 0 );
+      forme.addVertex(v5);
+      Vertex v6( 6, 0, 1, 0 );
+      forme.addVertex(v6);
+      Vertex v7( 7, 0, 1, 1 );
+      forme.addVertex(v7);
+      Vertex v8( 8, 0, 0, 1 );
+      forme.addVertex(v8);
 
-    vector<int> s2;
-    s2.push_back(5);
-    s2.push_back(6);
-    s2.push_back(7);
-    s2.push_back(8);
-    Face face2( 2 );
-    face2.setSommets( &s2 );
-*/
+      vector<int> s2;
+      s2.push_back(5);
+      s2.push_back(6);
+      s2.push_back(7);
+      s2.push_back(8);
+      Face face2( 2 );
+      face2.setSommets( &s2 );
+     */
     /*	forme.setVertices( &vv );*/
     //forme.addFace( face2 );
 
@@ -320,7 +328,7 @@ int main(int argc, char *argv[]){
 		continuer = false;
 		break;
 
-	    // Gestion de la caméra avec la touches directionnelles 
+		// Gestion de la caméra avec la touches directionnelles 
 	    case SDL_KEYDOWN:
 		switch ( event.key.keysym.sym ) {
 		    case SDLK_UP:
