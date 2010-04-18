@@ -219,7 +219,7 @@ int main(int argc, char *argv[]){
     atexit(SDL_Quit);
     //affiche un titre dans la Fenetre
     SDL_WM_SetCaption("HeadCrabs ~ TER", NULL);
-    SDL_WM_SetIcon(SDL_LoadBMP("headcrabs2.bmp"), NULL);
+    SDL_WM_SetIcon(SDL_LoadBMP("./img/headcrabs2.bmp"), NULL);
 
     //fixe la taille de la Fenetre et indique le rendu openGL
     SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL);
