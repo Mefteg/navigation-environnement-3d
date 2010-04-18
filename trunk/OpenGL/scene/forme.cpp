@@ -118,8 +118,8 @@ void Forme::parcoursGraph() {
 	int i=0;
 	//on récupère un sommet non isolé pour commencer le parcours
 	while ( v == NULL && i < this->vertices.size() ) {
-		//si le sommet à au moins un voisin
-		if ( !this->vertices.at(i).getVoisins()->empty() ) {
+		//si le sommet à au moins un voisin ( qu'il n'est pas isolé )
+		if ( !this->vertices.at(i).estIsole() ) {
 			v = &(this->vertices.at(i));
 		}
 		i++;
