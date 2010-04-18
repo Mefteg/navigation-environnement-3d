@@ -101,6 +101,14 @@ void Vertex::parcoursVoisins() {
 	}
 }
 
+//retourne 1 si le sommet est isolé, 0 sinon
+int Vertex::estIsole() {
+	if ( this->getVoisins()->empty() )
+		return 1;
+	else
+		return 0;
+}
+
 string Vertex::printVoisins() {
     string str;
     cout << "nb de voisins: " << this->getVoisins()->size() << endl;

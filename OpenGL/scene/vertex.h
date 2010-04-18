@@ -44,6 +44,8 @@ class Vertex {
         void removeVoisin( int n );
         bool dejaVoisin( int p );
 		void parcoursVoisins();
+		//retourne 1 si le sommet est isolé, 0 sinon
+		int estIsole();
         string printVoisins();
 
 		void draw( int r, int g, int b );

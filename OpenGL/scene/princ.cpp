@@ -208,6 +208,12 @@ void dessinerForme( Forme forme ) {
 }
 
 int main(int argc, char *argv[]){
+	//on vérifie qu'il y est une carte à charger
+	if ( argv[1] == NULL ) {
+		cout << "xx Erreur: Il n'y a pas de carte à charger" << endl;
+		return -1;
+	}
+
     //lance SDL
     SDL_Init(SDL_INIT_VIDEO);
     atexit(SDL_Quit);
