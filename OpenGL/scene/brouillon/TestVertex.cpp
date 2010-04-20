@@ -86,18 +86,27 @@ bool intersectionSegmentBoundingBox(Vertex p1, Vertex p2, Vertex a, Vertex b, Ve
 }
 
 int main(){
+
 	Vertex a(1, 1, 1, 0 );
 	Vertex b(2, 1, 4, 0);
 	Vertex c(3, 4, 4, 0);
 	Vertex d(4, 4, 1, 0);
-	Vertex p1(5, -1, 1, 0);
-	Vertex p2(6, 0, 5, 0);
+
+	Vertex p1(5, 2, 2, 0);
+	Vertex p2(6, 100, 2, 0);
+
+	if(vertexInsidePolyg(a,b,c,d,p1)) {
+	    cout << "[!] P1 est dans le polygone [!]" << endl;
+	}
+	if(vertexInsidePolyg(a,b,c,d,p2)) {
+	    cout << "[!] P2 est dans le polygone [!]" << endl;
+	}
 
 	if(intersectionSegmentBoundingBox(p1,p2,a,b,c,d)) {
 	    cout << "Intersection avec la bounding box" << endl;
 	}
 	else {
-	    cout << " Pas intersection avec la bounding box" << endl;
+	    cout << "Pas intersection avec la bounding box" << endl;
 	}
 }
 
