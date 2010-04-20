@@ -15,41 +15,41 @@
 using namespace std;
 
 class Vertex {
-	private:
-		int num;
-		float x;
-		float y;
-		float z;
-        vector<Vertex *> voisins;
-		int visite;
+    private:
+	int num;
+	float x;
+	float y;
+	float z;
+	vector<Vertex *> voisins;
+	int visite;
 
-	public:
-		Vertex();
-		Vertex( int num, float x, float y, float z );
+    public:
+	Vertex();
+	Vertex( int num, float x, float y, float z );
 
-		int getNum();
-		float getX();
-		float getY();
-		float getZ();
-        vector<Vertex *> * getVoisins();
-		int getVisite();
+	int getNum();
+	float getX();
+	float getY();
+	float getZ();
+	vector<Vertex *> * getVoisins();
+	int getVisite();
 
-		void setNum(int n);
-		void setX(float x);
-		void setY(float y);
-		void setZ(float z);
-		void setVisite( int i );
+	void setNum(int n);
+	void setX(float x);
+	void setY(float y);
+	void setZ(float z);
+	void setVisite( int i );
 
-        void addVoisin( Vertex * v );
-        void removeVoisin( int n );
-        bool dejaVoisin( int p );
-		void parcoursVoisins();
-		void parcoursVoisinsDessiner();
-		//retourne 1 si le sommet est isolé, 0 sinon
-		int estIsole();
-        string printVoisins();
+	void addVoisin( Vertex * v );
+	void removeVoisin( int n );
+	bool dejaVoisin( int p );
+	void parcoursVoisins();
+	void parcoursVoisinsDessiner();
+	//retourne 1 si le sommet est isolé, 0 sinon
+	int estIsole();
+	string printVoisins();
 
-		void draw( int r, int g, int b );
+	void draw( int r, int g, int b );
 };
 
 #endif

@@ -1,5 +1,5 @@
-#include "vertex.h"
-//#include "vertex.cpp" // pour que marc compile :P 
+#include "../vertex.h"
+#include "../vertex.cpp" // pour que marc compile :P 
 
 // Fonction qui teste de quel côté du segment se situe un point
 // Si la fonction retourne 0 alors le point est sur le segment
@@ -53,6 +53,44 @@ bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	//
 	// tous dans le meme sens => a l'interieur
 	return true;
 }
+
+
+bool segmentsIntersection(Vertex a, Vertex b, Vertex c, Vertex d) {
+
+    // Source http://www.faqs.org/faqs/graphics/algorithms-faq/
+
+    float Ax = a.getX();
+    float Ay = a.getY();
+    float Bx = b.getX();
+    float By = b.getY();
+    float Cx = c.getX();
+    float Cy = c.getY();
+    float Dx = d.getX();
+    float Dy = d.getY();
+
+    float r =((Ay-Cy)*(Dx-Cx)-(Ax-Cx)*(Dy-Cy)) / ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx));
+    float s = ((Ay-Cy)*(Bx-Ax)-(Ax-Cx)*(By-Ay)) / ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx));
+
+    return  (((0 <= r) or (r <= 1)) && ((0 <= s) or (s <= 1))); // vrai intersection faux pas d'intersection !
+
+ /*   if (((0 <= r) or (r <= 1)) && ((0 <= s) or (s <= 1))) {
+	return true; // intersection ! 
+    }
+
+    return false;*/
+
+    /*  if ((r < 0) || (r > 1) || (s < 0) || ( s > 1)) {
+	return false; // pas d'intersection
+	}
+     */
+
+}
+
+// Les points sont supposés être rangés
+bool intersectionSegmentBoundingBox(Vertex p1, Vertex p2, Vertex a, Vertex b, Vertex c, Vertex d) {
+    return (segmentsIntersection(p1,p2,a,b) or segmentsIntersection(p1,p2,b,c) or segmentsIntersection(p1,p2,c,d) or segmentsIntersection(p1,p2,d,a));
+}
+
 int main(){
 	Vertex p1(0, 3, 0, 0 );
 	Vertex p2(0, 5, 2, 0);
