@@ -57,7 +57,7 @@ bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	//
 
 bool segmentsIntersection(Vertex a, Vertex b, Vertex c, Vertex d) {
 
-    // Source http://www.faqs.org/faqs/graphics/algorithms-faq/
+    // Pour comprendre : http://www.faqs.org/faqs/graphics/algorithms-faq/
 
     float Ax = a.getX();
     float Ay = a.getY();
@@ -68,21 +68,15 @@ bool segmentsIntersection(Vertex a, Vertex b, Vertex c, Vertex d) {
     float Dx = d.getX();
     float Dy = d.getY();
 
+    cout << "r = " << ((Ay-Cy)*(Dx-Cx)-(Ax-Cx)*(Dy-Cy)) << " / " << ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx)) << endl;
+    cout << "s = " << ((Ay-Cy)*(Bx-Ax)-(Ax-Cx)*(By-Ay)) << " / " << ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx))<< endl;
+
     float r =((Ay-Cy)*(Dx-Cx)-(Ax-Cx)*(Dy-Cy)) / ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx));
     float s = ((Ay-Cy)*(Bx-Ax)-(Ax-Cx)*(By-Ay)) / ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx));
 
+    cout << "Après calcul : r = "<< r << " s = " << s << endl;
+
     return  (((0 <= r) or (r <= 1)) && ((0 <= s) or (s <= 1))); // vrai intersection faux pas d'intersection !
-
- /*   if (((0 <= r) or (r <= 1)) && ((0 <= s) or (s <= 1))) {
-	return true; // intersection ! 
-    }
-
-    return false;*/
-
-    /*  if ((r < 0) || (r > 1) || (s < 0) || ( s > 1)) {
-	return false; // pas d'intersection
-	}
-     */
 
 }
 
@@ -92,15 +86,18 @@ bool intersectionSegmentBoundingBox(Vertex p1, Vertex p2, Vertex a, Vertex b, Ve
 }
 
 int main(){
-	Vertex p1(0, 3, 0, 0 );
-	Vertex p2(0, 5, 2, 0);
-	Vertex p3(0, 3, 4, 0);
-	Vertex p4(0, 1, 2, 0);
-	Vertex p(0, 0, 0, 0);
+	Vertex a(1, 1, 1, 0 );
+	Vertex b(2, 1, 4, 0);
+	Vertex c(3, 4, 4, 0);
+	Vertex d(4, 4, 1, 0);
+	Vertex p1(5, 1, 1, 0);
+	Vertex p2(6, 1, 4, 0);
 
-	if(vertexInsidePolyg( p1,  p2,  p3,  p4,  p))
-		cout << "a l interieur";
-	else
-		cout << "a l exterieur";
+	if(intersectionSegmentBoundingBox(p1,p2,a,b,c,d)) {
+	    cout << "Intersection avec la bounding box" << endl;
+	}
+	else {
+	    cout << " Pas intersection avec la bounding box" << endl;
+	}
 }
 
