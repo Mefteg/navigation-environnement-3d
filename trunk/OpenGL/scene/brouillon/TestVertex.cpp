@@ -76,11 +76,11 @@ bool segmentsIntersection(Vertex a, Vertex b, Vertex c, Vertex d) {
 
     cout << "Après calcul : r = "<< r << " s = " << s << endl;
 
-    return  (((0 <= r) or (r <= 1)) && ((0 <= s) or (s <= 1))); // vrai intersection faux pas d'intersection !
+    return  (((0 <= r) and (r <= 1)) && ((0 <= s) and (s <= 1))); // vrai intersection faux pas d'intersection !
 
 }
 
-// Les points sont supposés être rangés
+// Les points sont supposés être rangés - Renvoie vrai si le segment intersecte la bounding box
 bool intersectionSegmentBoundingBox(Vertex p1, Vertex p2, Vertex a, Vertex b, Vertex c, Vertex d) {
     return (segmentsIntersection(p1,p2,a,b) or segmentsIntersection(p1,p2,b,c) or segmentsIntersection(p1,p2,c,d) or segmentsIntersection(p1,p2,d,a));
 }
@@ -90,8 +90,8 @@ int main(){
 	Vertex b(2, 1, 4, 0);
 	Vertex c(3, 4, 4, 0);
 	Vertex d(4, 4, 1, 0);
-	Vertex p1(5, 1, 1, 0);
-	Vertex p2(6, 1, 4, 0);
+	Vertex p1(5, -1, 1, 0);
+	Vertex p2(6, 0, 5, 0);
 
 	if(intersectionSegmentBoundingBox(p1,p2,a,b,c,d)) {
 	    cout << "Intersection avec la bounding box" << endl;
