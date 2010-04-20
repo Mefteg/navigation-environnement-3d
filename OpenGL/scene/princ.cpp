@@ -163,17 +163,12 @@ int parser( string chemin, vector<Forme> * vFormes ) {
  * On décide du mode de dessin (par exemple GL_LINE_LOOP)
  */
 
-/**
-  * Je l'ai mise en commentaire car cette fonction n'a pas vraiment lieu d'être si on la met on sous entend qu'on peut charger plusieurs scènes. 
-  *
-   void dessinerScene( vector<Forme> * vFormes ) {
-
+void dessinerScene( vector<Forme> * vFormes ) {
     //Pour chaque forme
     for ( int i=0; i<vFormes->size(); i++ ) {
 	vFormes->at(i).draw();
     }
 }
-*/
 
 /**
  * Fonction pour tout initialiser correctement et utiliser la fenetre 
@@ -189,14 +184,8 @@ void dessiner( vector<Forme> * vFormes ) {
     //le y définit la verticale
     gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
 
-    //dessinerScene( vFormes );
-    // On dessine la scène
-    for ( int i=0; i<vFormes->size(); i++ ) {
-	vFormes->at(i).draw();
-    }
-
-    // Parcours du sol ?
-    vFormes->at(0).parcoursGraph();
+    dessinerScene( vFormes );
+	vFormes->at(0).parcoursGraphDessiner();
 
     //On s'assure que toutes les commandes OpenGL ont été exécutées
     glFlush();
