@@ -101,16 +101,7 @@ void Forme::generateGraph() {
 }
 
 void Forme::removeSommet( Vertex * v ) {
-	vector<Vertex *> * voisins = v->getVoisins();
-	//pour chaque voisin du sommet à supprimer
-	for ( int i=0; i<voisins->size(); i++ ) {
-		//on l'enlève de la liste de voisins
-		voisins->at(i)->removeVoisin( v->getNum() );
-	}
-
-	//on supprime sa liste de voisin, il est isolé
-	//donc plus jamais parcouru, pas besoin de le supprimer en réalité
-	voisins->clear();
+	v->isolation();
 }
 
 void Forme::parcoursGraph() {
@@ -152,6 +143,30 @@ void Forme::parcoursGraphDessiner() {
 	//si on en a trouver un
 	if ( v != NULL ) {
 		v->parcoursVoisinsDessiner();
+	}
+
+	//une fois que le parcours a été fait, on remet tout à 0
+	//pour pouvoir refaire un autre parcours
+	for ( int i=0; i<this->vertices.size(); i++ ) {
+		this->vertices.at(i).setVisite( 0 );
+	}
+}
+
+void Forme::parcoursGraphMerging() {
+	Vertex * v = NULL;
+	int i=0;
+	//on récupère un sommet non isolé pour commencer le parcours
+	while ( v == NULL && i < this->vertices.size() ) {
+		//si le sommet à au moins un voisin ( qu'il n'est pas isolé )
+		if ( !this->vertices.at(i).estIsole() ) {
+			v = &(this->vertices.at(i));
+		}
+		i++;
+	}
+
+	//si on en a trouver un
+	if ( v != NULL ) {
+		v->parcoursVoisinsMerging( 0 );
 	}
 
 	//une fois que le parcours a été fait, on remet tout à 0

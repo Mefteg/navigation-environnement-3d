@@ -69,6 +69,7 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 		    {
 			//S'il s'agit d'une nouvelle forme
 			if ( nv_forme == 0 ) {
+				cout << "Nouvelle Forme" << endl;
 			    //On enregistre la dernière forme
 			    vFormes->push_back( forme );
 			    //On va passer à la nouvelle forme
@@ -156,20 +157,31 @@ int parser( string chemin, vector<Forme> * vFormes ) {
     }
 }
 
+int detecterSol( vector<Forme> * vFormes ) {
+	int taille=0;
+	int max=0;
+	for ( int i=0; i<vFormes->size(); i++ ) {
+		if ( vFormes->at(i).getVertices()->size() > taille ) {
+			taille = vFormes->at(i).getVertices()->size();
+			max = i;
+		}
+	}
+
+	return max;
+}
+
 /**
  * Dessine une scène précédemment parsée
  *
  * On dessine pour chaque forme, chacuns de ses points
  * On décide du mode de dessin (par exemple GL_LINE_LOOP)
  */
-/*
 void dessinerScene( vector<Forme> * vFormes ) {
     //Pour chaque forme
     for ( int i=0; i<vFormes->size(); i++ ) {
 	vFormes->at(i).draw();
     }
 }
-*/
 
 /**
  * Fonction pour tout initialiser correctement et utiliser la fenetre 
@@ -185,12 +197,11 @@ void dessiner( vector<Forme> * vFormes ) {
     //le y définit la verticale
     gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
 
-    //dessinerScene( vFormes ); La fonction n'a pas lieu d'être. On ne va pas charger plusieurs scènes dans la même fenêtre çà n'aurait pas de sens >< !
-    for ( int i=0; i<vFormes->size(); i++ ) {
-	vFormes->at(i).draw();
-    }
+/*	dessinerScene( vFormes );*/
 
-    vFormes->at(0).parcoursGraphDessiner();
+	int sol = detecterSol( vFormes );
+    vFormes->at(sol).draw();
+    vFormes->at(sol).parcoursGraphDessiner();
 
     //On s'assure que toutes les commandes OpenGL ont été exécutées
     glFlush();
@@ -244,15 +255,18 @@ int main(int argc, char *argv[]){
     // On appelle le parser :
     vector<Forme> vFormes;
     parser( argv[1], &vFormes );
+	int sol = detecterSol( &vFormes );
+
 
     // On suppose que la première forme trouvé est le sol, comme le sol = notre maillage => on créé le graphe à partir du sol. 
-    vFormes.at(0).generateGraph();
+    vFormes.at(sol).generateGraph();
+    vFormes.at(sol).parcoursGraphMerging();
 
 
     // DEBUT DES TESTS 
 
-    /*Vertex * vsuppr = vFormes.at(0).getVertex( 3 );
-      vFormes.at(0).removeSommet( vsuppr );*/
+/*    Vertex * vsuppr = vFormes.at(0).getVertex( 3 );*/
+/*    vFormes.at(0).removeSommet( vsuppr );*/
     /*    vFormes.at(0).parcoursGraph();*/
     /*    cout << vFormes.at(0).printGraph();*/
 
