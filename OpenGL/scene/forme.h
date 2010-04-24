@@ -42,6 +42,7 @@ class Forme {
 		void removeSommet( Vertex * v );
 		void parcoursGraph();
 		void parcoursGraphDessiner();
+		void parcoursGraphMerging();
 
 		void draw();
 		//void drawFace( int num_face );

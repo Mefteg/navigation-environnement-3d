@@ -20,6 +20,9 @@ class Vertex {
 	float x;
 	float y;
 	float z;
+	int r;
+	int v;
+	int b;
 	vector<Vertex *> voisins;
 	int visite;
 
@@ -40,16 +43,19 @@ class Vertex {
 	void setZ(float z);
 	void setVisite( int i );
 
+	int nbVoisins();
 	void addVoisin( Vertex * v );
 	void removeVoisin( int n );
 	bool dejaVoisin( int p );
+	void isolation();
 	void parcoursVoisins();
 	void parcoursVoisinsDessiner();
+	void parcoursVoisinsMerging( int profondeur );
 	//retourne 1 si le sommet est isolé, 0 sinon
 	int estIsole();
 	string printVoisins();
 
-	void draw( int r, int g, int b );
+	void draw();
 };
 
 #endif
