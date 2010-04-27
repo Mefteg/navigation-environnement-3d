@@ -110,6 +110,16 @@ void scission(Forme * f, int numero) {
     }
     else {
 
+	// Parcours pour connaitre quel numéro attribuer à la face
+
+	int derniere_face = 0;
+
+	for(int j=0; j < pFaces->size() ; j++) {
+	    if(pFaces->at(j).getNum() > derniere_face) {
+		derniere_face = pFaces->at(j).getNum();
+	    }
+	}
+
 	// On parcourt la liste des faces à la recherche de la face à scisser
 	for(int i=0; i < pFaces->size() ; i++) {
 	    if (pFaces->at(i).getNum() == numero) {
@@ -126,6 +136,14 @@ void scission(Forme * f, int numero) {
 
 		    // But = supprimer la face de la forme et on en créer 4
 
+		    // Parcours de la liste des vertex pour connaitre le numéro du dernier sommet ajouté
+		    int dernier_num = 0; // Sommet ayant le numéro le plus grand parmi tous les Vertex.
+		    for(int j=0; j < f->getVertices()->size(); j ++) {
+			if(f->getVertices()->at(j).getNum() > dernier_num) {
+			    dernier_num = f->getVertices()->at(j).getNum();
+			}
+		    }
+
 		    // On récupère les 4 points 
 		    Vertex * p1 = f->getVertex(sommets->at(0));
 		    Vertex * p2 = f->getVertex(sommets->at(1));
@@ -137,48 +155,48 @@ void scission(Forme * f, int numero) {
 		    p12.setX((p1->getX() + p2->getX()) / 2); // x
 		    p12.setY((p1->getY() + p2->getY()) / 2); // y 
 		    p12.setZ((p1->getZ() + p2->getZ()) / 2); // z
-		    p12.setNum(5); // CODER EN DUR ICI ! DOIT ETRE CHANGE ! J'avais pensé à récupérer le nombre total de vertex puis d'ajouter 1...
+		    p12.setNum(dernier_num+1); // A VOIR SI C'EST COMPATIBLE AVEC CE QUI A DEJA ETE FAIT ! (bon numéro de vertex ?)
 
-		    cout << "p12" << endl;
+		    /*cout << "p12" << endl;
 		    cout << p12.getX() << endl;
 		    cout << p12.getY() << endl;
-		    cout << p12.getZ() << endl<<endl;
+		    cout << p12.getZ() << endl<<endl;*/
 		    
 		    // p23 (idem p12)
 		    Vertex p23(0,0,0,0);
 		    p23.setX((p2->getX() + p3->getX()) / 2); 		    
 		    p23.setY((p2->getY() + p3->getY()) / 2); 
 		    p23.setZ((p2->getZ() + p3->getZ()) / 2);
-		    p23.setNum(6);
+		    p23.setNum(dernier_num+2); // idem
 
-		    cout << "p23" << endl;
+		    /*cout << "p23" << endl;
 		    cout << p23.getX() << endl;
 		    cout << p23.getY() << endl;
-		    cout << p23.getZ() << endl<<endl;
+		    cout << p23.getZ() << endl<<endl;*/
 		    
 		    // p34 
 		    Vertex p34(0,0,0,0);
 		    p34.setX((p3->getX() + p4->getX()) / 2); 
 		    p34.setY((p3->getY() + p4->getY()) / 2); 
 		    p34.setZ((p3->getZ() + p4->getZ()) / 2);
-		    p34.setNum(7);
+		    p34.setNum(dernier_num+3); // idem
 
-		    cout << "p34" << endl;
+		    /*cout << "p34" << endl;
 		    cout << p34.getX() << endl;
 		    cout << p34.getY() << endl;
-		    cout << p34.getZ() << endl<<endl;
+		    cout << p34.getZ() << endl<<endl;*/
 		    
 		    // p41 
 		    Vertex p41(0,0,0,0);
 		    p41.setX((p4->getX() + p1->getX()) / 2); 
 		    p41.setY((p4->getY() + p1->getY()) / 2); 
 		    p41.setZ((p4->getZ() + p1->getZ()) / 2);
-		    p41.setNum(8);
+		    p41.setNum(dernier_num+4); // idem
 
-		    cout << "p41" << endl;
+		    /*cout << "p41" << endl;
 		    cout << p41.getX() << endl;
 		    cout << p41.getY() << endl;
-		    cout << p41.getZ() << endl<<endl;
+		    cout << p41.getZ() << endl<<endl;*/
 		    
 		    
 		    // p5 = le point entre p12 et p34 (le point au centre)
@@ -187,12 +205,12 @@ void scission(Forme * f, int numero) {
 		    p5.setX((p12.getX() + p34.getX()) / 2); 
 		    p5.setY((p12.getY() + p34.getY()) / 2); 
 		    p5.setZ((p12.getZ() + p34.getZ()) / 2);
-		    p5.setNum(9);
+		    p5.setNum(dernier_num+5); // idem
 
-		    cout << "p5" << endl;
+		    /*cout << "p5" << endl;
 		    cout << p5.getX() << endl;
 		    cout << p5.getY() << endl;
-		    cout << p5.getZ() << endl<<endl;
+		    cout << p5.getZ() << endl<<endl;*/
 
 		    // ON AJOUTE LES VERTEX A LA FORME DE DEPART
 
@@ -208,6 +226,7 @@ void scission(Forme * f, int numero) {
 		    p3 = f->getVertex(sommets->at(2));
 		    p4 = f->getVertex(sommets->at(3));
 
+
 		    // LES 4 FACES CONSTRUITES A PARTIR DES NOUVEAUX POINTS
 
 		    vector<int> s;
@@ -219,7 +238,7 @@ void scission(Forme * f, int numero) {
 		    s.push_back(p5.getNum());
 		    s.push_back(p41.getNum());
 
-		    Face f1( 11 ); // A CHANGER ! CODE EN DUR :/ !
+		    Face f1( derniere_face +1 ); // A VOIR SI COMPATIBLE AVEC CE QUI A DEJA ETE FAIT ! (bon numéro de face ?)
 		    f1.setSommets( &s );
 
 		    f->addFace(f1);
@@ -232,7 +251,7 @@ void scission(Forme * f, int numero) {
 		    s.push_back(p23.getNum());
 		    s.push_back(p5.getNum());
 
-		    Face f2( 12 ); // Idem
+		    Face f2( derniere_face +2 ); // Idem
 		    f2.setSommets( &s );
 		    f->addFace(f2);
 		    
@@ -243,7 +262,7 @@ void scission(Forme * f, int numero) {
 		    s.push_back(p3->getNum());
 		    s.push_back(p34.getNum());
 
-		    Face f3( 13 ); // Idem
+		    Face f3( derniere_face +3 ); // Idem
 		    f3.setSommets( &s );
 		    f->addFace(f3);
 
@@ -254,14 +273,13 @@ void scission(Forme * f, int numero) {
 		    s.push_back(p34.getNum());
 		    s.push_back(p4->getNum());
 
-		    Face f4( 14 ); // Idem
+		    Face f4( derniere_face +4 ); // Idem
 		    f4.setSommets( &s );
 		    f->addFace(f4);
 
 		    // ON SUPPRIME LA FACE
 
 		    //f->removeFace(pFaces->at(i));
-
 
 
 		}
@@ -280,18 +298,17 @@ void scission(Forme * f, int numero) {
 int main(){
 
 
+    // Initialisation de la forme de départ 
     Forme forme;
 
-
-
     vector<Vertex> v;
-    Vertex v1( 1, -1, 1, 0 );// num x y z 
+    Vertex v1( 1, 0, 0, 0 );// num x y z 
     v.push_back(v1);
-    Vertex v2( 2, -2, 1, 0 );
+    Vertex v2( 2, 2, 0, 0 );
     v.push_back(v2);
-    Vertex v3( 3, -2, 2, 0 );
+    Vertex v3( 3, 2, 2, 0 );
     v.push_back(v3);
-    Vertex v4( 4, -1, 2, 0 );
+    Vertex v4( 4, 0, 2, 0 );
     v.push_back(v4);
 
     vector<int> sommets;
@@ -306,6 +323,14 @@ int main(){
 
     forme.setVertices( &v );
     forme.addFace( face );
+
+
+
+
+    // Première scission !
+
+    cout << "<--------------------------------->" << endl;
+    cout << "SCISSION DE LA FACE 1 ! " << endl;
 
     scission(&forme, 1);
 
@@ -330,7 +355,38 @@ int main(){
     for(int i=0; i<f666->size(); i++) {
 	cout << "Numéro de la face " <<f666->at(i).getNum() << endl;
 	vector<int> * s666;
-	//s666->clear(); Déclenche une erreur de segmentation ? Surement normal j'ai pas regardé la doc à ce sujet.
+	s666 = f666->at(i).getSommets();
+	for(int i=0;i< s666->size();i++) {
+	    cout<<s666->at(i)<<" ";
+	}
+	cout << endl;
+    }
+
+
+
+
+    // Deuxième scission sur une face fraichement créée ! 
+
+    cout << "<--------------------------------->" << endl;
+    cout << "SCISSION DE LA FACE 3 MAINTENANT !" << endl;
+
+    scission(&forme,3);
+
+
+    cout << endl << "AFFICHAGE DES VERTICES" << endl;
+
+    for(int i=0; i<v666->size(); i++) {
+	cout << "num : " << v666->at(i).getNum() << endl;
+	cout <<"x "<< v666->at(i).getX() << endl;
+	cout <<"y "<< v666->at(i).getY() << endl;
+	cout <<"z "<< v666->at(i).getZ() << endl;
+    }
+
+    cout << endl << "AFFICHAGE DES FACES" << endl;
+
+    for(int i=0; i<f666->size(); i++) {
+	cout << "Numéro de la face " <<f666->at(i).getNum() << endl;
+	vector<int> * s666;
 	s666 = f666->at(i).getSommets();
 	for(int i=0;i< s666->size();i++) {
 	    cout<<s666->at(i)<<" ";
