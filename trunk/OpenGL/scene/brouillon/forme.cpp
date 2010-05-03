@@ -217,8 +217,8 @@ int Forme::generateBoundingBox() {
 	    }
 
 
-	    if(vertices.at(i).getZ() > zmax) {
-		zmax = vertices.at(i).getZ();
+	    if(vertices.at(i).getZ() < zmin) {
+		zmin = vertices.at(i).getZ();
 	    }
 	    if(vertices.at(i).getZ() > zmax) {
 		zmax = vertices.at(i).getZ();
