@@ -1,0 +1,112 @@
+\documentclass[a4paper,12pt]{report}
+
+\usepackage[frenchb]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{algorithm,algorithmic}
+
+
+
+
+\usepackage[pdftex,bookmarks,colorlinks]{hyperref}
+\hypersetup{colorlinks,%
+citecolor=black,%
+filecolor=black,%
+linkcolor=black,%
+urlcolor=black
+}
+
+% Raccourcis...
+
+\title{Naviguation dans un environnement 3D \vspace{0.5cm}}
+\author{Marc BEYSECKER, Tom GIMENEZ, Valentin HIRSON, Léo RIZZON\\  \\Université Montpellier II \\  \\Master 1 Informatique}
+
+
+\date{}
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\chapter{Remerciements}
+
+Ma mère, ta mère. Merci mon cul bonsoir messieurs dames.
+
+\chapter{Introduction}
+
+
+\section*{Contexte}
+
+Dans les jeux vidéos, les personnages non joués par des humains doivent pouvoir se déplacer de manière autonome et cohérente. Un environnement 3D est constitué d'un graphe énorme avec des milliers de sommets. Même en ne prenant que le sol, le graphe est encore très gros et, surtout, n'est pas seulement constitué des points naviguables. C'est à dire que le personnage ne doit pas pouvoir se déplacer dessus.
+
+Comme nous l'avons étudié, la recherche de chemins dans un graphe est un problème classique mais qui peut s'avérer très lourd sur de gros graphes. En prenant en compte que les jeux mettent en scène un grand nombre d'agents il s'agit de minimiser les temps de calculs. 
+
+
+Dans le cadre de notre unité d'enseignement intitulée Algorithmes de l'Intelligence Artificielle, nous avons réalisé un projet qui consiste en .
+
+
+\section*{Objectifs}
+
+L'objectif de ce projet était, d'une part, la compréhension poussée d'un algorithme d'exclusion mutuelle et l'étude d'un système tolérant aux pannes.  Toutefois, il s'agissait assimiler les problèmes et défauts qu'il comportait pour bien appréhender l'amélioration proposée.
+
+D'autre part, l'implémentation de ces modèles pour appliquer toute la théorie à un exemple concret.
+
+Notons également que l'étude s'est faite à partir d'un article en anglais, comme la majorité des articles scientifiques, ce qui constitue une expérience intéressante.
+
+L'implémentation consiste donc en l'application de l'algorithme de \nt à un certain nombre de sites, en réseaux, qui cherchent à acceder à une même ressource alors qu'il n'y qu'un accès possible à la fois.
+
+\newpage
+
+\chapter{Recherches préliminaires}
+
+\section{Une scène en 3D avec Blender}
+
+\section{Récupérer notre scène en 3D}
+
+\subsection{OpenSceneGraph}
+
+\subsection{OpenGL avec nos propres structures de données}
+
+\chapter{Implémentation finale}
+
+\section{Un parser pour récupérer notre scène}
+
+\section{Nos structures de données}
+
+\subsection{La scène}
+
+\subsection{Le graphe géneré}
+
+\section{Travaux effectués sur le graphe}
+
+\subsection{Création du graphe des way-points}
+
+\paragraph{Parcours}
+\paragraph{Heuristique}
+
+\subsection{Simplification du graphe obtenu : merging}
+
+\chapter{Conclusion}
+
+\subsection*{Bilan technique}
+
+Nous avons réussi à implémenter tous les algorithmes demandés. Tous les mécanismes de l'amélioration de l'algorithme de \nt sont opérationnels. Nous avons éffectué une solide batterie de tests en essayant de rencontrer un maximum de configurations possibles.
+
+Toutefois on pourra noter que notre code n'est pas parfait, nos choix se portant parfois d'avantage sur la simplicité que sur l'élégance du code. 
+
+\subsection*{Bilan personnel}
+
+Ce projet a été bien plus important que nous ne l'imaginions au premier abord, tant en quantité de travail que sur le nombre et la diversité des domaines sur lesquels nous avons travaillé.
+
+Premièrement ces algorithmes, forts connus, nous ont plongés au coeur de l'algorithmie distribuée nous obligeant à en bien comprendre les principes, en nous confrontant à bon nombre de problèmes classiques. L'amélioration de l'algorithme de \nt est un modèle assez complexe qui n'a pas été facile à bien cerné. Pourtant, le travail terminé, nous avons réellement la sensation d'avoir progressé dans cette discipline.
+
+Il est clair que notre expérience de développement, bien que n'étant pas la première, est toujours aussi importante et nous a familiarisé de nouveau avec le langage C, le réseau, le multi-threading.
+
+Enfin ce projet à été l'occasion de travailler en un groupe qui ne l'avait jamais été. Une excellente surprise que nous tenterons de renouveler à l'avenir. Une équipe complémentaire et équilibrée qui a permis d'arriver au bout de nos objectifs.
+
+
+\end{document}
