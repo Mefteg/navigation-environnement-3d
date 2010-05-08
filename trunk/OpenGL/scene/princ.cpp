@@ -23,21 +23,6 @@ const int SCREEN_HEIGHT=480;
 int xCam=5;
 int yCam=5;
 
-
-
-/*struct vertex {
-  int num;
-  vector<float> coord;
-  };
-
-  struct forme {
-  vector< vertex > vertices;
-  vector< vector<int> > faces;
-  };
- */
-
-
-
 /**
  * Parse un fichier .obj passé en paramètre (selon son chemin)
  *	
@@ -171,6 +156,17 @@ int detecterSol( vector<Forme> * vFormes ) {
 	return max;
 }
 
+//sort le sol du vecteur de formes vFormes et le retourne
+Forme isolerSol( vector<Forme> * vFormes ) {
+	int psol = detecterSol( vFormes );
+
+	Forme sol = vFormes->at( psol );
+
+	vFormes->erase( vFormes->begin()+psol );
+
+	return sol;
+}
+
 /**
  * Dessine une scène précédemment parsée
  *
@@ -180,14 +176,14 @@ int detecterSol( vector<Forme> * vFormes ) {
 void dessinerScene( vector<Forme> * vFormes ) {
     //Pour chaque forme
     for ( int i=0; i<vFormes->size(); i++ ) {
-	vFormes->at(i).draw();
+		vFormes->at(i).draw();
     }
 }
 
 /**
  * Fonction pour tout initialiser correctement et utiliser la fenetre 
  * */
-void dessiner( vector<Forme> * vFormes ) {
+void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 
     //efface le tampon d'affichage ( ? )
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -198,11 +194,8 @@ void dessiner( vector<Forme> * vFormes ) {
     //le y définit la verticale
     gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
 
-/*	dessinerScene( vFormes );*/
-
-	int sol = detecterSol( vFormes );
-    vFormes->at(sol).draw();
-    vFormes->at(sol).parcoursGraphDessiner();
+    sol->draw();
+    sol->parcoursGraphDessiner();
 
     //On s'assure que toutes les commandes OpenGL ont été exécutées
     glFlush();
@@ -255,13 +248,17 @@ int main(int argc, char *argv[]){
 
     // On appelle le parser :
     vector<Forme> vFormes;
+	//On parse la scène 3D
     parser( argv[1], &vFormes );
-	int sol = detecterSol( &vFormes );
+	//On isole le sol des autres formes
+	Forme sol = isolerSol( &vFormes );
 
     // On suppose que la première forme trouvé est le sol, comme le sol = notre maillage => on créé le graphe à partir du sol. 
-    vFormes.at(sol).generateGraph();
-    vFormes.at(sol).parcoursGraphMerging();
+    sol.generateGraph();
+    sol.parcoursGraphMerging();
 
+<<<<<<< .mine
+=======
     // On genere les bouding box
     vector <BoundingBox> listeBoundingBox = formeToBoundingBox(vector<Forme>(vFormes.begin() + 1, vFormes.end()));
 
@@ -323,6 +320,7 @@ int main(int argc, char *argv[]){
 
     // FIN DES TESTS
 
+>>>>>>> .r47
     bool continuer = true;
     //Les évènements SDL
     SDL_Event event;
@@ -330,7 +328,7 @@ int main(int argc, char *argv[]){
 
     while (continuer)
     {
-	dessiner( &vFormes );
+	dessiner( &sol, &vFormes );
 	/* dessinerForme( forme );*/
 
 	//Attente d'évènement méthode bloquante
