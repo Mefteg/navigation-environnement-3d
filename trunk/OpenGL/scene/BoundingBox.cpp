@@ -77,12 +77,12 @@ BoundingBox :: BoundingBox(Forme f){
 	//p4.setZ();
 }
 
-vector <BoundingBox> formeToBoundingBox(vector<Forme> * vFormes){
+vector <BoundingBox> formeToBoundingBox(vector<Forme> vFormes){
 	vector <BoundingBox> listeBoundingBox;
 	
 	vector<Forme>::iterator it;
 
-	for( it = vFormes->begin() ; it < vFormes->end(); it++ )
+	for( it = vFormes.begin() ; it < vFormes.end(); it++ )
 		listeBoundingBox.push_back(BoundingBox(*it));
 
 	return listeBoundingBox;
@@ -193,4 +193,3 @@ bool segmentIntersectBoundingBox(vector <BoundingBox> liBB, Vertex p1, Vertex p2
 	return false;
 }
 
-int main(){}
