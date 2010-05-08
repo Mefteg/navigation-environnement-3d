@@ -32,7 +32,7 @@ urlcolor=black
 
 \newpage
 
-\chapter{Remerciements}
+\chapter*{Remerciements}
 
 Ma mère, ta mère. Merci mon cul bonsoir messieurs dames.
 
@@ -64,6 +64,25 @@ Le résultat serait donc un graphe des way-points, simplifié, automatiquement g
 
 \section{Une scène en 3D avec Blender}
 
+\subsection{Les différents formats de fichier}
+
+\paragraph{COLLADA}
+
+Collaborative Design Activity (abrégé en COLLADA, signifiant activité de conception collaborative) a pour but d'établir un format de fichier d'échange pour les applications 3D interactives.
+
+COLLADA définit un standard de schéma XML ouvert pour échanger les acquisitions numériques entre différents types d'applications logicielles graphiques qui pourraient autrement conserver leur acquisition dans des formats incompatibles. Les documents COLLADA, qui décrivent des acquisitions numériques, sont des fichiers XML, habituellement identifiés par leur extension .dae («digital asset exchange», traduit par «échange numérique d'acquisition»).
+C'est un format supportant la vaste majorité des fonctionnalités modernes
+requises par les développeurs de jeux vidéo. 
+
+Il fallait donc faire un choix, COLLADA étant plus conséquent que .obj, et le sujet de notre TER n'étant pas porté sur le format de notre scène, 
+nous avons donc choisi de faire simple et de choisir .obj. De plus le format XML nous obligeait à utiliser des librairies dédiées, complexes et non standardisées, qui nous aurait pris beaucoup plus de temps pour écrire le parser.
+
+\paragraph{WaveFront}
+
+.obj
+Notre choix
+A quoi ca ressemble, pourquoi on a choisit ca
+
 \section{Récupérer notre scène en 3D}
  
 Une fois notre scène créée sous Blender s'est posé le problème de l'exploiter. Nous avons alors cherché du côté des librairies existantes, en C/C++ surtout. En effet, Blender nous proposait divers format de fichier de sortie. Nous devions faire en sorte que les informations soient récupérables et exploitable pour nos algorithmes. L'idée générale est d'utiliser un parser qui va lire les données du fichier pour les transformer en données compréhensibles par notre programme.
@@ -80,12 +99,53 @@ L'utilisation d'OpenGL, conseillée par notre professeur encadrant, était un ch
 
 Coder en C++, pour la performance du programme, pour l'aspect objet intéressant dans notre contexte, pour l'utilisation d'OpenGL, était presque évident.
 
+Finalement nous avons donc implémenté notre propre parser pour remplir nos propres structures de données. En fait, on a recodé une partie des fonctionnalités des librairies que nous avions étudiées pour n'en garder que ce dont nous avons besoin et pour avoir des structures que nous maitrisons pleinement. Au final, cela nous a fait gagné du temps.
+
 
 \chapter{Implémentation finale}
 
+Nous présenterons ici les éléments que nous avons effectivement implémentés.
+
 \section{Un parser pour récupérer notre scène}
 
+Nous récupérons donc un fichier au format WaveFront. Il s'agit 
+Nous avons présenté
+
 \section{Nos structures de données}
+\begin{itemize}
+ \item Forme:
+
+Une forme est une figure géométrique qui contient une liste de vertex
+et une liste de faces.
+À partir d'une forme, nous pouvons générer un graphe qui lui correspond.
+ 
+ \item Vertex:
+
+Un vertex est un point de notre scène.
+Il possède 3 coordonnées x, y et z.
+Lorsque qu'un graphe est généré, tous les vertex d'une forme voient leur
+liste de voisins mise à jour. Grâce à cette liste de voisins ( ou 
+d'adjacences ), les parcours dans le graphe sont possibles ( cette liste
+représente les arêtes du graphe ).
+Nous avons choisi les listes de voisins car chaque sommet possède au plus
+4 voisins si le maillage est fait de carrés ou 3 voisins s'il est fait de
+triangles. Ce qui permet un coût de stockage très faible et un temps de
+calcul bien maitrisé.
+Prenons l'exemple de la suppression d'un voisin:
+Il suffit de l'isolé pour qu'il ne soit plus parcouru ; soit le
+supprimer de la liste de voisins de tous ses voisins.
+Au pire des cas: 4 x 4 tests.
+ 
+ \item Faces:
+
+Les faces possèdent une liste contenant les numéros des vertex
+qui les composent. C'est grâce aux faces que nous pouvons déduire les
+voisins des sommets du graphe. Elles servent aussi à effectuer un affichage
+cohérent des formes.
+\end{itemize}
+
+
+
 
 \subsection{La scène}
 
@@ -96,16 +156,18 @@ Coder en C++, pour la performance du programme, pour l'aspect objet intéressant
 \subsection{Création du graphe des way-points}
 
 \paragraph{Parcours}
+
 \paragraph{Heuristique}
 
+
 \subsection{Simplification du graphe obtenu : merging}
+
+\chapter{Bibliographie}
 
 \chapter{Conclusion}
 
 \subsection*{Bilan technique}
 
-
 \subsection*{Bilan personnel}
-
 
 \end{document}
