@@ -2,14 +2,10 @@
 
 \usepackage[frenchb]{babel}
 \usepackage[utf8]{inputenc}
-
 \usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
 \usepackage{algorithm,algorithmic}
-
-
-
-
 \usepackage[pdftex,bookmarks,colorlinks]{hyperref}
+
 \hypersetup{colorlinks,%
 citecolor=black,%
 filecolor=black,%
@@ -34,7 +30,7 @@ urlcolor=black
 
 \chapter*{Remerciements}
 
-Ma mère, ta mère. Merci mon cul bonsoir messieurs dames.
+Ma mère, ta mère. Merci mon cul bonsoir m'ssieurs dames.
 
 \chapter{Introduction}
 
@@ -108,8 +104,26 @@ Nous présenterons ici les éléments que nous avons effectivement implémentés
 
 \section{Un parser pour récupérer notre scène}
 
-Nous récupérons donc un fichier au format WaveFront. Il s'agit 
-Nous avons présenté
+Nous récupérons donc un fichier au format WaveFront. Il s'agit de remplir nos structures de données, un vecteur de forme que nous appelerons ici \textit{listeDeFormes}.
+Nous avons présenté précédemment la structure d'un fichier au format WaveFront. Ici nous présenterons le fonctionnement de notre parser.
+
+\begin{algorithm}[t]
+\caption{Parser de fichier .obj}
+\label{algo_naimi_trehel_init}
+\begin{algorithmic}[1]
+\REQUIRE fichier .obj
+\FOR{chaque forme (c'est à dire une apparition de ''v`` après une série de ''f'')}
+  \IF{la ligne commence par un ``v''}
+    \STATE enregister ``v x y z'' comme nouveau vertex de coordonnées (x,y,z) dans le vecteur de vertex de la forme courante
+  \ELSE
+    \IF{la ligne commence par un ``f''}
+    \STATE enregistrer ``f $x_{1}$ ... $x_{n}$'' comme nouvelle face dans le vecteur de faces de la forme courante
+    \ENDIF
+  \ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+ 
 
 \section{Nos structures de données}
 \begin{itemize}
