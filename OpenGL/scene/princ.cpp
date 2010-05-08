@@ -196,6 +196,7 @@ void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 
     sol->draw();
     sol->parcoursGraphDessiner();
+    dessinerScene(vFormes);
 
     //On s'assure que toutes les commandes OpenGL ont été exécutées
     glFlush();
@@ -223,50 +224,61 @@ SDL_GL_SwapBuffers();
 }*/
 
 int main(int argc, char *argv[]){
-    //On vérifie qu'il y est une carte à charger
-    if ( argv[1] == NULL ) {
-	cout << "xx Erreur: Il n'y a pas de carte à charger" << endl;
-	return -1;
-    }
+	//On vérifie qu'il y est une carte à charger
+	if ( argv[1] == NULL ) {
+		cout << "xx Erreur: Il n'y a pas de carte à charger" << endl;
+		return -1;
+	}
 
-    //On lance SDL
-    SDL_Init(SDL_INIT_VIDEO);
-    atexit(SDL_Quit);
-    //On affiche un titre et une icone dans la Fenetre
-    SDL_WM_SetCaption("HeadCrabs ~ TER", NULL);
-    SDL_WM_SetIcon(SDL_LoadBMP("./img/headcrabs2.bmp"), NULL);
+	//On lance SDL
+	SDL_Init(SDL_INIT_VIDEO);
+	atexit(SDL_Quit);
+	//On affiche un titre et une icone dans la Fenetre
+	SDL_WM_SetCaption("HeadCrabs ~ TER", NULL);
+	SDL_WM_SetIcon(SDL_LoadBMP("./img/headcrabs2.bmp"), NULL);
 
-    //On fixe la taille de la Fenetre et indique le rendu openGL
-    SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL);
-    //On indique le rendu openGL
-    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity( );
-    gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
-    glEnable(GL_DEPTH_TEST);
+	//On fixe la taille de la Fenetre et indique le rendu openGL
+	SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL);
+	//On indique le rendu openGL
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity( );
+	gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
+	glEnable(GL_DEPTH_TEST);
 
-    /* SDL_EnableKeyRepeat(10,10);*/
+	/* SDL_EnableKeyRepeat(10,10);*/
 
-    // On appelle le parser :
-    vector<Forme> vFormes;
+	// On appelle le parser :
+	vector<Forme> vFormes;
 	//On parse la scène 3D
-    parser( argv[1], &vFormes );
+	parser( argv[1], &vFormes );
 	//On isole le sol des autres formes
 	Forme sol = isolerSol( &vFormes );
 
-    // On suppose que la première forme trouvé est le sol, comme le sol = notre maillage => on créé le graphe à partir du sol. 
-    sol.generateGraph();
-    sol.parcoursGraphMerging();
+	// On genere les bouding box
+	vector <BoundingBox> listeBoundingBox = formeToBoundingBox(vFormes);
+	
+	vector<Vertex> * vertexDuSol = sol.getVertices();
+	for(int i = vertexDuSol->size(); i > 0; i--){
+		if(vertexInsideBoundingBox(listeBoundingBox, vertexDuSol->at(i - 1))){
+			// suppression
+			cout << " supprime point x = " << vertexDuSol->at(i - 1).getX() << " y = " << vertexDuSol->at(i - 1).getY() << "\n";
+			vertexDuSol->at(i - 1).setRVB(0, 0, 250);
+		}
+	}
+	
+	//exit(0);
 
-    // On genere les bouding box
-    vector <BoundingBox> listeBoundingBox = formeToBoundingBox(vector<Forme>(vFormes.begin() + 1, vFormes.end()));
+	// On suppose que la première forme trouvé est le sol, comme le sol = notre maillage => on créé le graphe à partir du sol. 
+	sol.generateGraph();
+//	sol.parcoursGraphMerging();
 
-    bool continuer = true;
-    //Les évènements SDL
-    SDL_Event event;
+	bool continuer = true;
+	//Les évènements SDL
+	SDL_Event event;
 
 
-    while (continuer)
-    {
+	while (continuer)
+	{
 	dessiner( &sol, &vFormes );
 	/* dessinerForme( forme );*/
 

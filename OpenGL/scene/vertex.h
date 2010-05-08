@@ -42,6 +42,7 @@ class Vertex {
 	void setY(float y);
 	void setZ(float z);
 	void setVisite( int i );
+	void setRVB(int cr, int cv, int cb);
 
 	int nbVoisins();
 	void addVoisin( Vertex * v );
