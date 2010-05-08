@@ -1,0 +1,4 @@
+OpenSceneGraph est une extension d'OpenGl qui facilite le traitement d'une scène 3D. Elle permet de charger simplement des scènes dans des formats divers et de parcourir et d'agir sur les informations ainsi recuperées.
+Une fois chargée, cette scène est transformée en un graphe très complexe contenant une énorme quantité d'informations. Ce graphe met en relation les formes entre elles et entre leurs informations respectives ( textures, transformations, etc... ).
+Cette solution n'a pas été retenue car nous n'avions pas le contrôle total de l'exécution d'OpenSceneGraph et la masse d'information générée était plus une gène qu'un atout. Enfin la facilité de chargement de la scène réduisait l'intérêt de notre projet.
+

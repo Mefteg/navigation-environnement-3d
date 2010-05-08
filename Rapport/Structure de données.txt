@@ -2,6 +2,7 @@ Forme:
 Une forme est une figure géométrique qui contient une liste de vertex
 et une liste de faces.
 À partir d'une forme, nous pouvons générer un graphe qui lui correspond.
+Toutes les actions ( parcours, etc... ) se font à partir de la forme concernée.
 
 Vertex:
 Un vertex est un point de notre scène.
