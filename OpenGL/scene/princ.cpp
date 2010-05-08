@@ -258,11 +258,12 @@ int main(int argc, char *argv[]){
     parser( argv[1], &vFormes );
 	int sol = detecterSol( &vFormes );
 
-    //vector <BoundingBox> listeBoundingBox = formeToBoundingBox(&vFormes);
-
     // On suppose que la première forme trouvé est le sol, comme le sol = notre maillage => on créé le graphe à partir du sol. 
     vFormes.at(sol).generateGraph();
     vFormes.at(sol).parcoursGraphMerging();
+
+    // On genere les bouding box
+    vector <BoundingBox> listeBoundingBox = formeToBoundingBox(vector<Forme>(vFormes.begin() + 1, vFormes.end()));
 
 
     // DEBUT DES TESTS 

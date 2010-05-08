@@ -21,7 +21,7 @@ class BoundingBox {
 };
 
 // renvoie la liste des BoundingBox
-vector <BoundingBox> formeToBoundingBox(vector<Forme> * vFormes);
+vector <BoundingBox> formeToBoundingBox(vector<Forme> vFormes);
 
 // teste si le vertex est dans les BoundingBox
 bool vertexInsideBoundingBox(vector <BoundingBox> bb, Vertex p);
