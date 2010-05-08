@@ -1,0 +1,17 @@
+Collaborative Design Activity (abrégé en COLLADA, signifiant activité de conception collaborative) a pour but d'établir un format de fichier d'échange pour les applications 3D interactives.
+
+COLLADA définit un standard de schéma XML ouvert pour échanger les acquisitions numériques entre différents types d'applications logicielles graphiques qui pourraient autrement conserver leur acquisition dans des formats incompatibles. Les documents COLLADA, qui décrivent des acquisitions numériques, sont des fichiers XML, habituellement identifiés par leur extension .dae («digital asset exchange», traduit par «échange numérique d'acquisition»).
+
+
+COLLADA est un format ouvert et en évolution rapide, 
+supportant la vaste majorité des fonctionnalités modernes
+requises par les développeurs de jeux vidéo. 
+
+Le format est facile à supporter et à étendre pour des fins originales.
+
+
+
+Il fallait donc faire un choix, COLLADA étant plus conséquent que .obj , et le sujet de notre TER n'étant pas porté sur le format de notre scène, 
+nous avons donc choisi de faire simple et de choisir .obj.
+
+
