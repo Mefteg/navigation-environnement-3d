@@ -77,14 +77,15 @@ BoundingBox :: BoundingBox(Forme f){
 	//p4.setZ();
 }
 
-vector <BoundingBox> BoundingBox :: formeToBoundingBox(vector<Forme> * vFormes){
+vector <BoundingBox> formeToBoundingBox(vector<Forme> * vFormes){
 	vector <BoundingBox> listeBoundingBox;
 	
 	vector<Forme>::iterator it;
 
-	for ( it = vFormes->begin() ; it < vFormes->end(); it++ )
+	for( it = vFormes->begin() ; it < vFormes->end(); it++ )
 		listeBoundingBox.push_back(BoundingBox(*it));
 
+	return listeBoundingBox;
 }
 
 // Fonction qui teste de quel cote du segment se situe un point
