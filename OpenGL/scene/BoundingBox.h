@@ -18,10 +18,10 @@ class BoundingBox {
 		Vertex getP3(void);
 		Vertex getP4(void);
 		BoundingBox(Forme f);
-	
-		// renvoie la liste des BoundingBox
-		vector <BoundingBox> formeToBoundingBox(vector<Forme> * vFormes);
 };
+
+// renvoie la liste des BoundingBox
+vector <BoundingBox> formeToBoundingBox(vector<Forme> * vFormes);
 
 // teste si le vertex est dans les BoundingBox
 bool vertexInsideBoundingBox(vector <BoundingBox> bb, Vertex p);
