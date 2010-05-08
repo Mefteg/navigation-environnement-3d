@@ -66,6 +66,12 @@ void Vertex::setVisite( int i ) {
 	this->visite = i;
 }
 
+void Vertex::setRVB(int cr, int cv, int cb){
+	r = cr;
+	v = cv;
+	b = cb;
+}
+
 int Vertex::nbVoisins() {
 	return this->getVoisins()->size();
 }

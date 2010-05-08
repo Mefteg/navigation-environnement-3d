@@ -32,12 +32,12 @@ BoundingBox :: BoundingBox(Forme f){
 	}
 	
 	float xmin = listePoints->front().getX();
-	float ymin = listePoints->front().getY();
-	//float zmin = listePoints->front().getZ();
+	//float ymin = listePoints->front().getY();
+	float zmin = listePoints->front().getZ();
 
 	float xmax = xmin;
-	float ymax = ymin;
-	//float zmax = zmin;
+	//float ymax = ymin;
+	float zmax = zmin;
 	
 	//on chercher les mins et max
 	for(int i = 1; i < listePoints->size() ; i++){
@@ -47,34 +47,34 @@ BoundingBox :: BoundingBox(Forme f){
 		if(listePoints->at(i).getX() > xmax)
 			xmax = listePoints->at(i).getX();
 
-		if(listePoints->at(i).getY() < ymin) 
+/*		if(listePoints->at(i).getY() < ymin) 
 			ymin = listePoints->at(i).getY();
 
 		if(listePoints->at(i).getY() > xmax) 
-			ymax = listePoints->at(i).getY();
+			ymax = listePoints->at(i).getY();*/
 
-/*		if(listePoints->at(i).getZ() < zmin)
+		if(listePoints->at(i).getZ() < zmin)
 			zmin = listePoints->at(i).getZ();
 
 		if(listePoints->at(i).getZ() > zmax)
-			zmax = listePoints->at(i).getZ();*/
+			zmax = listePoints->at(i).getZ();
 	}
 	
 	p1.setX(xmin);
-	p1.setY(ymin);
-	//p1.setZ();
+	//p1.setY();
+	p1.setZ(zmin);
 	
 	p2.setX(xmin);
-	p2.setY(ymax);
-	//p2.setZ();
+	//p2.setY();
+	p2.setZ(zmax);
 	
 	p3.setX(xmax);
-	p3.setY(ymax);
-	//p3.setZ();
+	//p3.setY();
+	p3.setZ(zmax);
 	
 	p4.setX(xmax);
-	p4.setY(ymin);
-	//p4.setZ();
+	//p4.setY();
+	p4.setZ(zmin);
 }
 
 vector <BoundingBox> formeToBoundingBox(vector<Forme> vFormes){
@@ -101,14 +101,14 @@ float droiteGauche(float x, float y, float x0,float y0, float x1, float y1){
 bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	// on teste si "p" est dans le carre p1p2p3p4
 
     // PREMIER TEST
-    float res = droiteGauche(p.getX(), p.getY(), p1.getX(), p1.getY(), p2.getX(), p2.getY());
+    float res = droiteGauche(p.getX(), p.getZ(), p1.getX(), p1.getZ(), p2.getX(), p2.getZ());
 
     if(res == 0)
 	return true;
     bool signe = res > 0;	// vrai si positif
 
     // DEUXIEME TEST
-    res = droiteGauche(p.getX(), p.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY());
+    res = droiteGauche(p.getX(), p.getZ(), p2.getX(), p2.getZ(), p3.getX(), p3.getZ());
 
     if(res == 0)
 	return true;
@@ -118,7 +118,7 @@ bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	//
 	return false;	// a l'exterieur
 
     // TROISIEME TEST
-    res = droiteGauche(p.getX(), p.getY(), p3.getX(), p3.getY(), p4.getX(), p4.getY());
+    res = droiteGauche(p.getX(), p.getZ(), p3.getX(), p3.getZ(), p4.getX(), p4.getZ());
 
     if(res == 0)
 	return true;
@@ -128,7 +128,7 @@ bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	//
 	return false;	// a l'exterieur
 
     // QUATRIEME TEST
-    res = droiteGauche(p.getX(), p.getY(), p4.getX(), p4.getY(), p1.getX(), p1.getY());
+    res = droiteGauche(p.getX(), p.getZ(), p4.getX(), p4.getZ(), p1.getX(), p1.getZ());
 
     if(res == 0)
 	return true;
@@ -160,13 +160,13 @@ bool segmentsIntersection(Vertex a, Vertex b, Vertex c, Vertex d) {
 	// Pour comprendre : http://www.faqs.org/faqs/graphics/algorithms-faq/
 
 	    float Ax = a.getX();
-	    float Ay = a.getY();
+	    float Ay = a.getZ();
 	    float Bx = b.getX();
-	    float By = b.getY();
+	    float By = b.getZ();
 	    float Cx = c.getX();
-	    float Cy = c.getY();
+	    float Cy = c.getZ();
 	    float Dx = d.getX();
-	    float Dy = d.getY();
+	    float Dy = d.getZ();
 
 	    float r =((Ay-Cy)*(Dx-Cx)-(Ax-Cx)*(Dy-Cy)) / ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx));
 	    float s = ((Ay-Cy)*(Bx-Ax)-(Ax-Cx)*(By-Ay)) / ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx));
