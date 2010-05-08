@@ -1,0 +1,3 @@
+Dans un fichier Wavefront ( extension .obj ), les formes sont stockées les unes après les autres.
+Donc, pour chaque forme les informations qui la concerne sont stockées ligne par ligne. Nous savons à quoi chaque information correspond car à la lettre clef qui débute la ligne ( par exemple: v pour un vertex ).
+Les seuls informations qui nous intéressent sont les vertex et les faces. Une ligne pour un vertex fournit la position de ce vertex ( x, y, z ) alors qu'une ligne pour une face fournit le numéro des vertex qui la composent. Le numéro d'un vertex n'est pas explicitement donné mais il se déduit par son ordre d'apparition dans le fichier Wavefront.
