@@ -1,0 +1,2 @@
+Blender est un logiciel d'édition d'objets 3D. C'est grâce à lui que nous avons créé nos scènes en 3D. Blender est un logiciel libre sous GPL.
+Nous sommes partis d'un sol carré plat de type carrelage. C'est sur ce carrelage que les formes ( des cubes ) sont disposées.
