@@ -257,70 +257,9 @@ int main(int argc, char *argv[]){
     sol.generateGraph();
     sol.parcoursGraphMerging();
 
-<<<<<<< .mine
-=======
     // On genere les bouding box
     vector <BoundingBox> listeBoundingBox = formeToBoundingBox(vector<Forme>(vFormes.begin() + 1, vFormes.end()));
 
-
-    // DEBUT DES TESTS 
-
-/*    Vertex * vsuppr = vFormes.at(0).getVertex( 3 );*/
-/*    vFormes.at(0).removeSommet( vsuppr );*/
-    /*    vFormes.at(0).parcoursGraph();*/
-    /*    cout << vFormes.at(0).printGraph();*/
-
-    /*Forme forme;
-
-      vector<Vertex> v;
-      Vertex v1( 1, 1, 0, 0 );
-      v.push_back(v1);
-      Vertex v3( 3, 0, 0, 1 );
-      v.push_back(v3);
-      Vertex v4( 4, 0, 0, 0 );
-      v.push_back(v4);
-      Vertex v2( 2, 1, 0, 1 );
-      v.push_back(v2);
-
-      vector<int> sommets;
-      sommets.push_back(1);
-      sommets.push_back(2);
-      sommets.push_back(3);
-      sommets.push_back(4);
-      Face face( 1 );
-      face.setSommets( &sommets );
-
-      forme.setVertices( &v );
-      forme.addFace( face );
-
-      vector<Vertex> vv;
-      Vertex v5( 5, 0, 0, 0 );
-      forme.addVertex(v5);
-      Vertex v6( 6, 0, 1, 0 );
-      forme.addVertex(v6);
-      Vertex v7( 7, 0, 1, 1 );
-      forme.addVertex(v7);
-      Vertex v8( 8, 0, 0, 1 );
-      forme.addVertex(v8);
-
-      vector<int> s2;
-      s2.push_back(5);
-      s2.push_back(6);
-      s2.push_back(7);
-      s2.push_back(8);
-      Face face2( 2 );
-      face2.setSommets( &s2 );
-     */
-    /*	forme.setVertices( &vv );*/
-    //forme.addFace( face2 );
-
-    /*    v5.findVoisins( &face2, &forme );*/
-    /*    cout << v5.printVoisins() << endl;*/
-
-
-    // FIN DES TESTS
-
->>>>>>> .r47
     bool continuer = true;
     //Les évènements SDL
     SDL_Event event;
