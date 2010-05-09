@@ -265,6 +265,7 @@ int main(int argc, char *argv[]){
 			cout << " supprime point x = " << vertexDuSol->at(i - 1).getX() << " z = " << vertexDuSol->at(i - 1).getZ() << "\n";
 			vertexDuSol->at(i - 1).setRVB(0, 0, 250);
 			dessiner( &sol, &vFormes );
+			vertexDuSol->at(i - 1).isolation();
 			sleep(1);
 		}
 	}
