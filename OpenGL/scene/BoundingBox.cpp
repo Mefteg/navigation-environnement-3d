@@ -61,8 +61,12 @@ BoundingBox :: BoundingBox(Forme f){
 	}
 	
 	p1.setX(xmin);
+	cout << "xmin = " << xmin << "\n";
 	//p1.setY();
 	p1.setZ(zmin);
+	cout << "zmin = " << zmin << "\n";
+	cout << "xmax = " << xmax << "\n";
+	cout << "zmax = " << zmax << "\n";
 	
 	p2.setX(xmin);
 	//p2.setY();
@@ -102,16 +106,17 @@ bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	//
 
     // PREMIER TEST
     float res = droiteGauche(p.getX(), p.getZ(), p1.getX(), p1.getZ(), p2.getX(), p2.getZ());
+	
+//    if(res == 0)
+//	return true;
 
-    if(res == 0)
-	return true;
     bool signe = res > 0;	// vrai si positif
 
     // DEUXIEME TEST
     res = droiteGauche(p.getX(), p.getZ(), p2.getX(), p2.getZ(), p3.getX(), p3.getZ());
 
-    if(res == 0)
-	return true;
+ //   if(res == 0)
+//	return true;
 
     bool signe2 = res > 0;	// vrai si positif
     if(signe != signe2)
@@ -120,8 +125,8 @@ bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	//
     // TROISIEME TEST
     res = droiteGauche(p.getX(), p.getZ(), p3.getX(), p3.getZ(), p4.getX(), p4.getZ());
 
-    if(res == 0)
-	return true;
+//    if(res == 0)
+//	return true;
 
     signe2 = res > 0;	// vrai si positif
     if(signe != signe2)
@@ -129,9 +134,9 @@ bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	//
 
     // QUATRIEME TEST
     res = droiteGauche(p.getX(), p.getZ(), p4.getX(), p4.getZ(), p1.getX(), p1.getZ());
-
-    if(res == 0)
-	return true;
+    
+//    if(res == 0)
+//	return true;
 
     signe2 = res > 0;	// vrai si positif
     if(signe != signe2)
