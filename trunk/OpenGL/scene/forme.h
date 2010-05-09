@@ -3,11 +3,12 @@
 
 #include <vector>
 #include <SDL/SDL.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+//#include <GL/gl.h>
+//#include <GL/glu.h>
 
 #include "vertex.h"
 #include "face.h"
+//#include "BoundingBox.h"
 
 using namespace std;
 
@@ -43,7 +44,7 @@ class Forme {
 		void parcoursGraph();
 		void parcoursGraphDessiner();
 		void parcoursGraphMerging();
-		void parcoursGraphSuppressionArete(vector <BoundingBox> liBB);
+		//void parcoursGraphSuppressionArete(vector <BoundingBox> liBB);
 
 		void draw();
 		//void drawFace( int num_face );

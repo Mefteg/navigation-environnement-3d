@@ -10,8 +10,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "face.h"
-#include "BoundingBox.h"
+//#include "face.h"
+//#include "BoundingBox.h"
 
 using namespace std;
 
@@ -26,6 +26,7 @@ class Vertex {
 	int b;
 	vector<Vertex *> voisins;
 	int visite;
+	int poids;
 
     public:
 	Vertex();
@@ -37,6 +38,7 @@ class Vertex {
 	float getZ();
 	vector<Vertex *> * getVoisins();
 	int getVisite();
+	int getPoids();
 
 	void setNum(int n);
 	void setX(float x);
@@ -44,6 +46,7 @@ class Vertex {
 	void setZ(float z);
 	void setVisite( int i );
 	void setRVB(int cr, int cv, int cb);
+	void setPoids( int poids );
 
 	int nbVoisins();
 	void addVoisin( Vertex * v );
@@ -53,11 +56,13 @@ class Vertex {
 	void parcoursVoisins();
 	void parcoursVoisinsDessiner();
 	void parcoursVoisinsMerging( int profondeur );
-	void parcoursVoisinsSuppressionArete(vector <BoundingBox> liBB);
+	//void parcoursVoisinsSuppressionArete(vector <BoundingBox> liBB);
 	//retourne 1 si le sommet est isolé, 0 sinon
 	int estIsole();
 	string printVoisins();
 
 	void draw();
+
+	string toString();
 };
 #endif

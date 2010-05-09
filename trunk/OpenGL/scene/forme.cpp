@@ -176,7 +176,7 @@ void Forme::parcoursGraphMerging() {
 	}
 }
 
-void Forme::parcoursGraphSuppressionArete(vector <BoundingBox> liBB){
+/*void Forme::parcoursGraphSuppressionArete(vector <BoundingBox> liBB){
 	
 	Vertex * v = NULL;
 	int i=0;
@@ -199,7 +199,7 @@ void Forme::parcoursGraphSuppressionArete(vector <BoundingBox> liBB){
 	for ( int i=0; i<this->vertices.size(); i++ ) {
 		this->vertices.at(i).setVisite( 0 );
 	}
-}
+}*/
 
 void Forme::draw() {
 	//pour chaque face de cette forme
