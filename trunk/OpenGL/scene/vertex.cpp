@@ -107,6 +107,10 @@ void Vertex::removeVoisin( int n ) {
     }
 }
 
+void  Vertex::removeDirectVoisin(int n){
+	this->getVoisins()->erase(this->getVoisins()->begin()+n);
+}
+
 bool Vertex::dejaVoisin( int p ) {
     for ( int i=0; i<this->getVoisins()->size(); i++ ) {
         if ( this->getVoisins()->at(i)->getNum() == p )

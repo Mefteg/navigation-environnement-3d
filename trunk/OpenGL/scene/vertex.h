@@ -51,6 +51,7 @@ class Vertex {
 	int nbVoisins();
 	void addVoisin( Vertex * v );
 	void removeVoisin( int n );
+	void removeDirectVoisin( int n ) ;
 	bool dejaVoisin( int p );
 	void isolation();
 	void parcoursVoisins();

@@ -298,25 +298,38 @@ int main(int argc, char *argv[]){
 	//		PARCOURS POUR SUPPRIMER LES ARETES QUI COUPENT UNE BOUNDINGBOX
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-/*	vertexDuSol = sol.getVertices();*/
-/*	*/
-/*	Vertex * v = NULL;*/
-/*	int i = vertexDuSol->size();*/
-/*	//on recupere un sommet non isole pour commencer le parcours*/
-/*	while(i > 0){*/
-/*		i--;*/
-/*		//si le sommet a  au moins un voisin (qu'il n'est pas isolee)*/
-/*		if ( !vertexDuSol->at(i).estIsole() ) {*/
-/*			v = &(vertexDuSol->at(i));*/
-/*			*/
-/*		}*/
-/*	}*/
-/**/
-/*	//une fois que le parcours a ete fait, on remet tout a  0*/
-/*	//pour pouvoir refaire un autre parcours*/
-/*	for(int i = 0; i < vertexDuSol->size(); i++){*/
-/*		vertexDuSol->at(i).setVisite(0);*/
-/*	}*/
+	vertexDuSol = sol.getVertices();
+	
+	Vertex * v = NULL;
+	int i = vertexDuSol->size();
+	//on recupere un sommet non isole pour commencer le parcours
+	while(i > 0){
+		i--;
+		//si le sommet a  au moins un voisin (qu'il n'est pas isolee)
+		if ( !vertexDuSol->at(i).estIsole() ) {
+			v = &(vertexDuSol->at(i));
+			v->setVisite(1);
+			
+			// On est face a un vertex a eplorer
+			for(int j = 0; j < v->getVoisins()->size(); j++){
+				if(!v->getVoisins()->at(j)->estIsole()){
+					// si il est pas isolé on teste l'arte entre les deux
+					if(segmentIntersectBoundingBox(listeBoundingBox,  *v, *(v->getVoisins()->at(j)))){
+						// on supprime l'arete
+						v->getVoisins()->at(j)->removeVoisin(v->getNum());
+						v->removeDirectVoisin(j);
+					}
+				}
+			}
+		}
+		cout << "vertex " << i << " traite\n";
+	}
+
+	//une fois que le parcours a ete fait, on remet tout a  0
+	//pour pouvoir refaire un autre parcours
+	for(int i = 0; i < vertexDuSol->size(); i++){
+		vertexDuSol->at(i).setVisite(0);
+	}
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	//simplification du graphe -> Merging
