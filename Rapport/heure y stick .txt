@@ -4,11 +4,11 @@ Arrivé à ce moment, il nous fallait donc savoir si un sommet était valide ou 
 Pour simplifier notre travail nous avons décidé de travailler sur les bounding box des formes. Une bounding box étant la plus petite boite englobant l'ensemble des points d'une forme. Générer une bounding box pouvant être
 un travail compliqué (cf article machin), nous avons choisi de dire que notre bounding était [MARC] .
 
-Pour nous, un sommet est donc valide si :
+Après réflexion, pour nous, un sommet est donc valide si :
 
 - il n'est pas contenu dans une bounding box
 
-- une arête partant d'un sommet ne doit couper une bounding box
+- une arête partant d'un sommet ne doit pas couper une bounding box
 
 - les sommets ne doivent pas être trop proches les uns des autres
 
@@ -17,9 +17,9 @@ Pour nous, un sommet est donc valide si :
 
 Pour tester si un point est contenu dans une bounding box, nous avons testé 3 solutions :
 
-- la première solution au problème souvent rencontré en informatique, déterminant ou non si un point (x,y) est à l'intérieur ou à l'extérieur d'un
+- la première solution au problème souvent rencontré en informatique, qui consiste à déterminer si un point (x,y) est à l'intérieur ou à l'extérieur d'un
 polygone sur un plan 2D est une solution simple. 
-Considérons un polygone, fait de N sommets (xi,yi) avec i de 0 à n-1. Le dernier sommet (xn,yn) est le même que le premier sommet,
+Considérons un polygone, fait de n sommets (xi,yi) avec i de 0 à n-1. Le dernier sommet (xn,yn) est le même que le premier sommet,
 pour que le polygone soit fermé. 
 Pour déterminer le status d'un point (xp,yp), on trace une droite horizontale partant de (xp,yp). 
 Si le nombre d'intersection de la droite avec chaque arête du poylygone est impaire alors le point est à l'intérieur du polygone, 
@@ -53,6 +53,8 @@ Un point est à l'intérieur du polygone si il est toujours du même côté que 
 
 Soit un segment entre P0(x0,y0), P1(x1,y1) et un autre point P(x,y) alors on a la relation suivante : (y - y0) (x1 - x0) - (x - x0) (y1 - y0)
 Si le résultat est inférieur à 0 alors P est à droite du segment, si il est égale à 0 alors il est sur le segment, et si il est supérieur à 0 alors il est à droite.
+
+A noter que cet algorithme ne marche pas avec les polygones troués. 
 
 illustration
 
@@ -118,11 +120,37 @@ bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	//
 Nous avons choisi de retenir la solution 3 car c'est celle qui nous semblait marcher le mieux. 
 
 
-Pour tester si une arête coupe une bounding box nous avons trouvé :
+Pour tester si une arête coupe une bounding box nous avons décomposé le problème :
 
--
+- dans un premier temps il nous fallait une méthode pour savoir si un segment coupé un autre
 
--
+- ensuite il suffit de tester si notre arête coupe chaque segment de la bounding box, notre bounding box étant un carré on a donc 4 tests à faire. 
+
+
+L'intersection d'un segment avec un autre peut être un problème extrêment simple ou extrêment compliqué, dépendant de l'application. 
+Mais si tout ce que l'on veut c'est le point d'intersection alors la méthode suivante marche :
+
+
+Soit A,B,C,D des vecteurs. Alors on a les propriétés suivantes :
+
+	AB=A+r(B-A), r compris entre [0,1]
+        CD=C+s(D-C), s compris entre [0,1]
+
+	    (Ay-Cy)(Dx-Cx)-(Ax-Cx)(Dy-Cy)
+        r = -----------------------------  (eqn 1)
+            (Bx-Ax)(Dy-Cy)-(By-Ay)(Dx-Cx)
+
+            (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay)
+        s = -----------------------------  (eqn 2)
+            (Bx-Ax)(Dy-Cy)-(By-Ay)(Dx-Cx)
+
+    Si 0<=r<=1 & 0<=s<=1, intersection 
+            r<0 or r>1 or s<0 or s>1 pas intersection
+
+
+
+
+
 
 Les points ne doivent pas etre proches les uns des autres cf merging ! [TOM]
 
