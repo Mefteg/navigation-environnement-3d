@@ -1,3 +1,4 @@
+#include <iostream>
 #include "vertex.h"
 
 Vertex::Vertex() {
@@ -9,6 +10,7 @@ Vertex::Vertex() {
 	this->v = 0;
 	this->b = 0;
 	this->visite = 0;
+	this->poids = 0;
 }
 
 Vertex::Vertex( int num, float x, float y, float z ) {
@@ -20,6 +22,7 @@ Vertex::Vertex( int num, float x, float y, float z ) {
 	this->v = 0;
 	this->b = 0;
 	this->visite = 0;
+	this->poids = 0;
 }
 
 int Vertex::getNum() {
@@ -46,6 +49,10 @@ int Vertex::getVisite() {
 	return visite;
 }
 
+int Vertex::getPoids() {
+	return this->poids;
+}
+
 void Vertex::setNum( int n ) {
 	this->num = n;
 }
@@ -66,10 +73,14 @@ void Vertex::setVisite( int i ) {
 	this->visite = i;
 }
 
-void Vertex::setRVB(int cr, int cv, int cb){
+void Vertex::setRVB(int cr, int cv, int cb) {
 	r = cr;
 	v = cv;
 	b = cb;
+}
+
+void Vertex::setPoids( int poids ) {
+	this->poids = poids;
 }
 
 int Vertex::nbVoisins() {
@@ -204,19 +215,19 @@ void Vertex::parcoursVoisinsMerging( int profondeur ) {
 	}
 }
 
-void Vertex::parcoursVoisinsSuppressionArete(vector <BoundingBox> liBB) {
+/*void Vertex::parcoursVoisinsSuppressionArete(vector <BoundingBox> liBB) {
 	//si le sommet n'a pas deja ete visite
 	if ( !this->getVisite() ) {
 		this->setVisite( 1 );
 		for ( int i=0; i<this->voisins.size(); i++ ) {
 			this->voisins.at(i)->parcoursVoisinsSuppressionArete(liBB);
-/*			if(segmentIntersectBoundingBox(liBB, *this, *voisins.at(i)))
+			if(segmentIntersectBoundingBox(liBB, *this, *voisins.at(i)))
 				cout << "coupe \n";
 			else
-				cout ww "coupe pas\n";*/
+				cout ww "coupe pas\n";
 		}
 	}
-}
+}*/
 
 //retourne 1 si le sommet est isolé, 0 sinon
 int Vertex::estIsole() {
@@ -249,4 +260,14 @@ void Vertex::draw() {
 	glColor3ub( this->r, this->v, this->b );
 	glVertex3d( x, y, z );
 	glEnd();
+}
+
+string Vertex::toString() {
+
+	stringstream oss;
+
+	oss << this->getNum() << " : ";
+	oss << this->getX() << " " << this->getZ();
+
+	return oss.str();
 }

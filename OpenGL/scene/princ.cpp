@@ -15,6 +15,8 @@
 
 using namespace std;
 
+//VARIABLES GLOBALES
+
 // Taille de la fenêtre
 const int SCREEN_WIDTH=640;
 const int SCREEN_HEIGHT=480;
@@ -22,6 +24,8 @@ const int SCREEN_HEIGHT=480;
 // Position de la caméra
 int xCam=5;
 int yCam=5;
+
+Vertex * vertexPerso;
 
 /**
  * Parse un fichier .obj passé en paramètre (selon son chemin)
@@ -165,6 +169,37 @@ Forme isolerSol( vector<Forme> * vFormes ) {
 	return sol;
 }
 
+void dessinerPerso( Forme * sol ) {
+	float x = vertexPerso->getX();
+	float y = vertexPerso->getY();
+	float z = vertexPerso->getZ();
+	glPushMatrix();
+	glTranslated( x, y, z );
+	glBegin( GL_LINES );
+	glPointSize( 5 );
+	glColor3ub( 255, 255, 255 );
+	glVertex3i( 0, 0, 0 );
+	glVertex3i( 0, 1, 0 );
+	glEnd();
+	glPopMatrix();
+}
+
+void changerVertexPerso() {
+	vector<Vertex *> * voisins = vertexPerso->getVoisins();
+	//on change le vertex courant du personnage
+	int next=0;
+	int aux=1000;
+	for ( int i=0; i<voisins->size(); i++ ) {
+		if ( voisins->at(i)->getPoids() < aux ) {
+			next = i;
+			aux = voisins->at(i)->getPoids();
+		}
+	}
+	vertexPerso = vertexPerso->getVoisins()->at(next);
+	vertexPerso->setPoids( vertexPerso->getPoids()+1 );
+	cout << vertexPerso->toString() << endl;
+}
+
 /**
  * Dessine une scène précédemment parsée
  *
@@ -190,36 +225,18 @@ void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 	glLoadIdentity( );
 
 	//le y définit la verticale
-	gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
+	gluLookAt( xCam, yCam, 5, 0, 0, 0, 0, 1, 0 );
 
 	sol->draw();
 	sol->parcoursGraphDessiner();
-	//dessinerScene(vFormes);
+	dessinerPerso( sol );
+/*	dessinerScene(vFormes);*/
 
 	//On s'assure que toutes les commandes OpenGL ont été exécutées
 	glFlush();
 	//Mise à jour de l'écran
 	SDL_GL_SwapBuffers();
 }
-
-/*void dessinerForme( Forme forme ) {
-
-//efface le tampon d'affichage ( ? )
-glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-glMatrixMode( GL_MODELVIEW );
-glLoadIdentity( );
-
-//le y définit la verticale
-gluLookAt(xCam,yCam,5,0,0,0,0,1,0);
-
-forme.draw();
-
-//on s'assure que toutes les commandes OpenGL ont été exécutées
-glFlush();
-//mise à jour de l'écran
-SDL_GL_SwapBuffers();
-}*/
 
 int main(int argc, char *argv[]){
 	//On vérifie qu'il y est une carte à charger
@@ -243,7 +260,7 @@ int main(int argc, char *argv[]){
 	gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
 	glEnable(GL_DEPTH_TEST);
 
-	/* SDL_EnableKeyRepeat(10,10);*/
+/*	SDL_EnableKeyRepeat(10,10);*/
 
 	// On appelle le parser :
 	vector<Forme> vFormes;
@@ -251,6 +268,10 @@ int main(int argc, char *argv[]){
 	parser( argv[1], &vFormes );
 	//On isole le sol des autres formes
 	Forme sol = isolerSol( &vFormes );
+
+	//zero pour l'instant, on prendra le premier point non isol� plus tard :)
+	vertexPerso = &(sol.getVertices()->at(0));
+	vertexPerso->setPoids( vertexPerso->getPoids()+1 );
 
 	// On suppose que la première forme trouvé est le sol, comme le sol = notre maillage => on créé le graphe à partir du sol. 
 	sol.generateGraph();
@@ -273,13 +294,37 @@ int main(int argc, char *argv[]){
 	// il faut faire un petit parcours pour supprimer les sommets qui possedent seulement deux voisins  qui se situent a l'oppose par rapport au sommet courant (que l'on veux supprimer)
 
 	
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//		PARCOURS POUR SUPPRIMER LES ARETES QUI COUPENT UNE BOUNDINGBOX
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+/*	vertexDuSol = sol.getVertices();*/
+/*	*/
+/*	Vertex * v = NULL;*/
+/*	int i = vertexDuSol->size();*/
+/*	//on recupere un sommet non isole pour commencer le parcours*/
+/*	while(i > 0){*/
+/*		i--;*/
+/*		//si le sommet a� au moins un voisin (qu'il n'est pas isolee)*/
+/*		if ( !vertexDuSol->at(i).estIsole() ) {*/
+/*			v = &(vertexDuSol->at(i));*/
+/*			*/
+/*		}*/
+/*	}*/
+/**/
+/*	//une fois que le parcours a ete fait, on remet tout a� 0*/
+/*	//pour pouvoir refaire un autre parcours*/
+/*	for(int i = 0; i < vertexDuSol->size(); i++){*/
+/*		vertexDuSol->at(i).setVisite(0);*/
+/*	}*/
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	sol.parcoursGraphMerging();
+	//simplification du graphe -> Merging
+/*	sol.parcoursGraphMerging();*/
 
 	bool continuer = true;
 	//Les évènements SDL
 	SDL_Event event;
-
 
 	while (continuer){
 		dessiner( &sol, &vFormes );
@@ -310,6 +355,11 @@ int main(int argc, char *argv[]){
 					
 					case SDLK_LEFT:
 						xCam--;
+					break;
+
+					case SDLK_RETURN:
+					//on fait avancer le perso
+					changerVertexPerso();
 					break;
 				}
 			break;
