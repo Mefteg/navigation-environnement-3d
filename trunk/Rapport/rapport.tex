@@ -2,16 +2,10 @@
 
 \usepackage[frenchb]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage[top=3cm, bottom=3cm, left=2.8cm, right=2.8cm]{geometry}
 \usepackage{algorithm,algorithmic}
-\usepackage[pdftex,bookmarks,colorlinks]{hyperref}
 
-\hypersetup{colorlinks,%
-citecolor=black,%
-filecolor=black,%
-linkcolor=black,%
-urlcolor=black
-}
+
 
 % Raccourcis...
 
@@ -60,14 +54,32 @@ Le résultat serait donc un graphe des way-points, simplifié, automatiquement g
 
 \section{Une scène en 3D avec Blender}
 
-
-\subsection{Le maillage complet}
 Blender est un logiciel d'édition d'objets 3D libre sous licence GPL. Bien que nous ayons eu la possibilité d'utiliser des logiciels payant très évolués, nous avons fait le choix, approuvé par notre professeur encadrant, d'utiliser Blender. Blender est multi-platerformes et c'est cet aspect qui nous a décidé car nous travaillons tous sous Linux. Bien que gratuit, il offre largement toutes les fonctionnalités dont avions besoin.
+
+\subsection{Le maillage}
+
+Pour simuler le travail sur un terrain assimilable à un environnement 3D de jeux vidéo, il nous fallait un graphe avec beaucoup de points. L'objectif était de passer 
+
+INSERER IMAGES CARRE SIMPLE PUIS MAILLAGE
+
+Créer une scène simple sous Blender a été plutôt facile. Pourtant nous avons eu plus de mal à obtenir un maillage. Nous avons alors exploré plusieurs possibilités.
+
+\paragraph{Une map Half-Life}
+
+Au départ, nous avions dans l'idée de partir d'une map Half-Life. Dans un premier temps nous générions la map avec un générateur de terrain : Gensurf. Ensuite nous l'importions et l'éditions avec l'éditeur de map officiel WorldCraft. Nous arrivions donc à générer une scène rapidement et plus facilement qu'avec Blender. 
+Malheureusement l'éditeur de map WorldCraft ne permet pas d'exporter directement en .obj , après quelques recherches, nous avons contourner le problème en utilisant Object Viewer qui permet de transformer un .map en .obj.
+
+Au final, nous n'avons pas retenue cette solution car le .obj obtenu n'était pas aussi "propre" que celui obtenu par Blender. De plus la scène avait une épaisseur, ce qui ne nous plaisait pas.
+
+\paragraph{La solution avec Blender}
+
 Pour fabriquer notre sol nous avons longtemps cherché un modèle pré-conçu mais cela s'avéra infructueux.
 Nous avons alors découvert qu'il était possible de diviser une forme de base. Nous avons décider de prendre un simple carré, de l'agrandir à la taille souhaitée et de le diviser en autant de petites cases que nécessaires. Cela nous a donc donné notre maillage sur lequel poser nos formes.
 Nous avons posé des pavés sur notre sol car se sont les formes que prennent les bounding box. Une bounding box est la forme simplifiée que prend un modèle 3D; cela permet de simplifier les calculs d'intersection entre la forme et son environnement.
 
 \subsection{Les différents formats de fichier}
+
+Une fois la scène créée sous Blender le logiciel nous proposait différents format d'exportation. Il y en a un grand nombre et nous en avons étudié principalement deux.
 
 \paragraph{COLLADA}
 
@@ -82,9 +94,28 @@ nous avons donc choisi de faire simple et de choisir .obj. De plus le format XML
 
 \paragraph{WaveFront}
 
-.obj
-Notre choix
-A quoi ca ressemble, pourquoi on a choisit ca
+OBJ est un format de fichier contenant la description d'une géométrie 3D. Il a été défini par la société Wavefront Technologies. Ce format de fichier est ouvert et a été adopté par d'autres logiciels 3D (tels que Maya, 3D Studio Max, Lightwave et bien sur Blender) pour des traitements d'import / export de données.
+
+Dans un fichier Wavefront (extension .obj), les formes sont stockées les unes après les autres. Les différentes entités sont écrites par bloc.
+Donc, pour chaque forme les informations qui la concerne sont stockées ligne par ligne. Nous savons à quoi chaque information correspond grace à la lettre clef qui débute la ligne ( par exemple: ''v'' pour un vertex ).
+Les seuls informations qui nous intéressent sont les vertex et les faces. 
+Une ligne pour un vertex fournit la position de ce vertex (x, y, z) écrit comme suit ''v x y z'' par exemple ''v 2.0 2.0 3.0'' pour un vertex de coordonnées (2.0, 2.0, 3.0)
+Une ligne pour une face fournit le numéro des vertex qui la composent écrit comme suit ``f num$_{1}$ ... num$_{n}$`` par exemple ``f 4 6 7 8 11 13``pour une face constituée des vetices numéros 4, 6, 7, 8 et 11. Le numéro d'un vertex n'est pas explicitement donné mais il se déduit par son ordre d'apparition dans le fichier Wavefront. C'est un identifiant unique.
+
+Voici un exemple de code dans un fichier .obj.
+
+Ici il s'agit d'un simple carré. Une forme commence par la liste des points qui la constitue puis la liste de ses faces.
+
+\begin{verbatim}
+v 0 0 0 //premier point de la nouvelle forme
+v 0 0 1
+v 1 0 1
+v 1 0 0
+f 1 2 3 4 //première face constituée des points 1 2 3 4
+v ... //un v après un f on est donc sur une nouvelle forme
+\end{verbatim}
+
+Nous avons donc choisi ce format de fichier pour stocker notre scène 3D car il nous a été très facile de développer le parser adéquat. Les informations fournies sont justes celles dont nous avons besoin. On peut noter toutefois qu'il est possible d'exporter également des données sur les textures et les normales mais nous n'utilisons pas ces fonctionnalités.
 
 \section{Récupérer notre scène en 3D}
  
@@ -121,6 +152,35 @@ Voici le principe général de notre programme. Ci-après les différentes étap
  \item Simplifier le graphe (merging)
 \end{itemize}
 
+\section{Nos structures de données}
+
+Nous présenterons ici nos structures de données, utilisées dans notre projet. Comme dit précédemment, nous avons exploité le potentiel objet du C++.
+
+\begin{itemize}
+ \item Forme:
+
+Une \textit{forme} est une figure géométrique qui contient une liste de vertex et une liste de faces. À partir d'une forme, nous pouvons générer un graphe qui lui correspond.
+ 
+ \item Vertex:
+
+Un \textit{vertex} est un point de notre scène. Il possède 3 coordonnées x, y et z. Lorsque qu'un graphe est généré, tous les vertex d'une forme voient leur liste de voisins mise à jour. Grâce à cette liste de voisins (ou d'adjacences), les parcours dans le graphe sont possibles (cette liste
+représente les arêtes du graphe). Nous avons choisi les listes de voisins car chaque sommet possède au plus 4 voisins si le maillage est fait de carrés ou 3 voisins s'il est fait de triangles. Ce qui permet un coût de stockage très faible et un temps de calcul bien maitrisé. Prenons l'exemple de la suppression d'un voisin :
+
+Il suffit de l'isoler pour qu'il ne soit plus parcouru ; soit le supprimer de la liste de voisins de tous ses voisins. Au pire des cas: 4 x 4 tests.
+ 
+ \item Faces:
+
+Les \textit{faces} possèdent une liste contenant les numéros des vertex qui les composent. C'est grâce aux faces que nous pouvons déduire les voisins des sommets du graphe. Elles servent aussi à effectuer un affichage cohérent des formes.
+
+  \item BoundingBox:
+
+\end{itemize}
+
+6
+\subsection{La scène}
+Comment est enregistrée la scène
+\subsection{Le graphe géneré}
+Comment est enregistré le graphe
 
 \section{Un parser pour récupérer notre scène}
 
@@ -145,48 +205,23 @@ Nous avons présenté précédemment la structure d'un fichier au format WaveFro
 \end{algorithm}
  
 
-\section{Nos structures de données}
 
-Nous présenterons ici nos structures de données, utilisées dans notre projet. Comme dit précédemment, nous avons exploité le potentiel objet du C++.
-
-\begin{itemize}
- \item Forme:
-
-Une \textit{forme} est une figure géométrique qui contient une liste de vertex et une liste de faces. À partir d'une forme, nous pouvons générer un graphe qui lui correspond.
- 
- \item Vertex:
-
-Un \textit{vertex} est un point de notre scène. Il possède 3 coordonnées x, y et z. Lorsque qu'un graphe est généré, tous les vertex d'une forme voient leur liste de voisins mise à jour. Grâce à cette liste de voisins (ou d'adjacences), les parcours dans le graphe sont possibles (cette liste
-représente les arêtes du graphe). Nous avons choisi les listes de voisins car chaque sommet possède au plus 4 voisins si le maillage est fait de carrés ou 3 voisins s'il est fait de triangles. Ce qui permet un coût de stockage très faible et un temps de calcul bien maitrisé. Prenons l'exemple de la suppression d'un voisin :
-
-Il suffit de l'isolé pour qu'il ne soit plus parcouru ; soit le supprimer de la liste de voisins de tous ses voisins. Au pire des cas: 4 x 4 tests.
- 
- \item Faces:
-
-Les \textit{faces} possèdent une liste contenant les numéros des vertex qui les composent. C'est grâce aux faces que nous pouvons déduire les voisins des sommets du graphe. Elles servent aussi à effectuer un affichage cohérent des formes.
-
-  \item BoundingBox:
-
-\end{itemize}
-
-
-
-
-\subsection{La scène}
-
-\subsection{Le graphe géneré}
 
 \section{Travaux effectués sur le graphe}
 
+Notre scène est donc récupérée dans notre programme. Nous avons de plus généré le graphe du sol. Il nous faut maintenant y appliquer nos traitements.
+
 \subsection{Création du graphe des way-points}
+
+Dans un premier temps, à partir de tous les points du graphe, nous allons chercher à supprimer tous les point sur lesquels un agent ne doit pas pouvoir se déplacer.
 
 \paragraph{Parcours}
 
 \begin{algorithm}[t]
-\caption{Parcours du graphe complet}
+\caption{Parcours du graphe complet : parcourir(sommet)}
 \label{parcours_graphe}
+\mbox{Algorithme lancé à partir d'un sommet non isolé}
 \begin{algorithmic}[1]
-\STATE //Algorithme lancé à partir d'un sommet non isolé
 \IF{sommet courant non marqué}
   \STATE marquer le sommet courant
   \FOR{chaque voisin v}
@@ -198,13 +233,13 @@ Les \textit{faces} possèdent une liste contenant les numéros des vertex qui le
 
 \paragraph{Heuristique}
 
-\paragraph{Merging (simplification du graphe)}
+\subsection{Simplification du graphe des way-points : merging}
 
 \begin{algorithm}[t]
-\caption{Merging}
+\caption{Merging du graphe : merging(sommet)}
 \label{merging_graphe}
+\mbox{Algorithme lancé à partir d'un sommet non isolé}
 \begin{algorithmic}[1]
-\STATE //Algorithme lancé à partir d'un sommet non isolé
 \IF{sommet courant non marqué}
   \STATE dupliquer la liste des voisins
   \IF{sommet courant a 4 voisins}
@@ -219,9 +254,17 @@ Les \textit{faces} possèdent une liste contenant les numéros des vertex qui le
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Simplification du graphe obtenu : merging}
-
 \chapter{Bibliographie}
+
+\section*{OpenSceneGraph}
+\section*{OpenGL}
+\section*{Le langage C/C++}
+\section*{Blender}
+\section*{WaveFront (.obj)}
+\section*{SDL}
+\section*{Ogre}
+\section*{Map to obj}
+\section*{Bounding Box}
 
 \chapter{Conclusion}
 
