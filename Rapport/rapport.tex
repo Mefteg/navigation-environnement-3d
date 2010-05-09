@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[top=3cm, bottom=3cm, left=2.8cm, right=2.8cm]{geometry}
 \usepackage{algorithm,algorithmic}
+\usepackage{graphicx}
 
 
 
@@ -176,7 +177,7 @@ Les \textit{faces} possèdent une liste contenant les numéros des vertex qui le
 
 \end{itemize}
 
-6
+
 \subsection{La scène}
 Comment est enregistrée la scène
 \subsection{Le graphe géneré}
@@ -187,7 +188,7 @@ Comment est enregistré le graphe
 Nous récupérons donc un fichier au format WaveFront. Il s'agit de remplir nos structures de données, un vecteur de forme que nous appelerons ici \textit{listeDeFormes}.
 Nous avons présenté précédemment la structure d'un fichier au format WaveFront. Ici nous présenterons le fonctionnement de notre parser.
 
-\begin{algorithm}[t]
+\begin{algorithm}[h]
 \caption{Parser de fichier .obj}
 \label{parser}
 \begin{algorithmic}[1]
@@ -205,19 +206,19 @@ Nous avons présenté précédemment la structure d'un fichier au format WaveFro
 \end{algorithm}
  
 
-
-
 \section{Travaux effectués sur le graphe}
 
 Notre scène est donc récupérée dans notre programme. Nous avons de plus généré le graphe du sol. Il nous faut maintenant y appliquer nos traitements.
 
 \subsection{Création du graphe des way-points}
 
-Dans un premier temps, à partir de tous les points du graphe, nous allons chercher à supprimer tous les point sur lesquels un agent ne doit pas pouvoir se déplacer.
+Dans un premier temps, à partir de tous les points du graphe, nous allons chercher à supprimer tous les point sur lesquels un agent ne doit pas pouvoir se déplacer. Nous obtiendrons ainsi le graphe des way-points, ensemble des points navigables.
 
-\paragraph{Parcours}
+\subsubsection{Parcours}
 
-\begin{algorithm}[t]
+Voici notre méthode de parcours, en profondeur. 
+
+\begin{algorithm}[h]
 \caption{Parcours du graphe complet : parcourir(sommet)}
 \label{parcours_graphe}
 \mbox{Algorithme lancé à partir d'un sommet non isolé}
@@ -231,11 +232,96 @@ Dans un premier temps, à partir de tous les points du graphe, nous allons cherc
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{Heuristique}
+\subsubsection{Heuristique}
+
+Notre heuristique, qui va déterminer si un point est naviguable ou pas va se baser sur les bounding box. Une bounding box est la plus petite boite englobant l'ensemble des points d'une forme. Générer une bounding box pouvant être un travail compliqué, nous avons choisi de dire que notre bounding box était constitué de quatres points (vertex). On calcule leurs coordonnées selon les valeurs minimales et maximales de tous les vertex d'une forme. On classe les quatres points afin de facilité les calculs à venir.
+
+On considère comme valide :
+\begin{itemize}
+ \item un sommet s'il n'est pas contenu dans une bounding box. 
+ \item une arête, entre deux sommets, si elle ne coupe pas une bounding box
+\end{itemize}
+
+Une arête, entre deux sommets, est valide si elle ne coupe pas une bounding box. Il nous a donc fallu implémenter deux méthodes renvoyant un prédicat pour savoir quels points et quelles arêtes supprimer. 
+Quand un point est non valide, on l'isole dans le graphe. On peut afficher tous les points, voir clairement les diffétences. Le parcours du graphe est quand a lui simplifié.
+
+L'heuristique a été un pilier très important de ce projet et a été l'objet d'une réflexion assez poussée. Nous présenterons différentes méthode qui ont été envisagées.
+
+\paragraph{Méthode 1 }
+Cette solution, souvent utilisé en informatique, consiste à déterminer si un point (x,y) est à l'intérieur ou à l'extérieur d'un
+polygone sur un plan 2D. 
+Considérons un polygone, fait de n sommets (x$_{i}$,y$_{i}$) avec $i$ de $0$ à $n-1$. Le dernier sommet (x$_{n}$,y$_{n}$) est le même que le premier sommet, pour que le polygone soit fermé. 
+Pour déterminer le status d'un point (x$_{p}$,y$_{p}$), on trace une droite horizontale partant de (x$_{p}$,y$_{p}$). 
+Si le nombre d'intersection de la droite avec chaque arête du poylygone est impaire alors le point est à l'intérieur du polygone, sinon il n'est pas dedans. Le dessin suivant illustre la méthode : http://local.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/
+
+Le seul problème qui apparait est lorsque qu'un sommet ou une arête du polygone est parralèle à la droite.
+
+Les situations possibles sont illustrées en dessous :
+
+Les lignes épaisses ne sont pas considérées comme valide, les lignes fines si. Il est bon de noter que cet algorithme marche avec des polygones troués.
+
+DESSIN
+
+Cette méthode est idéale pour les polygones non convexes mais comme nous utilisons des carrés, elle aurait été un peu lourde.
+
+\paragraph{Méthode 2 }
+Une autre solution, est de calculer la somme des angles fait entre le point test et chaque paires de points du polygone. Si la somme est égale à $2\pi$ alors le point est à l'intérieur, sinon le point est à l'extérieur. 
+Cette méthode marche aussi avec les polygones troués.
+De même cette méthode est assez gourmande en calcul et n'a pas été retenue.
+
+\paragraph{Méthode 3 : retenue}
+La dernière solution que nous avons testé ne marche qu'avec les polygones convexes. Si un polygone est convexe alors on peut considérer ces arêtes comme un "chemin" partant du premier sommet pour y revenir. 
+Un point est à l'intérieur du polygone si il est toujours du même côté que tous les arêtes constituant le "chemin".
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{Images/chemin.jpg}
+\caption{Un chemin dans un carré}
+\end{figure}
+\vspace{0.5cm}
+
+
+
+Soit un segment entre P0(x$_{0}$,y$_{0}$), P1(x$_{1}$,y$_{1}$) et un autre point P(x,y) alors on a la relation suivante : (y - y$_{0}$).(x$_{1}$ - x$_{0}$) - (x - x$_{0}$).(y$_{1}$ - y$_{0}$).
+Si le résultat est inférieur à 0 alors P est à droite du segment [P0,P1], si il est égale à 0 alors il est sur la droite (P0,P1) et s'il est supérieur à 0 alors il est à droite du segment [P0,P1].
+
+A noter que cet algorithme ne marche pas avec les polygones troués. 
+
+Il nous suffit donc de faire 4 tests, on teste la position du point par rapport à chacune des arêtes constituant le polygone, si le point est toujours du même côté alors le point est à l'intérieur du polygone.
+
+Nous avons choisi de retenir la solution 3 car c'est celle qui nous semblait marcher le mieux ainsi que la plus économe en ressources. Elle est parfaitement adaptée à notre projet.
+
+\paragraph{Méthode de test d'intersection d'une arête avec un bounding box }
+
+
+Pour tester si une arête coupe une bounding box nous avons décomposé le problème :
+\begin{itemize}
+ \item dans un premier temps il nous fallait une méthode pour savoir si un segment est coupé par un autre.
+ \item ensuite il suffit de tester si notre arête coupe chaque segment de la bounding box, notre bounding box étant un carré on a donc 4 tests à faire.
+\end{itemize}
+
+L'intersection d'un segment avec un autre peut être un problème extrêment simple ou extrêment compliqué, dépendant de l'application. 
+Mais si l'on veut seulement le point d'intersection alors la méthode suivante marche :
+
+Soit A,B,C,D des vecteurs. Alors on a les propriétés suivantes :
+
+$AB=A+r(B-A)$, $r \in [0,1]$
+
+$CD=C+s(D-C)$, $s \in [0,1]$
+
+$r = \frac{(A_{y}-C_{y})(D_{x}-C_{x})-(A_{x}-C_{x})(D_{y}-C_{y})}{(B_{x}-A_{x})(D_{y}-C_{y})-(B_{y}-A_{y})(D_{x}-C_{x})} (eqn 1)$
+
+$s = \frac{(A_{y}-C_{y})(B_{x}-A_{x})-(A_{x}-C_{x})(B_{y}-A_{y})}{(B_{x}-A_{x})(D_{y}-C_{y})-(B_{y}-A_{y})(D_{x}-C_{x})} (eqn 2)$
+
+Après, le test est simple : 
+\begin{itemize}
+ \item Si $0\le r \le 1 \wedge 0 \le s \le 1 \rightarrow$ intersection
+ \item Si $r<0 \vee r>1 \vee s<0 \vee s>1 \rightarrow$ pas d'intersection
+\end{itemize}
 
 \subsection{Simplification du graphe des way-points : merging}
 
-\begin{algorithm}[t]
+\begin{algorithm}[h]
 \caption{Merging du graphe : merging(sommet)}
 \label{merging_graphe}
 \mbox{Algorithme lancé à partir d'un sommet non isolé}
