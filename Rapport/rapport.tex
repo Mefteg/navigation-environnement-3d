@@ -126,36 +126,27 @@ Nous avons présenté précédemment la structure d'un fichier au format WaveFro
  
 
 \section{Nos structures de données}
+
+Nous présenterons ici nos structures de données, utilisées dans notre projet. Comme dit précédemment, nous avons exploité le potentiel objet du C++.
+
 \begin{itemize}
  \item Forme:
 
-Une forme est une figure géométrique qui contient une liste de vertex
-et une liste de faces.
-À partir d'une forme, nous pouvons générer un graphe qui lui correspond.
+Une \textit{forme} est une figure géométrique qui contient une liste de vertex et une liste de faces. À partir d'une forme, nous pouvons générer un graphe qui lui correspond.
  
  \item Vertex:
 
-Un vertex est un point de notre scène.
-Il possède 3 coordonnées x, y et z.
-Lorsque qu'un graphe est généré, tous les vertex d'une forme voient leur
-liste de voisins mise à jour. Grâce à cette liste de voisins ( ou 
-d'adjacences ), les parcours dans le graphe sont possibles ( cette liste
-représente les arêtes du graphe ).
-Nous avons choisi les listes de voisins car chaque sommet possède au plus
-4 voisins si le maillage est fait de carrés ou 3 voisins s'il est fait de
-triangles. Ce qui permet un coût de stockage très faible et un temps de
-calcul bien maitrisé.
-Prenons l'exemple de la suppression d'un voisin:
-Il suffit de l'isolé pour qu'il ne soit plus parcouru ; soit le
-supprimer de la liste de voisins de tous ses voisins.
-Au pire des cas: 4 x 4 tests.
+Un \textit{vertex} est un point de notre scène. Il possède 3 coordonnées x, y et z. Lorsque qu'un graphe est généré, tous les vertex d'une forme voient leur liste de voisins mise à jour. Grâce à cette liste de voisins (ou d'adjacences), les parcours dans le graphe sont possibles (cette liste
+représente les arêtes du graphe). Nous avons choisi les listes de voisins car chaque sommet possède au plus 4 voisins si le maillage est fait de carrés ou 3 voisins s'il est fait de triangles. Ce qui permet un coût de stockage très faible et un temps de calcul bien maitrisé. Prenons l'exemple de la suppression d'un voisin :
+
+Il suffit de l'isolé pour qu'il ne soit plus parcouru ; soit le supprimer de la liste de voisins de tous ses voisins. Au pire des cas: 4 x 4 tests.
  
  \item Faces:
 
-Les faces possèdent une liste contenant les numéros des vertex
-qui les composent. C'est grâce aux faces que nous pouvons déduire les
-voisins des sommets du graphe. Elles servent aussi à effectuer un affichage
-cohérent des formes.
+Les \textit{faces} possèdent une liste contenant les numéros des vertex qui les composent. C'est grâce aux faces que nous pouvons déduire les voisins des sommets du graphe. Elles servent aussi à effectuer un affichage cohérent des formes.
+
+  \item BoundingBox:
+
 \end{itemize}
 
 
