@@ -60,6 +60,13 @@ Le résultat serait donc un graphe des way-points, simplifié, automatiquement g
 
 \section{Une scène en 3D avec Blender}
 
+
+\subsection{Le maillage complet}
+Blender est un logiciel d'édition d'objets 3D libre sous licence GPL. Bien que nous ayons eu la possibilité d'utiliser des logiciels payant très évolués, nous avons fait le choix, approuvé par notre professeur encadrant, d'utiliser Blender. Blender est multi-platerformes et c'est cet aspect qui nous a décidé car nous travaillons tous sous Linux. Bien que gratuit, il offre largement toutes les fonctionnalités dont avions besoin.
+Pour fabriquer notre sol nous avons longtemps cherché un modèle pré-conçu mais cela s'avéra infructueux.
+Nous avons alors découvert qu'il était possible de diviser une forme de base. Nous avons décider de prendre un simple carré, de l'agrandir à la taille souhaitée et de le diviser en autant de petites cases que nécessaires. Cela nous a donc donné notre maillage sur lequel poser nos formes.
+Nous avons posé des pavés sur notre sol car se sont les formes que prennent les bounding box. Une bounding box est la forme simplifiée que prend un modèle 3D; cela permet de simplifier les calculs d'intersection entre la forme et son environnement.
+
 \subsection{Les différents formats de fichier}
 
 \paragraph{COLLADA}
@@ -102,6 +109,19 @@ Finalement nous avons donc implémenté notre propre parser pour remplir nos pro
 
 Nous présenterons ici les éléments que nous avons effectivement implémentés.
 
+\section{Principe général}
+
+Voici le principe général de notre programme. Ci-après les différentes étapes successives en considérant que l'on part d'une scène 3D en format WaveFront.
+
+\begin{itemize}
+ \item Parser le fichier .obj de la scène 3D
+ \item Isoler le sol des autres formes
+ \item Générer le graphe correspondant au sol
+ \item Détecter les sommets invalides et les retirer du graphe
+ \item Simplifier le graphe (merging)
+\end{itemize}
+
+
 \section{Un parser pour récupérer notre scène}
 
 Nous récupérons donc un fichier au format WaveFront. Il s'agit de remplir nos structures de données, un vecteur de forme que nous appelerons ici \textit{listeDeFormes}.
@@ -109,7 +129,7 @@ Nous avons présenté précédemment la structure d'un fichier au format WaveFro
 
 \begin{algorithm}[t]
 \caption{Parser de fichier .obj}
-\label{algo_naimi_trehel_init}
+\label{parser}
 \begin{algorithmic}[1]
 \REQUIRE fichier .obj
 \FOR{chaque forme (c'est à dire une apparition de ''v`` après une série de ''f'')}
@@ -162,8 +182,42 @@ Les \textit{faces} possèdent une liste contenant les numéros des vertex qui le
 
 \paragraph{Parcours}
 
+\begin{algorithm}[t]
+\caption{Parcours du graphe complet}
+\label{parcours_graphe}
+\begin{algorithmic}[1]
+\STATE //Algorithme lancé à partir d'un sommet non isolé
+\IF{sommet courant non marqué}
+  \STATE marquer le sommet courant
+  \FOR{chaque voisin v}
+    \STATE parcourir(v)
+  \ENDFOR
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
 \paragraph{Heuristique}
 
+\paragraph{Merging (simplification du graphe)}
+
+\begin{algorithm}[t]
+\caption{Merging}
+\label{merging_graphe}
+\begin{algorithmic}[1]
+\STATE //Algorithme lancé à partir d'un sommet non isolé
+\IF{sommet courant non marqué}
+  \STATE dupliquer la liste des voisins
+  \IF{sommet courant a 4 voisins}
+    \IF{sommets voisins du sommet courant ont tous au moins 3 voisins}
+      \STATE isolation du sommet courant
+    \ENDIF
+  \ENDIF
+  \FOR{chaque voisin v sauvegardé}
+    \STATE merging(v)
+  \ENDFOR
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Simplification du graphe obtenu : merging}
 
