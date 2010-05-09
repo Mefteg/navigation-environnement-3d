@@ -1,4 +1,4 @@
-Blender est un logiciel d'édition d'objets 3D libre sous licence GPL.
+Blender est un logiciel d'édition d'objets 3D libre sous licence GPL. Blender est multi-plateforme et c'est cette qualité qui nous a séduit au premier abord car nous travaillons tous sous Linux. 
 Pour fabriquer notre sol nous avons longtemps cherché un modèle près conçu mais cela s'avéra infructueux.
 Nous avons alors découvert qu'il était possible de diviser une forme de base. Nous avons décider de prendre un simple carré, de l'agrandir à la taille souhaitée et de le diviser en autant de petites cases que nécessaires. Cela nous a donc donné notre maillage sur lequel poser nos formes.
 Nous avons posé des pavés sur notre sol car se sont les formes que prennent les bounding box. Une bounding box est la forme simplifiée que prend un modèle 3D; cela permet de simplifier les calculs d'intersection entre la forme et son environnement.
