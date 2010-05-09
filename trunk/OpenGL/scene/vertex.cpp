@@ -204,6 +204,20 @@ void Vertex::parcoursVoisinsMerging( int profondeur ) {
 	}
 }
 
+void Vertex::parcoursVoisinsSuppressionArete(vector <BoundingBox> liBB) {
+	//si le sommet n'a pas deja ete visite
+	if ( !this->getVisite() ) {
+		this->setVisite( 1 );
+		for ( int i=0; i<this->voisins.size(); i++ ) {
+			this->voisins.at(i)->parcoursVoisinsSuppressionArete(liBB);
+/*			if(segmentIntersectBoundingBox(liBB, *this, *voisins.at(i)))
+				cout << "coupe \n";
+			else
+				cout ww "coupe pas\n";*/
+		}
+	}
+}
+
 //retourne 1 si le sommet est isolé, 0 sinon
 int Vertex::estIsole() {
 	if ( this->getVoisins()->empty() )

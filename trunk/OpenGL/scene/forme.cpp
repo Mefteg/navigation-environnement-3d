@@ -176,6 +176,31 @@ void Forme::parcoursGraphMerging() {
 	}
 }
 
+void Forme::parcoursGraphSuppressionArete(vector <BoundingBox> liBB){
+	
+	Vertex * v = NULL;
+	int i=0;
+	//on récupère un sommet non isolé pour commencer le parcours
+	while ( v == NULL && i < this->vertices.size() ) {
+		//si le sommet à au moins un voisin ( qu'il n'est pas isolé )
+		if ( !this->vertices.at(i).estIsole() ) {
+			v = &(this->vertices.at(i));
+		}
+		i++;
+	}
+
+	//si on en a trouver un
+	if ( v != NULL ) {
+		v->parcoursVoisinsSuppressionArete(liBB);
+	}
+
+	//une fois que le parcours a été fait, on remet tout à 0
+	//pour pouvoir refaire un autre parcours
+	for ( int i=0; i<this->vertices.size(); i++ ) {
+		this->vertices.at(i).setVisite( 0 );
+	}
+}
+
 void Forme::draw() {
 	//pour chaque face de cette forme
 	for ( int i=0; i<this->faces.size(); i++ ) {

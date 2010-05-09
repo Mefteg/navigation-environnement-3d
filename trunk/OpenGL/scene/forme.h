@@ -37,18 +37,18 @@ class Forme {
 		//void removeVertex( int n );
 		//void removeFace( int n );
 
-        void findVoisinsVertex( Vertex * v, Face * f );
-        void generateGraph();
+		void findVoisinsVertex( Vertex * v, Face * f );
+		void generateGraph();
 		void removeSommet( Vertex * v );
 		void parcoursGraph();
 		void parcoursGraphDessiner();
 		void parcoursGraphMerging();
+		void parcoursGraphSuppressionArete(vector <BoundingBox> liBB);
 
 		void draw();
 		//void drawFace( int num_face );
 		//string toString();
         string printGraph();
 };
-
 #endif
 
