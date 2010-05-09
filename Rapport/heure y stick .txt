@@ -1,0 +1,128 @@
+Heuristique :
+
+Arrivé à ce moment, il nous fallait donc savoir si un sommet était valide ou non.
+Pour simplifier notre travail nous avons décidé de travailler sur les bounding box des formes. Une bounding box étant la plus petite boite englobant l'ensemble des points d'une forme. Générer une bounding box pouvant être
+un travail compliqué (cf article machin), nous avons choisi de dire que notre bounding était [MARC] .
+
+Pour nous, un sommet est donc valide si :
+
+- il n'est pas contenu dans une bounding box
+
+- une arête partant d'un sommet ne doit couper une bounding box
+
+- les sommets ne doivent pas être trop proches les uns des autres
+
+- on garde seulement les sommets qui sont à la hauteur du sol
+
+
+Pour tester si un point est contenu dans une bounding box, nous avons testé 3 solutions :
+
+- la première solution au problème souvent rencontré en informatique, déterminant ou non si un point (x,y) est à l'intérieur ou à l'extérieur d'un
+polygone sur un plan 2D est une solution simple. 
+Considérons un polygone, fait de N sommets (xi,yi) avec i de 0 à n-1. Le dernier sommet (xn,yn) est le même que le premier sommet,
+pour que le polygone soit fermé. 
+Pour déterminer le status d'un point (xp,yp), on trace une droite horizontale partant de (xp,yp). 
+Si le nombre d'intersection de la droite avec chaque arête du poylygone est impaire alors le point est à l'intérieur du polygone, 
+sinon il n'est pas dedans. Le dessin suivant illustre la méthode : http://local.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/
+
+Le seul problème qui apparait est lorsque qu'un sommet ou une arête du polygone est parralèle à la droite.
+
+Les situations possibles sont illustrées en dessous :
+
+
+Les lignes épaisses ne sont pas considérées comme valide, les lignes fines si. Il est bon de noter que cet algorithme marche avec des polygones troués.
+
+DESSIN
+
+
+
+
+
+-
+
+ Méthode 2 :
+
+ Une autre solution, est de calculer la somme des angles fait entre le point test et chaque paires de points du polygone. Si la somme est égale à 2pi alors le hpoint est à l'intérieur, sinon le points est à l'extérieur. 
+Cette méthode marche aussi avec les polygones troués. 
+
+-
+Méthode 3 :
+
+La dernière solution que nous avons testé ne marche qu'avec les polygones convexes. Si un polygone est convexe alors on peut le considérer comme un "chemin" partant du premier sommet. 
+Un point est à l'intérieur du polygone si il est toujours du même côté que tous les arêtes constituant le "chemin".
+
+Soit un segment entre P0(x0,y0), P1(x1,y1) et un autre point P(x,y) alors on a la relation suivante : (y - y0) (x1 - x0) - (x - x0) (y1 - y0)
+Si le résultat est inférieur à 0 alors P est à droite du segment, si il est égale à 0 alors il est sur le segment, et si il est supérieur à 0 alors il est à droite.
+
+illustration
+
+Il nous suffit donc de faire 4 tests, on teste la position du point par rapport à chacunes des arêtes constituant le polygone, si le point est toujours du même côté alors le point est à l'intérieur du polygone.
+
+
+ALGO :
+
+// Fonction qui teste de quel côté du segment se situe un point
+// Si la fonction retourne 0 alors le point est sur le segment
+float droiteGauche(float x, float y, float x0,float y0, float x1, float y1){
+    return (y -y0)*(x1 - x0) - (x -x0)*(y1 - y0);
+}
+
+// Retourne vrai si le point testé est dans le polygone (ici on a simplifié on travaille avec des carrés donc un polygone à 4 sommets)
+// L'algorithme va regarder où se situe le point par rapport aux 4 cotés du polygone si il est toujours du même côté alors le point est dans le polygone
+// Sinon le point est dehors.
+// On suppose que l'on travaille avec des carrés (le fond de la bounding box)
+bool vertexInsidePolyg(Vertex p1, Vertex p2, Vertex p3, Vertex p4, Vertex p){	// on teste si "p" est dans le carre p1p2p3p4
+
+    // PREMIER TEST
+    float res = droiteGauche(p.getX(), p.getY(), p1.getX(), p1.getY(), p2.getX(), p2.getY());
+
+    if(res == 0)
+	return true;
+    bool signe = res > 0;	// vrai si positif
+
+    // DEUXIEME TEST
+    res = droiteGauche(p.getX(), p.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY());
+
+    if(res == 0)
+	return true;
+
+    bool signe2 = res > 0;	// vrai si positif
+    if(signe != signe2)
+	return false;	// a l'exterieur
+
+    // TROISIEME TEST
+    res = droiteGauche(p.getX(), p.getY(), p3.getX(), p3.getY(), p4.getX(), p4.getY());
+
+    if(res == 0)
+	return true;
+
+    signe2 = res > 0;	// vrai si positif
+    if(signe != signe2)
+	return false;	// a l'exterieur
+
+    // QUATRIEME TEST
+    res = droiteGauche(p.getX(), p.getY(), p4.getX(), p4.getY(), p1.getX(), p1.getY());
+
+    if(res == 0)
+	return true;
+
+    signe2 = res > 0;	// vrai si positif
+    if(signe != signe2)
+	return false;	// a l'exterieur
+
+    // tous dans le meme sens => a l'interieur
+    return true;
+}
+
+
+Nous avons choisi de retenir la solution 3 car c'est celle qui nous semblait marcher le mieux. 
+
+
+Pour tester si une arête coupe une bounding box nous avons trouvé :
+
+-
+
+-
+
+Les points ne doivent pas etre proches les uns des autres cf merging ! [TOM]
+
