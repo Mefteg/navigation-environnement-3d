@@ -2,6 +2,7 @@
 #define BOUNDINGBOX_H
 
 #include "forme.h"
+#include "vertex.h"
 
 using namespace std;
 
@@ -24,9 +25,9 @@ class BoundingBox {
 vector <BoundingBox> formeToBoundingBox(vector<Forme> vFormes);
 
 // teste si le vertex est dans les BoundingBox
-bool vertexInsideBoundingBox(vector <BoundingBox> bb, Vertex p);
+//bool vertexInsideBoundingBox(vector <BoundingBox> bb, Vertex p);
 // teste si l'arete est dans les BoundingBox
-bool segmentIntersectBoundingBox(vector <BoundingBox> liBB, Vertex p1, Vertex p2);	// On peux l'appliquer si il manque un des voisins, c'est un peu tricher car c'est pas toujours vrai, mais ca peu faire gagner beaucoup de temps
+//bool segmentIntersectBoundingBox(vector <BoundingBox> liBB, Vertex p1, Vertex p2);	// On peux l'appliquer si il manque un des voisins, c'est un peu tricher car c'est pas toujours vrai, mais ca peu faire gagner beaucoup de temps
 
 #endif
 

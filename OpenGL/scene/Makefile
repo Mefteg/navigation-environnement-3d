@@ -1,4 +1,4 @@
-SOURCES =	princ.cpp vertex.cpp face.cpp forme.cpp BoundingBox.cpp
+SOURCES =	vertex.cpp face.cpp forme.cpp BoundingBox.cpp princ.cpp
 OBJECTS	=	$(SOURCES:.cpp=.o)
 TARGET	=	princ
 LIBS	=	$(shell sdl-config --libs) -lGL -lGLU 

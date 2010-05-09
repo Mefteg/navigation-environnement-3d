@@ -9,8 +9,8 @@
 
 
 #include "forme.h"
-#include "vertex.h"
-#include "face.h"
+//#include "vertex.h"
+//#include "face.h"
 #include "BoundingBox.h"
 
 using namespace std;
@@ -270,8 +270,11 @@ int main(int argc, char *argv[]){
 		}
 	}
 	
+	// il faut faire un petit parcours pour supprimer les sommets qui possedent seulement deux voisins  qui se situent a l'oppose par rapport au sommet courant (que l'on veux supprimer)
 
-//	sol.parcoursGraphMerging();
+	
+
+	sol.parcoursGraphMerging();
 
 	bool continuer = true;
 	//Les évènements SDL

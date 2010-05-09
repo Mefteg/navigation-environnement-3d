@@ -11,6 +11,7 @@
 #include <GL/glu.h>
 
 #include "face.h"
+#include "BoundingBox.h"
 
 using namespace std;
 
@@ -52,11 +53,11 @@ class Vertex {
 	void parcoursVoisins();
 	void parcoursVoisinsDessiner();
 	void parcoursVoisinsMerging( int profondeur );
+	void parcoursVoisinsSuppressionArete(vector <BoundingBox> liBB);
 	//retourne 1 si le sommet est isolé, 0 sinon
 	int estIsole();
 	string printVoisins();
 
 	void draw();
 };
-
 #endif
