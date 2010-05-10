@@ -23,6 +23,10 @@ int SCREEN_HEIGHT=480;
 int xCam=5;
 int yCam=5;
 
+int angleSceneY=0;
+int angleSceneZ=0;
+int zoomScene=70;
+
 //savoir où se situe le personnage
 Vertex * vertexPerso;
 //savoir s'il faut afficher les formes ou non
@@ -219,6 +223,10 @@ void dessinerScene( vector<Forme> * vFormes ) {
  * */
 void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity( );
+	gluPerspective( zoomScene, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
+
 	//efface le tampon d'affichage ( ? )
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
@@ -226,7 +234,14 @@ void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 	glLoadIdentity( );
 
 	//le y dÃ©finit la verticale
-	gluLookAt( xCam, yCam, 5, 0, 0, 0, 0, 1, 0 );
+/*	gluLookAt( zoomScene, 0, 0, 0, 0, 0, 0, 1, 0 );*/
+	gluLookAt( angleSceneZ, 10, angleSceneZ, 0, 0, 0, 0, 1, 0 );
+
+	glPushMatrix();
+
+	glRotated( angleSceneY, 0, 1, 0 );
+/*	glRotated( angleSceneZ, 0, 0, 1 );*/
+/*	glScalef( zoomScene, zoomScene, zoomScene );*/
 
 	sol->draw();
 	dessinerPerso( sol );
@@ -238,6 +253,8 @@ void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 	if ( afficherGraphe ) {
 		sol->parcoursGraphDessiner();
 	}
+
+	glPopMatrix();
 
 	//On s'assure que toutes les commandes OpenGL ont Ã©tÃ© exÃ©cutÃ©es
 	glFlush();
@@ -359,81 +376,96 @@ int main(int argc, char *argv[]){
 			// Permet de fermer la fenÃªtre
 			case SDL_QUIT:
 				continuer = false;
+				break;
+
+			case SDL_MOUSEBUTTONDOWN:
+				switch ( event.button.button ) {
+					case SDL_BUTTON_WHEELUP:
+						zoomScene -= 2;
+						break;
+
+					case SDL_BUTTON_WHEELDOWN:
+						zoomScene += 2;
+						break;
+
+					default:
+						break;
+			}
+			evenementPertinent = 1;
 			break;
 
 			// Gestion de la camÃ©ra avec la touches directionnelles 
 			case SDL_KEYDOWN:
 				switch ( event.key.keysym.sym ) {
 					case SDLK_UP:
-						yCam++;
-					break;
+						angleSceneZ -= 2;
+						break;
 					
 					case SDLK_DOWN:
-						yCam--;
-					break;
+						angleSceneZ += 2;
+						break;
 					
 					case SDLK_RIGHT:
-						xCam++;
+						angleSceneY += 2;
 					break;
 					
 					case SDLK_LEFT:
-						xCam--;
-					break;
+						angleSceneY -= 2;
+						break;
 
 					case SDLK_RETURN:
-					//on fait avancer le perso
-					changerVertexPerso();
-					break;
+						//on fait avancer le perso
+						changerVertexPerso();
+						break;
 
 					case SDLK_m:
-					//simplification du graphe -> Merging
-					sol.parcoursGraphMerging();
-					break;
+						//simplification du graphe -> Merging
+						sol.parcoursGraphMerging();
+						break;
 
 					case SDLK_c:
-					if ( afficherFormes ) {
-						afficherFormes = 0;
-					}
-					else {
-						afficherFormes = 1;
-					}
-					break;
+						if ( afficherFormes ) {
+							afficherFormes = 0;
+						}
+						else {
+							afficherFormes = 1;
+						}
+						break;
 
 					case SDLK_t:
-					if ( afficherGraphe ) {
-						afficherGraphe = 0;
-					}
-					else {
-						afficherGraphe = 1;
-					}
-					break;
+						if ( afficherGraphe ) {
+							afficherGraphe = 0;
+						}
+						else {
+							afficherGraphe = 1;
+						}
+						break;
 
 					case SDLK_d:
-					detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes, 0.1 );
-					detectionAretesInvalides( &sol, &listeBoundingBox, &vFormes );
-					break;
+						detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes, 0.1 );
+						detectionAretesInvalides( &sol, &listeBoundingBox, &vFormes );
+						break;
 
 					case SDLK_a:
-					detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes, 0.0 );
-					detectionAretesInvalides( &sol, &listeBoundingBox, &vFormes );
-					break;
+						detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes, 0.0 );
+						detectionAretesInvalides( &sol, &listeBoundingBox, &vFormes );
+						break;
 
 					case SDLK_g:
-					sol.generateGraph();
-					break;
+						sol.generateGraph();
+						break;
 
 					case SDLK_h:
-					cout << endl << " ~~~~~ HELP ~~~~~" << endl;
-					cout << "Détecter les points invalides ( avec suivi visuel ): d" << endl;
-					cout << "Détecter les points invalides ( sans suivi visuel ): a" << endl;
-					cout << "Simplifier le graphe ( Merging ): m" << endl;
-					cout << "Afficher/Masquer les formes: c" << endl;
-					cout << "Afficher/Masquer le graphe: t" << endl;
-					cout << "Bouger la caméra: touches directionnelles" << endl;
-					cout << endl;
-					break;
+						cout << endl << " ~~~~~ HELP ~~~~~" << endl;
+						cout << "Détecter les points invalides ( avec suivi visuel ): d" << endl;
+						cout << "Détecter les points invalides ( sans suivi visuel ): a" << endl;
+						cout << "Simplifier le graphe ( Merging ): m" << endl;
+						cout << "Afficher/Masquer les formes: c" << endl;
+						cout << "Afficher/Masquer le graphe: t" << endl;
+						cout << "Bouger la caméra: touches directionnelles" << endl;
+						cout << endl;
+						break;
 				}
-
 				evenementPertinent = 1;
 			break;
 
