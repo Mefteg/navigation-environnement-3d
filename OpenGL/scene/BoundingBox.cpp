@@ -73,8 +73,6 @@ BoundingBox :: BoundingBox(Forme f){
 			}
 		}
 		
-		cout << "BEUG\n";
-		bool carre = true;
 		// tester si les points sont en carre
 		
 		if(pointBas.size() == 4){
