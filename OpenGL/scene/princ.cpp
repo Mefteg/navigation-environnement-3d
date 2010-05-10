@@ -399,6 +399,14 @@ int main(int argc, char *argv[]){
 					case SDLK_d:
 					detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes );
 					break;
+
+					case SDLK_h:
+					cout << endl << " ~~~~~ HELP ~~~~~" << endl;
+					cout << "Detecter les points invalides: d" << endl;
+					cout << "Simplifier le graphe ( Merging ): m" << endl;
+					cout << "Afficher/Masquer les formes: c" << endl;
+					cout << endl;
+					break;
 				}
 
 				evenementPertinent = 1;
