@@ -159,24 +159,36 @@ Une \textit{forme} est une figure géométrique qui contient une liste de vertex
  
  \item Vertex:
 
-Un \textit{vertex} est un point de notre scène. Il possède 3 coordonnées x, y et z. Lorsque qu'un graphe est généré, tous les vertex d'une forme voient leur liste de voisins mise à jour. Grâce à cette liste de voisins (ou d'adjacences), les parcours dans le graphe sont possibles (cette liste
-représente les arêtes du graphe). Nous avons choisi les listes de voisins car chaque sommet possède au plus 4 voisins si le maillage est fait de carrés ou 3 voisins s'il est fait de triangles. Ce qui permet un coût de stockage très faible et un temps de calcul bien maitrisé. Prenons l'exemple de la suppression d'un voisin :
+Un \textit{vertex} est un point de notre scène. Il possède 3 coordonnées x, y et z. Il contient également une liste de pointeurs sur les vertices qui sont ses voisins.
 
-Il suffit de l'isoler pour qu'il ne soit plus parcouru ; soit le supprimer de la liste de voisins de tous ses voisins. Au pire des cas: 4 x 4 tests.
- 
  \item Faces:
 
 Les \textit{faces} possèdent une liste contenant les numéros des vertex qui les composent. C'est grâce aux faces que nous pouvons déduire les voisins des sommets du graphe. Elles servent aussi à effectuer un affichage cohérent des formes.
 
-  \item BoundingBox:
+ \item Bounding Box:
 
 \end{itemize}
 
 
 \subsection{La scène}
-Comment est enregistrée la scène
+
+Reprécisons bien comment sont stockées les données.
+
+Notre scène, c'est à dire l'ensemble de tous les vertices et de toutes les formes, est stockée dans une liste de formes. On a donc, comme expliqué plus haut, une scène complète séparée en différentes formes : par exemple une forme qui correspond à tout le sol, une à un cube etc.
+
+C'est pourquoi nous avons une méthode qui permet d'identifier quelle forme est le sol. Dans notre cas, nous avons pu faire très simple et la forme correspondant au sol est celle qui possède le plus de points.
+
 \subsection{Le graphe géneré}
-Comment est enregistré le graphe
+
+Pour stocker notre graphe dont la création est expliquée plus loin, nous avons fait le choix de rajouter à notre classe Vertex une liste d'adjacence contenant des pointeurs vers les voisins de ce sommet. C'est donc une méthode d'implémentation classique où chaque sommet connait ses voisins. Encore une fois, comme le point principal du projet n'est pas là, nous avons choisi de faire au plus simple. 
+
+Grâce à cette liste de voisins (ou d'adjacences), les parcours dans le graphe sont possibles (cette liste représente les arêtes du graphe). Nous avons choisi les listes de voisins car chaque sommet possède au plus 4 voisins si le maillage est fait de carrés ou 3 voisins s'il est fait de triangles. Ce qui permet un coût de stockage très faible et un temps de calcul bien maitrisé. 
+
+Prenons l'exemple de la suppression d'un voisin :
+
+Il suffit de l'isoler pour qu'il ne soit plus parcouru ; soit le supprimer de la liste de voisins de tous ses voisins. Au pire des cas: 4 x 4 tests.
+ 
+Cette liste d'adjacence est donc remplie à l'appel de la méthode de génération du graphe.
 
 \section{Un parser pour récupérer notre scène}
 
@@ -199,7 +211,15 @@ Nous avons présenté précédemment la structure d'un fichier au format WaveFro
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
- 
+
+\section{Génération du graphe correspondant au sol}
+
+Pour effectuer les traitements prévus nous avons donc décider de travailler sur un graphe. Nous partons d'un ensemble de points et de faces dans des formes séparées. Nous selectionnons la forme correspondant au sol avec notre méthode dédiée. Ensuite, sur cette forme nous appliquons une méthode qui va créer les liaisons entre sommets en fonction des faces de la forme. 
+
+Pour chaque face on lie ses vertices de manière à ce que chaque sommet prenne comme voisins son prédecesseur et son successeur dans leur ordre d'apparition de la liste des points de la face.
+
+Notre sol n'est composé que de carrés et chaque face possède une liste de 4 sommets A,B,C,D.
+voisins(A) = {B,D} ;  voisins(B) = {A,C} ; voisins(C) = {B,D} ; voisins(D) = {A,C}
 
 \section{Travaux effectués sur le graphe}
 
@@ -286,7 +306,7 @@ Un point est à l'intérieur du polygone si il est toujours du même côté que 
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.6]{Images/chemin.jpg}
+\includegraphics[scale=0.6]{Images/chemin2.jpg}
 \caption{Un chemin dans un carré}
 \end{figure}
 \vspace{0.5cm}
@@ -330,6 +350,10 @@ Après, le test est simple :
 
 \subsection{Simplification du graphe des way-points : merging}
 
+Pour limiter les calculs de recherche de chemins les graphes des way-points sont généralement simplifier par l'application d'une technique qu'on appelle merging. 
+
+Nous n'avons pas eu le temps de développer un merging très évolué. Toutefois notre procédure de merging remplit son oeuvre en préservant la connexité du graphe. Il s'agit en fait d'isoler certain sommets dont l'entourage possède un grand nombre de voisins. 
+
 \begin{algorithm}[h]
 \caption{Merging du graphe : merging(sommet)}
 \label{merging_graphe}
@@ -348,6 +372,29 @@ Après, le test est simple :
 \ENDIF
 \end{algorithmic}
 \end{algorithm}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{Images/maillage.png}
+\includegraphics[scale=0.6]{Images/merging.png}
+\caption{Notre graphe avant et après merging}
+\end{figure}
+\vspace{0.5cm}
+
+\chapter{Résultats}
+
+\section{Interface graphique}
+commandes
+
+\section{Application de l'heuristique}
+screenshot
+
+\section{Merging}
+screenshot
+
+\section{Déplacement d'un agent}
+
+
 
 \chapter{Bibliographie}
 
