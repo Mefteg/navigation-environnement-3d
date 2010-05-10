@@ -60,48 +60,46 @@ BoundingBox :: BoundingBox(Forme f){
 			zmax = listePoints->at(i).getZ();
 	}
 
-	/*
+	
 	//optimisation si on passe un cube
 	if(listePoints->size() == 8){
-		vector<Face> *  facesForme = f.getFaces();
-		int numFace = -1;
-		int j = facesForme->size();
-		bool carre = true;
-		while(j > 0 && carre){
+		vector<Vertex>* pointB = f.getVertices();
+		vector<Vertex> pointBas = *pointB;
+		int j = 8;
+		while(j > 0){
 			j--;
-			carre = facesForme->at(j).estCarre();
-			
-			// trouve la face la plus basse
-			if(numFace == -1 && facesForme->at(j).getSommets()->size() == 4){
-				vector<int> * liSom = facesForme->at(j).getSommets();
-				int bonneHauteur = 0;
-				for(int w = 0; w < liSom->size(); w++){
-					if(f.getVertex(liSom->at(w))->getY() != ymin)
-						bonneHauteur++;
-				}
-				if(bonneHauteur == liSom->size())
-					numFace = j;
+			if(pointBas.at(j).getY() != ymin){
+				pointBas.erase(pointBas.begin() + j);
 			}
 		}
 		
-		if(carre){
-			vector<int> * liSom = facesForme->at(numFace).getSommets();
-			p1.setX(f.getVertex(liSom->at(0))->getX());
-			p1.setZ(f.getVertex(liSom->at(0))->getZ());
+		cout << "BEUG\n";
+		bool carre = true;
+		// tester si les points sont en carre
+		
+		if(pointBas.size() == 4){
 			
-			p2.setX(f.getVertex(liSom->at(1))->getX());
-			p2.setZ(f.getVertex(liSom->at(1))->getZ());
+			p1.setX(pointBas.at(0).getX());
+			p1.setZ(pointBas.at(0).getZ());
+			
+			p2.setX(pointBas.at(3).getX());
+			p2.setZ(pointBas.at(3).getZ());
 		
-			p3.setX(f.getVertex(liSom->at(2))->getX());
-			p3.setZ(f.getVertex(liSom->at(2))->getZ());
+			p3.setX(pointBas.at(2).getX());
+			p3.setZ(pointBas.at(2).getZ());
 		
-			p4.setX(f.getVertex(liSom->at(3))->getX());
-			p4.setZ(f.getVertex(liSom->at(3))->getZ());
+			p4.setX(pointBas.at(1).getX());
+			p4.setZ(pointBas.at(1).getZ());
 			
 			cout << "carre \n";
+			
+			cout << "1 : " << p1.getX() << " / " << p1.getZ() << "\n";
+			cout << "2 : " << p2.getX() << " / " << p2.getZ() << "\n";
+			cout << "3 : " << p3.getX() << " / " << p3.getZ() << "\n";
+			cout << "4 : " << p4.getX() << " / " << p4.getZ() << "\n";
 			return;
 		}
-	}*/
+	}
 	
 /*	
 	cout << "xmin = " << xmin << "\n";

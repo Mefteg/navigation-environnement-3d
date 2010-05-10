@@ -39,6 +39,3 @@ void Face::removeSommet( int num_vertex ){
 
 }
 
-
-
-
