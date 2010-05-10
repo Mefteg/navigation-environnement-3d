@@ -195,8 +195,10 @@ void changerVertexPerso() {
 	//on change le vertex courant du personnage
 	int next=0;
 	int aux=1000;
+	int pas=1;
 	for ( int i=0; i<voisins->size(); i++ ) {
-		if ( voisins->at(i)->getPoids() <= aux ) {
+		int p = voisins->at(i)->poidsParcours( pas, vertexPerso->getNum() );
+		if ( p <= aux ) {
 			next = i;
 			aux = voisins->at(i)->getPoids();
 		}
@@ -406,11 +408,11 @@ int main(int argc, char *argv[]){
 						break;
 					
 					case SDLK_RIGHT:
-						angleSceneY += 2;
+						angleSceneY += 4;
 					break;
 					
 					case SDLK_LEFT:
-						angleSceneY -= 2;
+						angleSceneY -= 4;
 						break;
 
 					case SDLK_RETURN:
@@ -443,12 +445,17 @@ int main(int argc, char *argv[]){
 
 					case SDLK_d:
 						detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes, 0.1 );
-						detectionAretesInvalides( &sol, &listeBoundingBox, &vFormes );
+						vertexPerso = sol.premierSommetValide();
 						break;
 
 					case SDLK_a:
 						detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes, 0.0 );
+						vertexPerso = sol.premierSommetValide();
+						break;
+
+					case SDLK_z:
 						detectionAretesInvalides( &sol, &listeBoundingBox, &vFormes );
+						vertexPerso = sol.premierSommetValide();
 						break;
 
 					case SDLK_g:

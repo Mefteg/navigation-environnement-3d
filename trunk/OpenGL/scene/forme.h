@@ -44,6 +44,7 @@ class Forme {
 		void parcoursGraph();
 		void parcoursGraphDessiner();
 		void parcoursGraphMerging();
+		Vertex * premierSommetValide();
 		//void parcoursGraphSuppressionArete(vector <BoundingBox> liBB);
 
 		void draw();
