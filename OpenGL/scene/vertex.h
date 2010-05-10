@@ -60,6 +60,9 @@ class Vertex {
 	//void parcoursVoisinsSuppressionArete(vector <BoundingBox> liBB);
 	//retourne 1 si le sommet est isolé, 0 sinon
 	int estIsole();
+	//retourne le poids du parcours
+	int poidsParcours( int pas, int pere );
+	int poidsParcours2( int pas );
 	string printVoisins();
 
 	void draw();

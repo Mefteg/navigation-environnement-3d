@@ -243,6 +243,55 @@ void Vertex::draw() {
 	glEnd();
 }
 
+//retourne le poids du parcours
+int Vertex::poidsParcours( int pas, int pere ) {
+	vector<Vertex *> * voisins = this->getVoisins();
+
+	if ( pas == 0 ) {
+		return this->getPoids();
+	}
+	else {
+		//on change le vertex courant du personnage
+		int next=0;
+		int aux=1000;
+		for ( int i=0; i<voisins->size(); i++ ) {
+			if ( voisins->at(i)->getNum() != pere ) {
+				int p = voisins->at(i)->poidsParcours( pas-1, voisins->at(i)->getNum() );
+				if ( p <= aux ) {
+					next = i;
+					aux = p;
+				}
+			}
+		}
+
+		return aux+this->getPoids();
+	}
+}
+
+//retourne le poids du parcours
+int Vertex::poidsParcours2( int pas ) {
+	vector<Vertex *> * voisins = this->getVoisins();
+	//si je suis au bout de l'appel récursif
+	if ( pas == 0 ) {
+		return this->getPoids();
+	}
+	else {
+		int next=-1;
+		int aux=1000;
+		for ( int i=0; i<voisins->size(); i++ ) {
+			int p = voisins->at(i)->getPoids();
+			if ( p == 0 ) {
+				next = i;
+			}
+		}
+
+		if ( next == -1 ) {
+		}
+
+		return aux+this->getPoids();
+	}
+}
+
 string Vertex::toString() {
 
 	stringstream oss;
