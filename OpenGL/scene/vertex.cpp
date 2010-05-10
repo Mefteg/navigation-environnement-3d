@@ -170,13 +170,13 @@ void Vertex::parcoursVoisinsMerging( int profondeur ) {
 
 		this->setVisite( 1 );
 
-		if ( this->b+profondeur > 255 ) {
-			this->b = 255;
-			this->v = (this->v+profondeur+100)%255;
-		}
-		else {
-			this->b = (this->b+profondeur)%255;
-		}
+/*		if ( this->b+profondeur > 255 ) {*/
+/*			this->b = 255;*/
+/*			this->v = (this->v+profondeur+100)%255;*/
+/*		}*/
+/*		else {*/
+/*			this->b = (this->b+profondeur)%255;*/
+/*		}*/
 
 
 	cout << this->r << " ";
@@ -261,7 +261,12 @@ void Vertex::draw() {
 	glPointSize( 5.0 );
 	//on crée un glVert
 	glBegin( GL_POINTS );
-	glColor3ub( this->r, this->v, this->b );
+	if ( this->getPoids() > 0 ) {
+		glColor3ub( 0, this->poids*30, 255 );
+	}
+	else {
+		glColor3ub( this->r, this->v, this->b );
+	}
 	glVertex3d( x, y, z );
 	glEnd();
 }
