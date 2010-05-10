@@ -32,11 +32,11 @@ BoundingBox :: BoundingBox(Forme f){
 	}
 	
 	float xmin = listePoints->front().getX();
-	//float ymin = listePoints->front().getY();
+	float ymin = listePoints->front().getY();
 	float zmin = listePoints->front().getZ();
 
 	float xmax = xmin;
-	//float ymax = ymin;
+	float ymax = ymin;
 	float zmax = zmin;
 	
 	//on chercher les mins et max
@@ -47,11 +47,11 @@ BoundingBox :: BoundingBox(Forme f){
 		if(listePoints->at(i).getX() > xmax)
 			xmax = listePoints->at(i).getX();
 
-/*		if(listePoints->at(i).getY() < ymin) 
+		if(listePoints->at(i).getY() < ymin) 
 			ymin = listePoints->at(i).getY();
 
 		if(listePoints->at(i).getY() > xmax) 
-			ymax = listePoints->at(i).getY();*/
+			ymax = listePoints->at(i).getY();
 
 		if(listePoints->at(i).getZ() < zmin)
 			zmin = listePoints->at(i).getZ();
@@ -59,14 +59,60 @@ BoundingBox :: BoundingBox(Forme f){
 		if(listePoints->at(i).getZ() > zmax)
 			zmax = listePoints->at(i).getZ();
 	}
+
+	/*
+	//optimisation si on passe un cube
+	if(listePoints->size() == 8){
+		vector<Face> *  facesForme = f.getFaces();
+		int numFace = -1;
+		int j = facesForme->size();
+		bool carre = true;
+		while(j > 0 && carre){
+			j--;
+			carre = facesForme->at(j).estCarre();
+			
+			// trouve la face la plus basse
+			if(numFace == -1 && facesForme->at(j).getSommets()->size() == 4){
+				vector<int> * liSom = facesForme->at(j).getSommets();
+				int bonneHauteur = 0;
+				for(int w = 0; w < liSom->size(); w++){
+					if(f.getVertex(liSom->at(w))->getY() != ymin)
+						bonneHauteur++;
+				}
+				if(bonneHauteur == liSom->size())
+					numFace = j;
+			}
+		}
+		
+		if(carre){
+			vector<int> * liSom = facesForme->at(numFace).getSommets();
+			p1.setX(f.getVertex(liSom->at(0))->getX());
+			p1.setZ(f.getVertex(liSom->at(0))->getZ());
+			
+			p2.setX(f.getVertex(liSom->at(1))->getX());
+			p2.setZ(f.getVertex(liSom->at(1))->getZ());
+		
+			p3.setX(f.getVertex(liSom->at(2))->getX());
+			p3.setZ(f.getVertex(liSom->at(2))->getZ());
+		
+			p4.setX(f.getVertex(liSom->at(3))->getX());
+			p4.setZ(f.getVertex(liSom->at(3))->getZ());
+			
+			cout << "carre \n";
+			return;
+		}
+	}*/
 	
-	p1.setX(xmin);
+/*	
 	cout << "xmin = " << xmin << "\n";
-	//p1.setY();
-	p1.setZ(zmin);
 	cout << "zmin = " << zmin << "\n";
 	cout << "xmax = " << xmax << "\n";
 	cout << "zmax = " << zmax << "\n";
+*/
+	
+	p1.setX(xmin);
+	//p1.setY();
+	p1.setZ(zmin);
 	
 	p2.setX(xmin);
 	//p2.setY();

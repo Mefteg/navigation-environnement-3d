@@ -9,8 +9,6 @@
 
 
 #include "forme.h"
-//#include "vertex.h"
-//#include "face.h"
 #include "BoundingBox.h"
 
 using namespace std;
@@ -18,14 +16,17 @@ using namespace std;
 //VARIABLES GLOBALES
 
 // Taille de la fenêtre
-const int SCREEN_WIDTH=640;
-const int SCREEN_HEIGHT=480;
+int SCREEN_WIDTH=640;
+int SCREEN_HEIGHT=480;
 
 // Position de la caméra
 int xCam=5;
 int yCam=5;
 
+//savoir o� se situe le personnage
 Vertex * vertexPerso;
+//savoir s'il faut afficher les formes ou non
+int afficherFormes=0;
 
 /**
  * Parse un fichier .obj passé en paramètre (selon son chemin)
@@ -190,7 +191,7 @@ void changerVertexPerso() {
 	int next=0;
 	int aux=1000;
 	for ( int i=0; i<voisins->size(); i++ ) {
-		if ( voisins->at(i)->getPoids() < aux ) {
+		if ( voisins->at(i)->getPoids() <= aux ) {
 			next = i;
 			aux = voisins->at(i)->getPoids();
 		}
@@ -230,12 +231,70 @@ void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 	sol->draw();
 	sol->parcoursGraphDessiner();
 	dessinerPerso( sol );
-/*	dessinerScene(vFormes);*/
+
+	if ( afficherFormes ) {
+		dessinerScene(vFormes);
+	}
 
 	//On s'assure que toutes les commandes OpenGL ont été exécutées
 	glFlush();
 	//Mise à jour de l'écran
 	SDL_GL_SwapBuffers();
+}
+
+void detectionSommetsInvalides( Forme * sol, vector<BoundingBox> * listeBoundingBox, vector<Forme> * vFormes ) {
+	vector<Vertex> * vertexDuSol = sol->getVertices();
+	for(int i = vertexDuSol->size(); i > 0; i--){
+		if(vertexInsideBoundingBox(*(listeBoundingBox), vertexDuSol->at(i - 1))){
+			// suppression
+			cout << " supprime point x = " << vertexDuSol->at(i - 1).getX() << " z = " << vertexDuSol->at(i - 1).getZ() << "\n";
+			vertexDuSol->at(i - 1).setRVB(0, 0, 250);
+/*			dessiner( sol, vFormes );*/
+			vertexDuSol->at(i - 1).isolation();
+/*			sleep( 0.1 );*/
+		}
+	}
+}
+
+
+void detectionAretesInvalides( Forme * sol, vector<BoundingBox> * listeBoundingBox, vector<Forme> * vFormes ) {
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//		PARCOURS POUR SUPPRIMER LES ARETES QUI COUPENT UNE BOUNDINGBOX
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**/
+/*	vector<Vertex> * vertexDuSol = sol->getVertices();*/
+/**/
+/*	Vertex * v = NULL;*/
+/*	int i = vertexDuSol->size();*/
+/*	//on recupere un sommet non isole pour commencer le parcours*/
+/*	while(i > 0){*/
+/*		i--;*/
+/*		//si le sommet a� au moins un voisin (qu'il n'est pas isolee)*/
+/*		if ( !vertexDuSol->at(i).estIsole() ) {*/
+/*			v = &(vertexDuSol->at(i));*/
+/*			v->setVisite(1);*/
+/**/
+/*			// On est face a un vertex a eplorer*/
+/*			for(int j = 0; j < v->getVoisins()->size(); j++){*/
+/*				if(!v->getVoisins()->at(j)->estIsole()){*/
+/*					// si il est pas isol� on teste l'arte entre les deux*/
+/*					if(segmentIntersectBoundingBox(*(listeBoundingBox),  *v, *(v->getVoisins()->at(j)))){*/
+/*						// on supprime l'arete*/
+/*						v->getVoisins()->at(j)->removeVoisin(v->getNum());*/
+/*						v->removeDirectVoisin(j);*/
+/*					}*/
+/*				}*/
+/*			}*/
+/*		}*/
+/*		cout << "vertex " << i << " traite\n";*/
+/*	}*/
+/**/
+/*	//une fois que le parcours a ete fait, on remet tout a� 0*/
+/*	//pour pouvoir refaire un autre parcours*/
+/*	for(int i = 0; i < vertexDuSol->size(); i++){*/
+/*		vertexDuSol->at(i).setVisite(0);*/
+/*	}*/
+/*	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 }
 
 int main(int argc, char *argv[]){
@@ -253,14 +312,14 @@ int main(int argc, char *argv[]){
 	SDL_WM_SetIcon(SDL_LoadBMP("./img/headcrabs2.bmp"), NULL);
 
 	//On fixe la taille de la Fenetre et indique le rendu openGL
-	SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL);
+	SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL | SDL_RESIZABLE);
 	//On indique le rendu openGL
 	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity( );
+	glLoadIdentity();
 	gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
 	glEnable(GL_DEPTH_TEST);
 
-/*	SDL_EnableKeyRepeat(10,10);*/
+	SDL_EnableKeyRepeat(10,10);
 
 	// On appelle le parser :
 	vector<Forme> vFormes;
@@ -279,68 +338,16 @@ int main(int argc, char *argv[]){
 	// On genere les bouding box
 	vector <BoundingBox> listeBoundingBox = formeToBoundingBox(vFormes);
 	
-	vector<Vertex> * vertexDuSol = sol.getVertices();
-	for(int i = vertexDuSol->size(); i > 0; i--){
-		if(vertexInsideBoundingBox(listeBoundingBox, vertexDuSol->at(i - 1))){
-			// suppression
-			cout << " supprime point x = " << vertexDuSol->at(i - 1).getX() << " z = " << vertexDuSol->at(i - 1).getZ() << "\n";
-			vertexDuSol->at(i - 1).setRVB(0, 0, 250);
-			dessiner( &sol, &vFormes );
-			vertexDuSol->at(i - 1).isolation();
-			sleep(1);
-		}
-	}
-	
-	// il faut faire un petit parcours pour supprimer les sommets qui possedent seulement deux voisins  qui se situent a l'oppose par rapport au sommet courant (que l'on veux supprimer)
-
-	
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	//		PARCOURS POUR SUPPRIMER LES ARETES QUI COUPENT UNE BOUNDINGBOX
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
-	vertexDuSol = sol.getVertices();
-	
-	Vertex * v = NULL;
-	int i = vertexDuSol->size();
-	//on recupere un sommet non isole pour commencer le parcours
-	while(i > 0){
-		i--;
-		//si le sommet a� au moins un voisin (qu'il n'est pas isolee)
-		if ( !vertexDuSol->at(i).estIsole() ) {
-			v = &(vertexDuSol->at(i));
-			v->setVisite(1);
-			
-			// On est face a un vertex a eplorer
-			for(int j = 0; j < v->getVoisins()->size(); j++){
-				if(!v->getVoisins()->at(j)->estIsole()){
-					// si il est pas isol� on teste l'arte entre les deux
-					if(segmentIntersectBoundingBox(listeBoundingBox,  *v, *(v->getVoisins()->at(j)))){
-						// on supprime l'arete
-						v->getVoisins()->at(j)->removeVoisin(v->getNum());
-						v->removeDirectVoisin(j);
-					}
-				}
-			}
-		}
-		cout << "vertex " << i << " traite\n";
-	}
-
-	//une fois que le parcours a ete fait, on remet tout a� 0
-	//pour pouvoir refaire un autre parcours
-	for(int i = 0; i < vertexDuSol->size(); i++){
-		vertexDuSol->at(i).setVisite(0);
-	}
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	//simplification du graphe -> Merging
-/*	sol.parcoursGraphMerging();*/
-
 	bool continuer = true;
 	//Les évènements SDL
 	SDL_Event event;
 
+	int evenementPertinent = 1;
 	while (continuer){
-		dessiner( &sol, &vFormes );
+		if ( evenementPertinent ) {
+			dessiner( &sol, &vFormes );
+			evenementPertinent = 0;
+		}
 		/* dessinerForme( forme );*/
 
 		//Attente d'évènement méthode bloquante
@@ -374,7 +381,38 @@ int main(int argc, char *argv[]){
 					//on fait avancer le perso
 					changerVertexPerso();
 					break;
+
+					case SDLK_m:
+					//simplification du graphe -> Merging
+					sol.parcoursGraphMerging();
+					break;
+
+					case SDLK_c:
+					if ( afficherFormes ) {
+						afficherFormes = 0;
+					}
+					else {
+						afficherFormes = 1;
+					}
+					break;
+
+					case SDLK_d:
+					detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes );
+					break;
 				}
+
+				evenementPertinent = 1;
+			break;
+
+			case SDL_VIDEORESIZE:
+			SCREEN_WIDTH = event.resize.w; // <- largeur
+			SCREEN_HEIGHT = event.resize.h; // <- hauteur
+			cout << "largeur: " << SCREEN_WIDTH << " | hauteur: " << SCREEN_HEIGHT << endl;
+			SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL | SDL_RESIZABLE);
+			glViewport( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
+			gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
+
+			evenementPertinent = 1;
 			break;
 		}
 
