@@ -1,0 +1,9 @@
+Partir d'un simple carré ou rectangle:
+
+Une autre solution que nous avons expérimentée, était de créer le maillage de notre 
+scène par notre programme. Nous partions donc juste d'une forme carrée ou rectangulaire représentant le sol,
+puis nous la divisions en 4, ainsi de suite jusqu'à obtenir un maillage suffisant.
+L'avantage de cette solution c'est que ce n'est pas au designer de créer le maillage, 
+il peut donc créer la scène qu'il veut sans trop de contraintes. Les inconvéniants de cette méthode 
+est qu'elle offre un contrôle moins important sur la scène, elle rendait notre programme plus lourd et il 
+fallait quand même passer par Blender pour créer la scène. Nous n'avons donc pas retenue cette solution.
