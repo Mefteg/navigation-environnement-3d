@@ -27,6 +27,8 @@ int yCam=5;
 Vertex * vertexPerso;
 //savoir s'il faut afficher les formes ou non
 int afficherFormes=0;
+//savoir s'il faut afficher le graphe ou non
+int afficherGraphe=0;
 
 /**
  * Parse un fichier .obj pass√© en param√®tre (selon son chemin)
@@ -59,7 +61,6 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 				case 'v':{
 					//S'il s'agit d'une nouvelle forme
 					if ( nv_forme == 0 ) {
-						cout << "Nouvelle Forme" << endl;
 						//On enregistre la derni√®re forme
 						vFormes->push_back( forme );
 						//On va passer √† la nouvelle forme
@@ -198,7 +199,6 @@ void changerVertexPerso() {
 	}
 	vertexPerso = vertexPerso->getVoisins()->at(next);
 	vertexPerso->setPoids( vertexPerso->getPoids()+1 );
-	cout << vertexPerso->toString() << endl;
 }
 
 /**
@@ -229,11 +229,14 @@ void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 	gluLookAt( xCam, yCam, 5, 0, 0, 0, 0, 1, 0 );
 
 	sol->draw();
-	sol->parcoursGraphDessiner();
 	dessinerPerso( sol );
 
 	if ( afficherFormes ) {
 		dessinerScene(vFormes);
+	}
+
+	if ( afficherGraphe ) {
+		sol->parcoursGraphDessiner();
 	}
 
 	//On s'assure que toutes les commandes OpenGL ont √©t√© ex√©cut√©es
@@ -242,16 +245,17 @@ void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 	SDL_GL_SwapBuffers();
 }
 
-void detectionSommetsInvalides( Forme * sol, vector<BoundingBox> * listeBoundingBox, vector<Forme> * vFormes ) {
+void detectionSommetsInvalides( Forme * sol, vector<BoundingBox> * listeBoundingBox, vector<Forme> * vFormes, float temps ) {
 	vector<Vertex> * vertexDuSol = sol->getVertices();
 	for(int i = vertexDuSol->size(); i > 0; i--){
 		if(vertexInsideBoundingBox(*(listeBoundingBox), vertexDuSol->at(i - 1))){
 			// suppression
-			cout << " supprime point x = " << vertexDuSol->at(i - 1).getX() << " z = " << vertexDuSol->at(i - 1).getZ() << "\n";
 			vertexDuSol->at(i - 1).setRVB(0, 0, 250);
-/*			dessiner( sol, vFormes );*/
+			if ( temps > 0 ) {
+				dessiner( sol, vFormes );
+			}
 			vertexDuSol->at(i - 1).isolation();
-/*			sleep( 0.1 );*/
+			sleep( temps );
 		}
 	}
 }
@@ -261,40 +265,39 @@ void detectionAretesInvalides( Forme * sol, vector<BoundingBox> * listeBoundingB
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//		PARCOURS POUR SUPPRIMER LES ARETES QUI COUPENT UNE BOUNDINGBOX
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/**/
-/*	vector<Vertex> * vertexDuSol = sol->getVertices();*/
-/**/
-/*	Vertex * v = NULL;*/
-/*	int i = vertexDuSol->size();*/
-/*	//on recupere un sommet non isole pour commencer le parcours*/
-/*	while(i > 0){*/
-/*		i--;*/
-/*		//si le sommet a† au moins un voisin (qu'il n'est pas isolee)*/
-/*		if ( !vertexDuSol->at(i).estIsole() ) {*/
-/*			v = &(vertexDuSol->at(i));*/
-/*			v->setVisite(1);*/
-/**/
-/*			// On est face a un vertex a eplorer*/
-/*			for(int j = 0; j < v->getVoisins()->size(); j++){*/
-/*				if(!v->getVoisins()->at(j)->estIsole()){*/
-/*					// si il est pas isolÈ on teste l'arte entre les deux*/
-/*					if(segmentIntersectBoundingBox(*(listeBoundingBox),  *v, *(v->getVoisins()->at(j)))){*/
-/*						// on supprime l'arete*/
-/*						v->getVoisins()->at(j)->removeVoisin(v->getNum());*/
-/*						v->removeDirectVoisin(j);*/
-/*					}*/
-/*				}*/
-/*			}*/
-/*		}*/
-/*		cout << "vertex " << i << " traite\n";*/
-/*	}*/
-/**/
-/*	//une fois que le parcours a ete fait, on remet tout a† 0*/
-/*	//pour pouvoir refaire un autre parcours*/
-/*	for(int i = 0; i < vertexDuSol->size(); i++){*/
-/*		vertexDuSol->at(i).setVisite(0);*/
-/*	}*/
-/*	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+	vector<Vertex> * vertexDuSol = sol->getVertices();
+
+	Vertex * v = NULL;
+	int i = vertexDuSol->size();
+	//on recupere un sommet non isole pour commencer le parcours
+	while(i > 0){
+		i--;
+		//si le sommet a† au moins un voisin (qu'il n'est pas isolee)
+		if ( !vertexDuSol->at(i).estIsole() ) {
+			v = &(vertexDuSol->at(i));
+			v->setVisite(1);
+
+			// On est face a un vertex a eplorer
+			for(int j = 0; j < v->getVoisins()->size(); j++){
+				if(!v->getVoisins()->at(j)->estIsole()){
+					// si il est pas isolÈ on teste l'arte entre les deux
+					if(segmentIntersectBoundingBox(*(listeBoundingBox),  *v, *(v->getVoisins()->at(j)))){
+						// on supprime l'arete
+						v->getVoisins()->at(j)->removeVoisin(v->getNum());
+						v->removeDirectVoisin(j);
+					}
+				}
+			}
+		}
+	}
+
+	//une fois que le parcours a ete fait, on remet tout a† 0
+	//pour pouvoir refaire un autre parcours
+	for(int i = 0; i < vertexDuSol->size(); i++){
+		vertexDuSol->at(i).setVisite(0);
+	}
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 }
 
 int main(int argc, char *argv[]){
@@ -396,15 +399,37 @@ int main(int argc, char *argv[]){
 					}
 					break;
 
+					case SDLK_t:
+					if ( afficherGraphe ) {
+						afficherGraphe = 0;
+					}
+					else {
+						afficherGraphe = 1;
+					}
+					break;
+
 					case SDLK_d:
-					detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes );
+					detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes, 0.1 );
+					detectionAretesInvalides( &sol, &listeBoundingBox, &vFormes );
+					break;
+
+					case SDLK_a:
+					detectionSommetsInvalides( &sol, &listeBoundingBox, &vFormes, 0.0 );
+					detectionAretesInvalides( &sol, &listeBoundingBox, &vFormes );
+					break;
+
+					case SDLK_g:
+					sol.generateGraph();
 					break;
 
 					case SDLK_h:
 					cout << endl << " ~~~~~ HELP ~~~~~" << endl;
-					cout << "Detecter les points invalides: d" << endl;
+					cout << "DÈtecter les points invalides ( avec suivi visuel ): d" << endl;
+					cout << "DÈtecter les points invalides ( sans suivi visuel ): a" << endl;
 					cout << "Simplifier le graphe ( Merging ): m" << endl;
 					cout << "Afficher/Masquer les formes: c" << endl;
+					cout << "Afficher/Masquer le graphe: t" << endl;
+					cout << "Bouger la camÈra: touches directionnelles" << endl;
 					cout << endl;
 					break;
 				}
@@ -415,7 +440,6 @@ int main(int argc, char *argv[]){
 			case SDL_VIDEORESIZE:
 			SCREEN_WIDTH = event.resize.w; // <- largeur
 			SCREEN_HEIGHT = event.resize.h; // <- hauteur
-			cout << "largeur: " << SCREEN_WIDTH << " | hauteur: " << SCREEN_HEIGHT << endl;
 			SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL | SDL_RESIZABLE);
 			glViewport( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 			gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
