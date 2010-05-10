@@ -170,20 +170,6 @@ void Vertex::parcoursVoisinsMerging( int profondeur ) {
 
 		this->setVisite( 1 );
 
-/*		if ( this->b+profondeur > 255 ) {*/
-/*			this->b = 255;*/
-/*			this->v = (this->v+profondeur+100)%255;*/
-/*		}*/
-/*		else {*/
-/*			this->b = (this->b+profondeur)%255;*/
-/*		}*/
-
-
-	cout << this->r << " ";
-	cout << this->v << " ";
-	cout << this->b << " ";
-	cout << endl;
-
 		//si j'ai 4 voisins
 		if ( this->nbVoisins() == 4 ) {
 			int cpt=0;
@@ -218,20 +204,6 @@ void Vertex::parcoursVoisinsMerging( int profondeur ) {
 		}
 	}
 }
-
-/*void Vertex::parcoursVoisinsSuppressionArete(vector <BoundingBox> liBB) {
-	//si le sommet n'a pas deja ete visite
-	if ( !this->getVisite() ) {
-		this->setVisite( 1 );
-		for ( int i=0; i<this->voisins.size(); i++ ) {
-			this->voisins.at(i)->parcoursVoisinsSuppressionArete(liBB);
-			if(segmentIntersectBoundingBox(liBB, *this, *voisins.at(i)))
-				cout << "coupe \n";
-			else
-				cout ww "coupe pas\n";
-		}
-	}
-}*/
 
 //retourne 1 si le sommet est isolé, 0 sinon
 int Vertex::estIsole() {
