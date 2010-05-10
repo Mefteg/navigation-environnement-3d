@@ -1,0 +1,70 @@
+OPENGL
+
+    http://www.siteduzero.com/tutoriel-3-5014-creez-des-programmes-en-3d-avec-opengl.html
+
+    http://fr.wikipedia.org/wiki/OpenGL
+
+    http://www.opengl.org/documentation/
+
+    http://jeux.developpez.com/faq/opengl/?page=techniques#TECHNIQUES_modele
+
+    OpenGL: Shading Language Second Edition
+    Par Randi J. Rost
+    Édition Addison-Wesley 
+
+
+SDL
+
+    http://fr.wikipedia.org/wiki/Simple_DirectMedia_Layer
+
+    http://www.libsdl.org/
+
+    http://www.siteduzero.com/tutoriel-3-14080-installation-de-la-sdl.html
+
+
+HEURISTIQUE
+
+    http://softsurfer.com/Archive/algorithm_0107/algorithm_0107.htm (bounding box)
+
+    http://www.faqs.org/faqs/graphics/algorithms-faq/  (bounding box)
+
+    http://local.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/ (inside polygone)
+
+MAILLAGE
+
+    http://www.siteduzero.com/tutoriel-3-12988-decor-naturel-a-generer-un-terrain.html#ss_part_1 (Gensurf)
+
+    http://nemesis.thewavelength.net/index.php?p=45 (ObjectViewer)
+
+MODELISATION 3D
+
+    http://www.siteduzero.com/tutoriel-3-11714-debutez-dans-la-3d-avec-blender.html
+
+    http://fr.wikipedia.org/ pour les définitions (normal vertex, shader, etc ...)
+
+    http://www.blender.org/
+
+    http://fr.wikipedia.org/wiki/Objet_3D_(format_de_fichier)
+
+    http://www.khronos.org/collada/
+
+MOTEUR 3D
+
+    http://en.wikipedia.org/wiki/List_of_game_engines
+
+    http://en.wikipedia.org/wiki/OGRE
+
+    http://www.ogre3d.org/docs/manual
+
+    http://cheveche4.developpez.com/tutoriels/openscenegraph/
+
+    http://www.openscenegraph.org/projects/osg/wiki/Support/ReferenceGuides
+
+    http://jeux.developpez.com/faq/opengl/?page=techniques#TECHNIQUES_modele
+
+    http://www.openscenegraph.org/projects/osg
+
+
+
+
+
