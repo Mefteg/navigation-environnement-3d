@@ -89,12 +89,14 @@ BoundingBox :: BoundingBox(Forme f){
 			p4.setX(pointBas.at(1).getX());
 			p4.setZ(pointBas.at(1).getZ());
 			
+			/*
 			cout << "carre \n";
 			
 			cout << "1 : " << p1.getX() << " / " << p1.getZ() << "\n";
 			cout << "2 : " << p2.getX() << " / " << p2.getZ() << "\n";
 			cout << "3 : " << p3.getX() << " / " << p3.getZ() << "\n";
 			cout << "4 : " << p4.getX() << " / " << p4.getZ() << "\n";
+			*/
 			return;
 		}
 	}
