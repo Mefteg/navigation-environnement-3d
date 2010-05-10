@@ -24,7 +24,7 @@ int xCam=5;
 int yCam=5;
 
 int angleSceneY=0;
-int angleSceneZ=0;
+int angleSceneZ=10;
 int zoomScene=70;
 
 //savoir où se situe le personnage
@@ -335,11 +335,6 @@ int main(int argc, char *argv[]){
 
 	//On fixe la taille de la Fenetre et indique le rendu openGL
 	SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_OPENGL | SDL_RESIZABLE);
-	//On indique le rendu openGL
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
-	gluPerspective( 70, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
-	glEnable(GL_DEPTH_TEST);
 
 	SDL_EnableKeyRepeat(10,10);
 
