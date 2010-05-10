@@ -1,0 +1,9 @@
+
+Les bounding box sont des objets invisibles générés à partir d'autres objets. Chaque bounding box est un cube (ou un prisme à base rectangulaire) et contient une forme. Cela permet de réduire la complexité de différents calculs, tels que les collisions entre deux formes lors de recherche de chemins.
+
+Dans notre cas elles sont utile pour détecter les sommets invalides du graphe des waypoints. On a commencé par faire abstraction de la hauteur, car lorsqu'on parcourt le graphe on ne sait pas quelles sont les caractéristiques des formes qui vont se déplacer. On ne connait ni la nature du sol (eau, terre, lave, etc...) ni les attributs de la forme (taille, largeur, capacité à voler ou nager, etc..). Comme il nous manque des éléments sur la hauteur pour affiner opérations sur le graphe en fonction de qui parcourt ce graphe, on décide que, peu importe la hauteur (axe Y) d'un objet, on ne peut pas circuler sur l'espace où est projeté une forme sur le graphe (là l'image Projection_orthogonale_illustration si tu veux). De là on a besoin de seulement quatre points pour représenter notre bounding box. On utilise des vertex, comme cela si on veux étendre notre modèle à des bounding box en trois dimension il suffit de rajouter quatre autre vertex.
+
+La classe possède un constructeur qui prend une Forme en paramètre, on y calcule une la bounding box d'une forme quelconque. Pour chaque sommet du sol, on doit tester si le sommet est dans chaque bounding box. C'est pour cela que nos deux fonctions d'heuristique prennent en paramètre une liste (vector) de bounding box.
+
+
+
