@@ -7,9 +7,6 @@
 \usepackage{graphicx}
 
 
-
-% Raccourcis...
-
 \title{Navigation dans un environnement 3D \vspace{0.5cm}}
 \author{Marc BEYSECKER, Tom GIMENEZ, Valentin HIRSON, Léo RIZZON\\  \\Professeur encadrant : Mr Frédéric Koriche \\ \\Université Montpellier II \\  \\Master 1 Informatique}
 
@@ -48,8 +45,6 @@ Dans le cadre de notre unité d'enseignement intitulée Algorithmes de l'Intelli
 La base de notre travail est une scène 3D créée à l'aide d'un logiciel d'éditions d'objets 3D, par exemple Blender. Il s'agit alors de charger cette scène pour y appliquer nos traitements. Tout d'abord, il faut générer le graphe à partir de tous les points composant les différentes formes pour représenter les arêtes. Ensuite il faut épurer ce graphe pour ne garder que les sommets et les arêtes ``emruntables``. Enfin on va chercher à appliquer un algorithme de simplification pour ne garder que les points réellement utiles. C'est une procédure appelée merging.
 
 Le résultat serait donc un graphe des way-points, simplifié, automatiquement généré.
-
-\newpage
 
 \chapter{Recherches préliminaires}
 
@@ -252,13 +247,29 @@ Cette solution, souvent utilisé en informatique, consiste à déterminer si un 
 polygone sur un plan 2D. 
 Considérons un polygone, fait de n sommets (x$_{i}$,y$_{i}$) avec $i$ de $0$ à $n-1$. Le dernier sommet (x$_{n}$,y$_{n}$) est le même que le premier sommet, pour que le polygone soit fermé. 
 Pour déterminer le status d'un point (x$_{p}$,y$_{p}$), on trace une droite horizontale partant de (x$_{p}$,y$_{p}$). 
-Si le nombre d'intersection de la droite avec chaque arête du poylygone est impaire alors le point est à l'intérieur du polygone, sinon il n'est pas dedans. Le dessin suivant illustre la méthode : http://local.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/
+Si le nombre d'intersection de la droite avec chaque arête du poylygone est impaire alors le point est à l'intérieur du polygone, sinon il n'est pas dedans.
 
-Le seul problème qui apparait est lorsque qu'un sommet ou une arête du polygone est parralèle à la droite.
+\begin{figure}[h]
+\includegraphics[scale=0.6]{Images/insidepoly1.jpg}
+\includegraphics[scale=0.6]{Images/insidepoly3.jpg}
+\caption{Différents cas de figures avec nombre d'intersection paire et impaire}
+\label{nbintersect}
+\end{figure}
+\vspace{0.5cm}
+
+Le seul problème apparait lorsqu'un sommet ou une arête du polygone est parallèle à la droite.
 
 Les situations possibles sont illustrées en dessous :
 
-Les lignes épaisses ne sont pas considérées comme valide, les lignes fines si. Il est bon de noter que cet algorithme marche avec des polygones troués.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{Images/insidepoly2.jpg}
+\caption{Illustration des épaisseurs de ligne}
+\end{figure}
+\vspace{0.5cm}
+
+Les lignes épaisses ne sont pas considérées comme valides, les lignes fines si.
+Il est bon de noter que cet algorithme marche avec des polygones troués, comme illustré sur le figure \ref{nbintersect}.
 
 DESSIN
 
@@ -280,8 +291,6 @@ Un point est à l'intérieur du polygone si il est toujours du même côté que 
 \end{figure}
 \vspace{0.5cm}
 
-
-
 Soit un segment entre P0(x$_{0}$,y$_{0}$), P1(x$_{1}$,y$_{1}$) et un autre point P(x,y) alors on a la relation suivante : (y - y$_{0}$).(x$_{1}$ - x$_{0}$) - (x - x$_{0}$).(y$_{1}$ - y$_{0}$).
 Si le résultat est inférieur à 0 alors P est à droite du segment [P0,P1], si il est égale à 0 alors il est sur la droite (P0,P1) et s'il est supérieur à 0 alors il est à droite du segment [P0,P1].
 
@@ -291,7 +300,7 @@ Il nous suffit donc de faire 4 tests, on teste la position du point par rapport 
 
 Nous avons choisi de retenir la solution 3 car c'est celle qui nous semblait marcher le mieux ainsi que la plus économe en ressources. Elle est parfaitement adaptée à notre projet.
 
-\paragraph{Méthode de test d'intersection d'une arête avec un bounding box }
+\paragraph{Méthode de test d'intersection d'une arête avec une bounding box }
 
 
 Pour tester si une arête coupe une bounding box nous avons décomposé le problème :
