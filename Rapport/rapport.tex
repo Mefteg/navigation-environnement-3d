@@ -21,8 +21,6 @@
 \begin{document}
 
 
-
-
 \maketitle
 
 \tableofcontents
@@ -31,7 +29,9 @@
 
 \chapter*{Remerciements}
 
-Nous tennons à remercier M. Frédéric Koriche, notre tuteur de projet, pour nous avoir encadré et nous avoir éclairé lorsque nous étions perdu dans les méandres (ou abysse) du code.  
+Nous tenons à remercier M. Frédéric Koriche, notre encadrant de projet, pour avoir été disponible et attentif quand nous en avions besoin. Il nous a fait partager son savoir et a mis à notre disposition tous les outils dont nous avons eu besoin.
+
+Son expérience et sa pédagogie nous ont permis de trouver nos repères dans ce vaste domaine qui nous était inconnu.
 
 \chapter{Introduction}
 
@@ -51,7 +51,7 @@ Dans le cadre de notre unité d'enseignement intitulée Algorithmes de l'Intelli
 
 \section*{Objectifs}
 
-La base de notre travail est une scène 3D créée à l'aide d'un logiciel d'éditions d'objets 3D, par exemple Blender. Il s'agit alors de charger cette scène pour y appliquer nos traitements. Tout d'abord, il faut générer le graphe à partir de tous les points composant les différentes formes pour représenter les arêtes. Ensuite il faut épurer ce graphe pour ne garder que les sommets et les arêtes ``empruntables``. Enfin on va chercher à appliquer un algorithme de simplification pour ne garder que les points réellement utiles. C'est une procédure appelée merging.
+La base de notre travail est une scène 3D créée à l'aide d'un logiciel d'édition d'objets 3D, par exemple Blender. Il s'agit alors de charger cette scène pour y appliquer nos traitements. Tout d'abord, il faut générer le graphe à partir de tous les points composant les différentes formes pour représenter les arêtes. Ensuite il faut épurer ce graphe pour ne garder que les sommets et les arêtes ``empruntables``. Enfin on va chercher à appliquer un algorithme de simplification pour ne garder que les points réellement utiles. C'est une procédure appelée merging.
 
 Le résultat serait donc un graphe des way-points, simplifié, automatiquement généré.
 
@@ -76,6 +76,11 @@ Malheureusement l'éditeur de map WorldCraft ne permet pas d'exporter directemen
 
 Au final, nous n'avons pas retenue cette solution car le .obj obtenu n'était pas aussi "propre" que celui obtenu par Blender. De plus la scène avait une épaisseur, ce qui ne nous plaisait pas.
 
+\paragraph{Division directement dans notre programme}
+
+Une autre solution que nous avons expérimentée, était de créer le maillage de notre scène par notre programme. Nous partions donc juste d'une forme carrée ou rectangulaire représentant le sol, puis nous la divisions en 4, ainsi de suite jusqu'à obtenir un maillage suffisant.
+L'avantage de cette solution c'est que ce n'est pas au designer de créer le maillage, il peut donc créer la scène qu'il veut sans trop de contraintes. Les inconvéniants de cette méthode est qu'elle offre un contrôle moins important sur la scène, elle rendait notre programme plus lourd et il fallait quand même passer par Blender pour créer la scène. Nous n'avons donc pas retenue cette solution.
+
 \paragraph{La solution avec Blender}
 
 Pour fabriquer notre sol nous avons longtemps cherché un modèle pré-conçu mais cela s'avéra infructueux.
@@ -84,7 +89,7 @@ Nous avons posé des pavés sur notre sol car se sont les formes que prennent le
 
 \subsection{Les différents formats de fichier}
 
-Une fois la scène créée sous Blender le logiciel nous proposait différents format d'exportation. Il y en a un grand nombre et nous en avons étudié principalement deux.
+Une fois la scène créée sous Blender le logiciel nous proposait différents formats d'exportation. Il y en a un grand nombre et nous en avons étudié principalement deux.
 
 \paragraph{COLLADA}
 
@@ -102,8 +107,8 @@ nous avons donc choisi de faire simple et de choisir .obj. De plus le format XML
 OBJ est un format de fichier contenant la description d'une géométrie 3D. Il a été défini par la société Wavefront Technologies. Ce format de fichier est ouvert et a été adopté par d'autres logiciels 3D (tels que Maya, 3D Studio Max, Lightwave et bien sur Blender) pour des traitements d'import / export de données.
 
 Dans un fichier Wavefront (extension .obj), les formes sont stockées les unes après les autres. Les différentes entités sont écrites par bloc.
-Donc, pour chaque forme les informations qui la concerne sont stockées ligne par ligne. Nous savons à quoi chaque information correspond grace à la lettre clef qui débute la ligne ( par exemple: ''v'' pour un vertex ).
-Les seuls informations qui nous intéressent sont les vertex et les faces. 
+Donc, pour chaque forme les informations qui la concerne sont stockées ligne par ligne. Nous savons à quoi chaque information correspond grâce à la lettre clef qui débute la ligne ( par exemple: ''v'' pour un vertex ).
+Les seules informations qui nous intéressent sont les vertex et les faces. 
 Une ligne pour un vertex fournit la position de ce vertex (x, y, z) écrit comme suit ''v x y z'' par exemple ''v 2.0 2.0 3.0'' pour un vertex de coordonnées (2.0, 2.0, 3.0)
 Une ligne pour une face fournit le numéro des vertex qui la composent écrit comme suit ``f num$_{1}$ ... num$_{n}$`` par exemple ``f 4 6 7 8 11 13``pour une face constituée des vetices numéros 4, 6, 7, 8 et 11. Le numéro d'un vertex n'est pas explicitement donné mais il se déduit par son ordre d'apparition dans le fichier Wavefront. C'est un identifiant unique.
 
@@ -124,7 +129,7 @@ Nous avons donc choisi ce format de fichier pour stocker notre scène 3D car il 
 
 \section{Récupérer notre scène en 3D}
  
-Une fois notre scène créée sous Blender s'est posé le problème de l'exploiter. Nous avons alors cherché du côté des librairies existantes, en C/C++ surtout. En effet, Blender nous proposait divers format de fichier de sortie. Nous devions faire en sorte que les informations soient récupérables et exploitable pour nos algorithmes. L'idée générale est d'utiliser un parser qui va lire les données du fichier pour les transformer en données compréhensibles par notre programme.
+Une fois notre scène créée sous Blender s'est posé le problème de l'exploiter. Nous avons alors cherché du côté des librairies existantes, en C/C++ surtout. En effet, Blender nous proposait divers formats de fichier de sortie. Nous devions faire en sorte que les informations soient récupérables et exploitables pour nos algorithmes. L'idée générale est d'utiliser un parser qui va lire les données du fichier pour les transformer en données compréhensibles par notre programme.
 
 Voici les solutions que nous avons envisagées.
  
@@ -134,7 +139,7 @@ Voici les solutions que nous avons envisagées.
 
 Une fois l'expérience OpenSceneGraph terminée et mise de côté, nous avons dû de nouveau chercher une solution. Après de longues recherches, nous avons trouvé quelques possibilités comme OGRE (Object-Oriented Graphics Rendering Engine), nous avons finalement décidé de créer nous même ce dont nous avions besoin. C'est la solution finale.
 
-L'utilisation d'OpenGL (Open Graphics Library), conseillée par notre professeur encadrant, était un choix établi. C'est une spécification qui définit une API multi-plateforme pour la conception d'applications générant des images 3D (mais également 2D). Bien connue pour son ouverture, sa souplesse d'utilisation, sa stabilité et sa disponibilité sur toutes les plates-formes, OpenGL est de plus le sujet de nombreux tutoriaux. Elle est utilisée dans certains jeux-vidéo
+L'utilisation d'OpenGL (Open Graphics Library), conseillée par notre professeur encadrant, était un choix établi. C'est une spécification qui définit une API multi-plateforme pour la conception d'applications générant des images 3D (mais également 2D). Bien connue pour son ouverture, sa souplesse d'utilisation, sa stabilité et sa disponibilité sur toutes les plates-formes, OpenGL est de plus le sujet de nombreux tutoriaux. Elle est utilisée dans certains jeux-vidéo.
 
 OpenGL nous a permis d'afficher notre graphe en 3D avec les points, les arêtes, les formes. Grâce à la gestion des vertices nous avons pu avoir un rendu des formes, utiliser la coloration des objets et créer un élément mobile représentant un agent. La caméra, bien gérée par cette librairie, a permis un gain de précision et liberté d'observation dans notre affichage.
 
@@ -153,7 +158,7 @@ Pour tester si un point est valide nous avons dû réfléchir à quelle méthode
 
 Les Bounding Box sont des objets invisibles générés à partir d'autres objets. Chaque Bounding Box est un cube (ou un prisme à base rectangulaire) et contient une forme. Elle représente l'objet représenté de manière simplifiée. Cela permet de réduire la complexité de différents calculs, tels que les collisions entre deux formes lors de recherche de chemins.
 
-Dans notre cas elles sont utiles pour détecter les sommets invalides du graphe des way-points. On a commencé par faire abstraction de la hauteur, car lorsqu'on parcourt le graphe on ne sait pas quelles sont les caractéristiques des formes qui vont se déplacer. On ne connait ni la nature du sol (eau, terre, lave, etc...) ni les attributs de la forme ou de l'agent (taille, largeur, capacité à voler ou nager...). Comme il nous manque des éléments sur la hauteur pour affiner opérations sur le graphe en fonction de qui parcourt ce graphe, on décide que, peu importe la hauteur (axe Y) d'un objet, on ne peut pas circuler sur l'espace où est projeté une forme sur le graphe. 
+Dans notre cas elles sont utiles pour détecter les sommets invalides du graphe des way-points. On a commencé par faire abstraction de la hauteur, car lorsqu'on parcourt le graphe on ne sait pas quelles sont les caractéristiques des formes qui vont se déplacer. On ne connait ni la nature du sol (eau, terre, lave, etc...) ni les attributs de la forme ou de l'agent (taille, largeur, capacité à voler ou nager...). Comme il nous manque des éléments sur la hauteur pour affiner les opérations sur le graphe en fonction de qui parcourt ce graphe, on décide que, peu importe la hauteur (axe Y) d'un objet, on ne peut pas circuler sur l'espace où est projeté une forme sur le graphe. 
 
 \begin{figure}[h]
 \centering
@@ -168,7 +173,7 @@ De là on a besoin de seulement quatre points pour représenter notre Bounding B
 
 \chapter{Implémentation finale}
 
-Nous présenterons ici les éléments que nous avons effectivement implémentés.
+Nous présenterons ici les éléments que nous avons effectivement implémentés. Le travail en équipe a nécéssité une bonne organisation et nous avons créé un SVN et un Google Group.
 
 \section{Principe général}
 
@@ -212,7 +217,7 @@ Reprécisons bien comment sont stockées les données.
 
 Notre scène, c'est à dire l'ensemble de tous les vertices et de toutes les formes, est stockée dans une liste de formes. On a donc, comme expliqué plus haut, une scène complète séparée en différentes formes : par exemple une forme qui correspond à tout le sol, une à un cube etc.
 
-C'est pourquoi nous avons une méthode qui permet d'identifier quelle forme est le sol. Dans notre cas, nous avons pu faire très simple et la forme correspondant au sol est celle qui possède le plus de points.
+C'est pourquoi nous avons une méthode qui permet d'identifier quelle forme est le sol. Dans notre cas, nous avons pu faire très simple : la forme correspondant au sol est celle qui possède le plus de points. On peut noter que notre sol peut contenir des points avec une hauteur différente de 0.
 
 \subsection{Le graphe généré}
 
@@ -258,6 +263,9 @@ Notre sol n'est composé que de carrés et chaque face possède une liste de 4 s
 
 voisins(A) = {B,D} ;  voisins(B) = {A,C} ; voisins(C) = {B,D} ; voisins(D) = {A,C}
 
+Le graphe peut contenir des points dont la hauteur est différente de 0. On peut avoir des reliefs.
+
+
 \section{Travaux effectués sur le graphe}
 
 Notre scène est donc récupérée dans notre programme. Nous avons de plus généré le graphe du sol. Il nous faut maintenant y appliquer nos traitements.
@@ -286,7 +294,7 @@ Voici notre méthode de parcours, en profondeur.
 
 \subsubsection{Heuristique}
 
-Notre heuristique, qui va déterminer si un point est naviguable ou pas va se baser sur les bounding box. Une bounding box est la plus petite boite englobant l'ensemble des points d'une forme. Générer une bounding box pouvant être un travail compliqué, nous avons choisi de dire que notre bounding box était constitué de quatres points (vertex). On calcule leurs coordonnées selon les valeurs minimales et maximales de tous les vertex d'une forme. On classe les quatres points afin de facilité les calculs à venir.
+Notre heuristique, qui va déterminer si un point est navigable ou pas va se baser sur les bounding box. Une bounding box est la plus petite boite englobant l'ensemble des points d'une forme. Générer une bounding box pouvant être un travail compliqué, nous avons choisi de dire que notre bounding box était constituée de quatres points (vertex). On calcule leurs coordonnées selon les valeurs minimales et maximales de tous les vertex d'une forme. On classe les quatres points afin de facilité les calculs à venir.
 
 On considère comme valide :
 \begin{itemize}
@@ -295,7 +303,7 @@ On considère comme valide :
 \end{itemize}
 
 Une arête, entre deux sommets, est valide si elle ne coupe pas une bounding box. Il nous a donc fallu implémenter deux méthodes renvoyant un prédicat pour savoir quels points et quelles arêtes supprimer. 
-Quand un point est non valide, on l'isole dans le graphe. On peut afficher tous les points, voir clairement les diffétences. Le parcours du graphe est quand a lui simplifié.
+Quand un point est non valide, on l'isole dans le graphe. On peut afficher tous les points, voir clairement les différences. Le parcours du graphe est quand a lui simplifié.
 
 L'heuristique a été un pilier très important de ce projet et a été l'objet d'une réflexion assez poussée. Nous présenterons différentes méthode qui ont été envisagées.
 
@@ -328,8 +336,6 @@ Les situations possibles sont illustrées en dessous :
 
 Les lignes épaisses ne sont pas considérées comme valides, les lignes fines si.
 Il est bon de noter que cet algorithme marche avec des polygones troués, comme illustré sur le figure \ref{nbintersect}.
-
-DESSIN
 
 Cette méthode est idéale pour les polygones non convexes mais comme nous utilisons des carrés, elle aurait été un peu lourde.
 
@@ -385,11 +391,27 @@ Après, le test est simple :
  \item Si $r<0 \vee r>1 \vee s<0 \vee s>1 \rightarrow$ pas d'intersection
 \end{itemize}
 
+
+
+Voici une illustration de l'application de l'heuristique dans un cas complexe avec des sommets invalides recouverts et des arêtes coupées par la forme sans que les sommets qu'elles relient soient invalides : 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.25]{Images/1-maillage.jpg}
+\caption{Exemple de forme qui coupe des arêtes sans recouvrir les sommets qu'elles relient}
+\includegraphics[scale=0.23]{Images/2-SuppressionSommet.jpg}
+\includegraphics[scale=0.23]{Images/3-SuppressionAretes.jpg}
+\caption{Dans un premier temps, suppression des sommets recouverts, ensuite suppression des arêtes invalides}
+\end{figure}
+\vspace{0.5cm}
+
+Enfin, comme on ne travaille que sur une projection 2D, les reliefs ne posent pas problème et sont bien pris en compte. En contre-partie le sol qui passerait au dessus d'un obstacle serait innaccessible.
+
 \subsection{Simplification du graphe des way-points : merging}
 
-Pour limiter les calculs de recherche de chemins les graphes des way-points sont généralement simplifier par l'application d'une technique qu'on appelle merging. 
+Pour limiter les calculs de recherche de chemins les graphes des way-points sont généralement simplifiés par l'application d'une technique qu'on appelle merging. 
 
-Nous n'avons pas eu le temps de développer un merging très évolué. Toutefois notre procédure de merging remplit son oeuvre en préservant la connexité du graphe. Il s'agit en fait d'isoler certain sommets dont l'entourage possède un grand nombre de voisins. 
+Nous n'avons pas eu le temps de développer un merging très évolué. Toutefois notre procédure de merging remplit son rôle en préservant la connexité du graphe. Il s'agit en fait d'isoler certains sommets dont l'entourage possède un grand nombre de voisins. 
 
 \begin{algorithm}[h]
 \caption{Merging du graphe : merging(sommet)}
@@ -424,13 +446,14 @@ Ce chapitre est dédié à la présentation du résultat final à travers quelqu
 
 \section{Interface graphique}
 
-Nous avons utilisé le gestionnaire de fenêtres de la libraire SDL pour contenir notre scène affichée. Cette librairie nous permet de récupérer des différents évenements, tels que les évenements clavier, redimensionnement de la fenêtre. Nous n'avons pas eu de problèmes particuliers liés à son installation ou à son utilisation.
+Nous avons utilisé le gestionnaire de fenêtres de la libraire SDL pour contenir notre scène affichée. Cette librairie nous permet de récupérer les différents évenements, tels que les évenements clavier ou encore le redimensionnement de la fenêtre. Nous n'avons pas eu de problèmes particuliers liés à son installation ou à son utilisation.
 
-Pour le rendu graphique 3D nous nous sommes donc servi d'OpenGL. Le résultat est l'affichage de notre scène avec la possibilité de l'explorer en déplaçant la caméra. Nous avons implémenté la gestion de différents évenements clavier liés à nos traitement sur le graphe dont voici la liste :
+Pour le rendu graphique 3D nous nous sommes donc servi d'OpenGL. Le résultat est l'affichage de notre scène avec la possibilité de l'explorer en déplaçant la caméra. Nous avons implémenté la gestion de différents événements clavier liés à nos traitements sur le graphe dont voici la liste :
 
 \begin{itemize}
  \item[d] : détecter et enlever les points invalides avec suivi visuel (attention procédure longue)
  \item[a] : détecter et enlever les points invalides sans suivi visuel (procédure rapide)
+ \item[z] : détecter et enlever les arêtes invalides
  \item[m] : merging, simplification du graphe
  \item[c] : afficher/masquer les formes
  \item[t] : afficher/masquer le graphe
@@ -466,11 +489,21 @@ Avec la touche ``m'' du clavier on peut lancer la procédure de merging. Voici l
 
 \section{Déplacement d'un agent}
 
+Pour mieux illustrer les déplacements possibles dans le graphe des way-points, nous avons implémenté la possibilité d'afficher et de déplacer un personnage en 3D.
+
+
+
+
 Pour vérifier notre travail, pour une mise en condition ``réelle`` et pour un rendu encore plus sympathique, nous avons implémenté un agent qui va effectuer un parcours sur notre graphe. Il est modelisé par une ligne blanche.
+Pour charger le modèle ( en .obj ), nous nous servons du parser que nous avons initialement créé pour charger la scène et nous obtenons toujours un vecteur de formes.
+Toutes ces formes seront affichées en même temps que la scène et la position du personnage dépend du vertex qu'il a calculé avant de se déplacer.
+
 
 Chaque sommet possède un poids, initialement nul, qui va augmenter de 1 à chaque passage de l'agent.
 
 Pour bien voir le chemin parcouru, nous colorons les sommets parcourus en bleu avec une proportionnalité en fonction du poids. Plus le poids est élevé, plus le sommet s'éclairci.
+
+Pour choisir le vertex vers lequel le personnage va se deplacer, celui-ci calcule le chemin de coût minimal entre sa position et un vertex de distance d. Son voisin lui renvoyant le coût minimal sera sa prochaine destination.
 
 Notre algorithme de déplacement est le suivant : 
 
@@ -482,15 +515,19 @@ Notre algorithme de déplacement est le suivant :
 \IF{pas = 0}
   \STATE retourner monPoids
 \ELSE
-  \FOR{chaque voisin v}  
-      \STATE v.parcours(pas - 1)
+  \IF{monPoids = 0}
+    \STATE retourner 0
+  \ELSE
+  \FOR{chaque voisin v $\ne$ monPère}  
+      \STATE p = min\{p, v.parcours(pas - 1)\}
   \ENDFOR
-  \STATE retourner monPoids + min{poids de mes voisins}
+  \STATE retourner monPoids + p
+  \ENDIF
 \ENDIF
 \end{algorithmic}
 \end{algorithm}
 
-L'agent se déplacera donc sur le voisin offrant un chemin de poids minimal.
+L'agent se déplacera donc sur le voisin débutant un chemin de poids minimal.
 
 \begin{figure}[h]
 \centering
@@ -573,28 +610,49 @@ L'agent se déplacera donc sur le voisin offrant un chemin de poids minimal.
 
 \section*{Map Half-Life en .obj}
 \begin{itemize}
- \item http://www.siteduzero.com/tutoriel-3-12988-decor-naturel-a-generer-un-terrain.html\#ss\_part\_1 (Gensurf)
+ \item http://www.siteduzero.com/tutoriel-3-12988-decor-naturel-a-generer-un-terrain.html\#ss\_part\_1  (Gensurf)
  
- \item http://nemesis.thewavelength.net/index.php?p=45 (ObjectViewer)
+ \item http://nemesis.thewavelength.net/index.php?p=45  (ObjectViewer)
 \end{itemize}
 
  
 
 \section*{Heuristique et Bounding Box}
 \begin{itemize}
- \item http://softsurfer.com/Archive/algorithm\_0107/algorithm\_0107.htm (bounding box)
+ \item http://softsurfer.com/Archive/algorithm\_0107/algorithm\_0107.htm  (Bounding Box)
  
- \item http://www.faqs.org/faqs/graphics/algorithms-faq/  (bounding box)
+ \item http://www.faqs.org/faqs/graphics/algorithms-faq/  (Bounding Box)
  
- \item http://local.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/ (inside polygone)
+ \item http://local.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  (inside polygone)
 \end{itemize} 
 
 \chapter{Conclusion}
 
 \subsection*{Bilan technique}
 
-Notre projet s'apparentait à un projet de recherche. Une grande partie du travail a donc consisté à explorer le domaine des environnements 3D, 
+Notre projet s'apparentait à un projet de recherche. Une grande partie du travail a donc consisté à explorer le domaine des environnements 3D. Nos objectifs principaux ont été atteints : nous créons une scène 3D avec un logiciel dédié, Blender ; nous la chargeons dans notre programme ; nous y appliquons les traitements prévus c'est à dire l'heuristique pour la suppression des sommets non navigables et le merging pour simplifier le graphe des way-points obtenu. Enfin nous avons un agent qui utilise un algorithme d'exploration plutôt évolué.
+
+Nos structures de données, bien que parfaitement fonctionnelles, ne sont pas implémentées le plus ''proprement`` possible. Toutefois ce n'était pas l'objet principal du projet et nos avons fait le choix de nous concentrer sur d'autres points.
+
+Notre parser est très simple et ne gère que les fichier .obj de base (sans texture, normales etc.). Encore une fois cela était parfait pour notre travail.
+
+Les différents algorithmes par contre ont été le sujet de beaucoup d'attention. Les données pouvant être de très grande taille, en nombre de points et d'arêtes par exemple, nous avons été vigileant quand aux complexités.
+
+La génération des Bounding Box étant un problème très complexe, nous avons fait le choix, en correlation avec notre projet, de le réduire au calcul de Bounding Box non minimales et effectives sur un plan 2D.
+
+Le rendu à l'écran n'a pas été notre priorité mais il est clair, fonctionnel : largement suffisant pour y voir nos résultats.
+
+Au final, notre agent peut se déplacer dans un environnement 3D, avec reliefs et obstacles, sans problème de collision. Son graphe des way-point est cohérent et auto-généré.
+
+Nous avons pensé à une éventuelle amélioration du merging. Par exemple, lors de l'isolement d'un sommet, on pourrait relier ses voisins non connectés 2 à 2.
 
 \subsection*{Bilan personnel}
+Partis de rien nous avons pu, grâce à ce projet, découvrir l'univers de la 3D. Nous avons appris à nous servir d'un logiciel d'édition 3D : Blender logiciel libre mais complet qui nous permettra par la suite d'aborder des logiciels professionnels tels que 3D Studio Max ou Maya plus sereinement. 
+
+L'apprentissage d'OpenGL était vraiment intéressant : il nous a permis de nous initier à la programmation de scène 3D. C'est un pas vers l'exploration d'autres librairies 3D telles que DirectX. Par ailleurs, nous avons pu prendre de l'avance sur le programme de l'année prochaine, ce qui est un plus indéniable.
+
+Nous avons retravaillé sur ces structures si importantes en informatique que sont les graphes.
+
+L'aspect humain et organisationnel a été très important. Ce n'était pas notre premier projet en équipe mais c'était la première fois que nous travaillions ensemble. C'était intéressant en enrichissant. Enfin cela a nécéssité une bonne organisation comme la mise en place d'un SVN, d'un Google Group etc.
 
 \end{document}
