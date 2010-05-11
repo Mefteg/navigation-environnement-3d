@@ -23,6 +23,8 @@ Vertex BoundingBox :: getP4(void){
 /*
 	On pourra ajouter facilement quatres points suppémentaires pour faire une vrai Bounding box
 	et on fera les tests sur la hauteur
+
+	On devrait parcourir les vertex chercher la valeur minimal des rectangles
 */
 BoundingBox :: BoundingBox(Forme f){
 	vector<Vertex> *listePoints = f.getVertices();
