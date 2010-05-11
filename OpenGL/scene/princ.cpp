@@ -29,6 +29,9 @@ int zoomScene=70;
 
 //savoir o� se situe le personnage
 Vertex * vertexPerso;
+vector<Forme> personnage;
+
+
 //savoir s'il faut afficher les formes ou non
 int afficherFormes=0;
 //savoir s'il faut afficher le graphe ou non
@@ -63,6 +66,7 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 			switch ( ligne[0] ) {
 				//S'il s'agit d'un vertex
 				case 'v':{
+							 if ( ligne[1] != 't' ) {
 					//S'il s'agit d'une nouvelle forme
 					if ( nv_forme == 0 ) {
 						//On enregistre la dernière forme
@@ -97,6 +101,7 @@ int parser( string chemin, vector<Forme> * vFormes ) {
 
 					forme.addVertex( v );
 					/*  cout << "vertex = ( " << v.coord[0] << ", " << v.coord[1] << ", " << v.coord[2] << " )" << endl;*/
+							 }
 					break;
 				}
 
@@ -175,19 +180,38 @@ Forme isolerSol( vector<Forme> * vFormes ) {
 	return sol;
 }
 
+/**
+ * Dessine une scène précédemment parsée
+ *
+ * On dessine pour chaque forme, chacuns de ses points
+ * On décide du mode de dessin (par exemple GL_LINE_LOOP)
+ */
+void dessinerScene( vector<Forme> * vFormes ) {
+	//Pour chaque forme
+	for ( int i=0; i<vFormes->size(); i++ ) {
+		vFormes->at(i).draw();
+	}
+}
+
 void dessinerPerso( Forme * sol ) {
 	float x = vertexPerso->getX();
 	float y = vertexPerso->getY();
 	float z = vertexPerso->getZ();
 	glPushMatrix();
 	glTranslated( x, y, z );
-	glLineWidth( 5.0 );
-	glBegin( GL_LINES );
-	glPointSize( 5 );
-	glColor3ub( 102, 51, 102 );
-	glVertex3i( 0, 0, 0 );
-	glVertex3i( 0, 1, 0 );
-	glEnd();
+	//si aucun personnage n'a �t� charg�
+	if ( personnage.empty() ) {
+		glLineWidth( 5.0 );
+		glBegin( GL_LINES );
+		glPointSize( 5 );
+		glColor3ub( 102, 51, 102 );
+		glVertex3i( 0, 0, 0 );
+		glVertex3i( 0, 1, 0 );
+		glEnd();
+	}
+	else {
+		dessinerScene( &personnage );
+	}
 	glPopMatrix();
 }
 
@@ -208,18 +232,6 @@ void changerVertexPerso() {
 	vertexPerso->setPoids( vertexPerso->getPoids()+1 );
 }
 
-/**
- * Dessine une scène précédemment parsée
- *
- * On dessine pour chaque forme, chacuns de ses points
- * On décide du mode de dessin (par exemple GL_LINE_LOOP)
- */
-void dessinerScene( vector<Forme> * vFormes ) {
-	//Pour chaque forme
-	for ( int i=0; i<vFormes->size(); i++ ) {
-		vFormes->at(i).draw();
-	}
-}
 
 /**
  * Fonction pour tout initialiser correctement et utiliser la fenetre 
@@ -325,8 +337,19 @@ void detectionAretesInvalides( Forme * sol, vector<BoundingBox> * listeBoundingB
 int main(int argc, char *argv[]){
 	//On vérifie qu'il y est une carte à charger
 	if ( argv[1] == NULL ) {
-		cout << "xx Erreur: Il n'y a pas de carte à charger" << endl;
+		cout << "xx Erreur: Il n'y a pas de carte �charger" << endl;
 		return -1;
+	}
+
+	//On vérifie qu'il y est un personnage � charger
+	if ( argv[2] == NULL ) {
+		cout << "xx Erreur: Il n'y a pas de personnage � charger" << endl;
+	}
+	else {
+		parser( argv[2], &personnage );
+		for ( int i=0; i<personnage.size(); i++ ) {
+			personnage.at(i).setCouleur( 153, 52, 153 );
+		}
 	}
 
 	//On lance SDL
