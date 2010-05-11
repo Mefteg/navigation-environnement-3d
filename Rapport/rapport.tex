@@ -7,12 +7,21 @@
 \usepackage{graphicx}
 
 
+%Les 4 lignes suivantes servent à modifier les puces : plus seulement des tirets.
+\renewcommand\labelitemi{\textbullet}
+\renewcommand\labelitemii{\normalfont\bfseries\textendash}
+\renewcommand\labelitemiii{\textasteriskcentered}
+\renewcommand\labelitemiv{\textperiodcentered}
+
 \title{Navigation dans un environnement 3D \vspace{0.5cm}}
 \author{Marc BEYSECKER, Tom GIMENEZ, Valentin HIRSON, Léo RIZZON\\  \\Professeur encadrant : Mr Frédéric Koriche \\ \\Université Montpellier II \\  \\Master 1 Informatique}
 
 
 \date{}
 \begin{document}
+
+
+
 
 \maketitle
 
@@ -22,7 +31,7 @@
 
 \chapter*{Remerciements}
 
-Ma mère, ta mère. Merci mon cul bonsoir m'ssieurs dames.
+Nous tennons à remercier M. Frédéric Koriche, notre tuteur de projet, pour nous avoir encadré et nous avoir éclairé lorsque nous étions perdu dans les méandres (ou abysse) du code.  
 
 \chapter{Introduction}
 
@@ -33,7 +42,7 @@ Dans les jeux vidéos, les personnages non joués par des humains doivent pouvoi
 
 Comme nous l'avons étudié, la recherche de chemins dans un graphe est un problème classique mais qui peut s'avérer très lourd sur de gros graphes. En prenant en compte que les jeux mettent en scène un grand nombre d'agents il s'agit de minimiser les temps de calculs. 
 
-Il s'agit donc d'une part de ne sélectionner que les points naviguables et de simplifier le graphe obtenu pour limiter les espaces de calculs. De ces opérations nait le graphe de way-points. Il s'agit donc du graphe sur lequel vont se déplacer les agents.
+Il s'agit donc d'une part de ne sélectionner que les points navigables et de simplifier le graphe obtenu pour limiter les espaces de calculs. De ces opérations nait le graphe de way-points. Il s'agit donc du graphe sur lequel vont se déplacer les agents.
 
 Dans la plupart des jeux actuels les environnements sont créés ``à la main'' par les créateurs du jeu et les game designers placent eux même les points du graphe des way-points. Cela représente un gros travail et c'est même impossible dans le cas d'environnements aléatoirement générés.
 
@@ -42,7 +51,7 @@ Dans le cadre de notre unité d'enseignement intitulée Algorithmes de l'Intelli
 
 \section*{Objectifs}
 
-La base de notre travail est une scène 3D créée à l'aide d'un logiciel d'éditions d'objets 3D, par exemple Blender. Il s'agit alors de charger cette scène pour y appliquer nos traitements. Tout d'abord, il faut générer le graphe à partir de tous les points composant les différentes formes pour représenter les arêtes. Ensuite il faut épurer ce graphe pour ne garder que les sommets et les arêtes ``emruntables``. Enfin on va chercher à appliquer un algorithme de simplification pour ne garder que les points réellement utiles. C'est une procédure appelée merging.
+La base de notre travail est une scène 3D créée à l'aide d'un logiciel d'éditions d'objets 3D, par exemple Blender. Il s'agit alors de charger cette scène pour y appliquer nos traitements. Tout d'abord, il faut générer le graphe à partir de tous les points composant les différentes formes pour représenter les arêtes. Ensuite il faut épurer ce graphe pour ne garder que les sommets et les arêtes ``empruntables``. Enfin on va chercher à appliquer un algorithme de simplification pour ne garder que les points réellement utiles. C'est une procédure appelée merging.
 
 Le résultat serait donc un graphe des way-points, simplifié, automatiquement généré.
 
@@ -125,12 +134,37 @@ Voici les solutions que nous avons envisagées.
 
 Une fois l'expérience OpenSceneGraph terminée et mise de côté, nous avons dû de nouveau chercher une solution. Après de longues recherches, nous avons trouvé quelques possibilités comme OGRE (Object-Oriented Graphics Rendering Engine), nous avons finalement décidé de créer nous même ce dont nous avions besoin. C'est la solution finale.
 
-L'utilisation d'OpenGL, conseillée par notre professeur encadrant, était un choix établi. Libre et accessible, OpenGl est de plus au programme de l'année prochaine : il est toujours intéressant de prendre un peu d'avance. OpenGL nous sert à afficher notre scène 3D.
+L'utilisation d'OpenGL (Open Graphics Library), conseillée par notre professeur encadrant, était un choix établi. C'est une spécification qui définit une API multi-plateforme pour la conception d'applications générant des images 3D (mais également 2D). Bien connue pour son ouverture, sa souplesse d'utilisation, sa stabilité et sa disponibilité sur toutes les plates-formes, OpenGL est de plus le sujet de nombreux tutoriaux. Elle est utilisée dans certains jeux-vidéo
 
-Coder en C++, pour la performance du programme, pour l'aspect objet intéressant dans notre contexte, pour l'utilisation d'OpenGL, était presque évident.
+OpenGL nous a permis d'afficher notre graphe en 3D avec les points, les arêtes, les formes. Grâce à la gestion des vertices nous avons pu avoir un rendu des formes, utiliser la coloration des objets et créer un élément mobile représentant un agent. La caméra, bien gérée par cette librairie, a permis un gain de précision et liberté d'observation dans notre affichage.
+
+Enfin OpenGl est au programme de l'année prochaine : il est toujours intéressant de prendre un peu d'avance. 
+
+
+
+
+Au niveau du langage de programmation, coder en C++, pour la performance du programme, pour l'aspect objet intéressant dans notre contexte, pour l'utilisation d'OpenGL, était presque évident.
 
 Finalement nous avons donc implémenté notre propre parser pour remplir nos propres structures de données. En fait, on a recodé une partie des fonctionnalités des librairies que nous avions étudiées pour n'en garder que ce dont nous avons besoin et pour avoir des structures que nous maitrisons pleinement. Au final, cela nous a fait gagné du temps.
 
+\section{Test de validité des points : Bounding Box}
+
+Pour tester si un point est valide nous avons dû réfléchir à quelle méthode utiliser. Notre professeur encadrant nous avait parlé de Bounding Box.
+
+Les Bounding Box sont des objets invisibles générés à partir d'autres objets. Chaque Bounding Box est un cube (ou un prisme à base rectangulaire) et contient une forme. Elle représente l'objet représenté de manière simplifiée. Cela permet de réduire la complexité de différents calculs, tels que les collisions entre deux formes lors de recherche de chemins.
+
+Dans notre cas elles sont utiles pour détecter les sommets invalides du graphe des way-points. On a commencé par faire abstraction de la hauteur, car lorsqu'on parcourt le graphe on ne sait pas quelles sont les caractéristiques des formes qui vont se déplacer. On ne connait ni la nature du sol (eau, terre, lave, etc...) ni les attributs de la forme ou de l'agent (taille, largeur, capacité à voler ou nager...). Comme il nous manque des éléments sur la hauteur pour affiner opérations sur le graphe en fonction de qui parcourt ce graphe, on décide que, peu importe la hauteur (axe Y) d'un objet, on ne peut pas circuler sur l'espace où est projeté une forme sur le graphe. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{Images/Projection_orthogonale_illustration.jpg}
+\caption{Exemple de projection orthogonale d'un carré sur un plan 2D}
+\label{nbintersect}
+\end{figure}
+\vspace{0.5cm}
+
+
+De là on a besoin de seulement quatre points pour représenter notre Bounding Box. On utilise des vertex, comme cela, si on veut étendre notre modèle à des Bounding Box en trois dimensions il suffit de rajouter quatre autres vertex.
 
 \chapter{Implémentation finale}
 
@@ -167,6 +201,8 @@ Les \textit{faces} possèdent une liste contenant les numéros des vertex qui le
 
  \item Bounding Box:
 
+Les \textit{Bounding Box} possèdent 4 vertices qui correspondent aux points de la projection en 2D de la Bounding Box sur le sol. La classe possède un constructeur qui prend une forme en paramètre, on y calcule une la bounding box d'une forme quelconque.
+
 \end{itemize}
 
 
@@ -178,7 +214,7 @@ Notre scène, c'est à dire l'ensemble de tous les vertices et de toutes les for
 
 C'est pourquoi nous avons une méthode qui permet d'identifier quelle forme est le sol. Dans notre cas, nous avons pu faire très simple et la forme correspondant au sol est celle qui possède le plus de points.
 
-\subsection{Le graphe géneré}
+\subsection{Le graphe généré}
 
 Pour stocker notre graphe dont la création est expliquée plus loin, nous avons fait le choix de rajouter à notre classe Vertex une liste d'adjacence contenant des pointeurs vers les voisins de ce sommet. C'est donc une méthode d'implémentation classique où chaque sommet connait ses voisins. Encore une fois, comme le point principal du projet n'est pas là, nous avons choisi de faire au plus simple. 
 
@@ -219,6 +255,7 @@ Pour effectuer les traitements prévus nous avons donc décider de travailler su
 Pour chaque face on lie ses vertices de manière à ce que chaque sommet prenne comme voisins son prédecesseur et son successeur dans leur ordre d'apparition de la liste des points de la face.
 
 Notre sol n'est composé que de carrés et chaque face possède une liste de 4 sommets A,B,C,D.
+
 voisins(A) = {B,D} ;  voisins(B) = {A,C} ; voisins(C) = {B,D} ; voisins(D) = {A,C}
 
 \section{Travaux effectués sur le graphe}
@@ -270,6 +307,7 @@ Pour déterminer le status d'un point (x$_{p}$,y$_{p}$), on trace une droite hor
 Si le nombre d'intersection de la droite avec chaque arête du poylygone est impaire alors le point est à l'intérieur du polygone, sinon il n'est pas dedans.
 
 \begin{figure}[h]
+\centering
 \includegraphics[scale=0.6]{Images/insidepoly1.jpg}
 \includegraphics[scale=0.6]{Images/insidepoly3.jpg}
 \caption{Différents cas de figures avec nombre d'intersection paire et impaire}
@@ -306,7 +344,7 @@ Un point est à l'intérieur du polygone si il est toujours du même côté que 
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.6]{Images/chemin2.jpg}
+\includegraphics[scale=0.5]{Images/chemin2.jpg}
 \caption{Un chemin dans un carré}
 \end{figure}
 \vspace{0.5cm}
@@ -321,7 +359,6 @@ Il nous suffit donc de faire 4 tests, on teste la position du point par rapport 
 Nous avons choisi de retenir la solution 3 car c'est celle qui nous semblait marcher le mieux ainsi que la plus économe en ressources. Elle est parfaitement adaptée à notre projet.
 
 \paragraph{Méthode de test d'intersection d'une arête avec une bounding box }
-
 
 Pour tester si une arête coupe une bounding box nous avons décomposé le problème :
 \begin{itemize}
@@ -383,34 +420,180 @@ Nous n'avons pas eu le temps de développer un merging très évolué. Toutefois
 
 \chapter{Résultats}
 
+Ce chapitre est dédié à la présentation du résultat final à travers quelques exemples. Nous parlerons également de l'interface graphique mise au point pour afficher la scène et pour y appliquer nos différents traitements.
+
 \section{Interface graphique}
-commandes
+
+Nous avons utilisé le gestionnaire de fenêtres de la libraire SDL pour contenir notre scène affichée. Cette librairie nous permet de récupérer des différents évenements, tels que les évenements clavier, redimensionnement de la fenêtre. Nous n'avons pas eu de problèmes particuliers liés à son installation ou à son utilisation.
+
+Pour le rendu graphique 3D nous nous sommes donc servi d'OpenGL. Le résultat est l'affichage de notre scène avec la possibilité de l'explorer en déplaçant la caméra. Nous avons implémenté la gestion de différents évenements clavier liés à nos traitement sur le graphe dont voici la liste :
+
+\begin{itemize}
+ \item[d] : détecter et enlever les points invalides avec suivi visuel (attention procédure longue)
+ \item[a] : détecter et enlever les points invalides sans suivi visuel (procédure rapide)
+ \item[m] : merging, simplification du graphe
+ \item[c] : afficher/masquer les formes
+ \item[t] : afficher/masquer le graphe
+ \item[touches directionnelles] : déplacement de la caméra
+\end{itemize}
+
 
 \section{Application de l'heuristique}
-screenshot
+
+Donc, en appuyant sur la touche ``d'' ou ``a'' nous pouvons masquer, ou plutôt isoler les sommets invalides. Voici un exemple (pour plus de lisibilité nous avons choisi de ne pas afficher les formes qui couvraient les points en question : 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.4]{Images/heuristique1.png}
+\includegraphics[scale=0.4]{Images/heuristique2.png}
+\caption{Notre graphe avant application de l'heuristique, d'abord avec les formes affichées qui cachent les sommets en dessous puis avec les formes masquées}
+\includegraphics[scale=0.5]{Images/heuristique3.png}
+\caption{Notre graphe après l'application de l'heuristique (formes non affichées)}
+\end{figure}
+\vspace{0.5cm}
 
 \section{Merging}
-screenshot
+ 
+Avec la touche ``m'' du clavier on peut lancer la procédure de merging. Voici les résultats obtenu sur l'exemple précédent. Notons que l'application de l'heuristique doit avoir lieu avant. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Images/heuristique3.png}
+\includegraphics[scale=0.5]{Images/merging3.png}
+\caption{Notre graphe après application de l'heuristique, avec les formes masquées, avant et après la procédure de merging}
+\end{figure}
+\vspace{0.5cm}
 
 \section{Déplacement d'un agent}
 
+Pour vérifier notre travail, pour une mise en condition ``réelle`` et pour un rendu encore plus sympathique, nous avons implémenté un agent qui va effectuer un parcours sur notre graphe. Il est modelisé par une ligne blanche.
+
+Chaque sommet possède un poids, initialement nul, qui va augmenter de 1 à chaque passage de l'agent.
+
+Pour bien voir le chemin parcouru, nous colorons les sommets parcourus en bleu avec une proportionnalité en fonction du poids. Plus le poids est élevé, plus le sommet s'éclairci.
+
+Notre algorithme de déplacement est le suivant : 
+
+\begin{algorithm}[h]
+\caption{Déplacement d'un agent : parcours(pas)}
+\label{merging_graphe}
+\mbox{Algorithme lancé à partir du sommet courant de l'agent}
+\begin{algorithmic}[1]
+\IF{pas = 0}
+  \STATE retourner monPoids
+\ELSE
+  \FOR{chaque voisin v}  
+      \STATE v.parcours(pas - 1)
+  \ENDFOR
+  \STATE retourner monPoids + min{poids de mes voisins}
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+L'agent se déplacera donc sur le voisin offrant un chemin de poids minimal.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{Images/merging3.png}
+\includegraphics[scale=0.5]{Images/parcours1.png}
+\caption{Notre graphe après application de l'heuristique, avec les formes masquées, après la procédure de merging, avant l'exploration et pendant l'exploration}
+\end{figure}
+\vspace{0.5cm}
 
 
-\chapter{Bibliographie}
+\chapter{Bibliographie - Webographie}
+
+\section*{Moteur 3D}
+
+    http://en.wikipedia.org/wiki/List\_of\_game\_engines
 
 \section*{OpenSceneGraph}
+\begin{itemize}
+ \item http://www.openscenegraph.org/projects/osg
+ 
+ \item http://www.openscenegraph.org/projects/osg
+ 
+ \item http://cheveche4.developpez.com/tutoriels/openscenegraph/
+ 
+ \item http://www.openscenegraph.org/projects/osg/wiki/Support/ReferenceGuides
+\end{itemize}
+
+
 \section*{OpenGL}
-\section*{Le langage C/C++}
+\begin{itemize}
+ \item http://www.siteduzero.com/tutoriel-3-5014-creez-des-programmes-en-3d-avec-opengl.html
+
+ \item http://fr.wikipedia.org/wiki/OpenGL
+
+ \item http://www.opengl.org/documentation/
+
+ \item http://jeux.developpez.com/faq/opengl/?page=techniques\#TECHNIQUES\_modele
+
+ \item OpenGL: Shading Language Second Edition ; Par Randi J. Rost ; Édition Addison-Wesley 
+\end{itemize}
+
+
 \section*{Blender}
-\section*{WaveFront (.obj)}
+\begin{itemize}
+ \item http://www.siteduzero.com/tutoriel-3-11714-debutez-dans-la-3d-avec-blender.html
+ 
+ \item http://www.blender.org/
+\end{itemize}
+  
+
+\section*{Format de fichier 3D}
+\subsection*{COLLADA}
+\begin{itemize}
+ \item http://www.khronos.org/collada/
+\end{itemize}
+
+\subsection*{WaveFront (.obj)}
+\begin{itemize}
+ \item http://fr.wikipedia.org/wiki/Objet\_3D\_(format\_de\_fichier)
+ 
+ \item http://local.wasp.uwa.edu.au/~pbourke/dataformats/obj/
+\end{itemize}
+
+
 \section*{SDL}
+\begin{itemize}
+ \item http://fr.wikipedia.org/wiki/Simple\_DirectMedia\_Layer
+
+ \item http://www.libsdl.org/
+
+ \item http://www.siteduzero.com/tutoriel-3-14080-installation-de-la-sdl.html
+\end{itemize}
+
+
 \section*{Ogre}
-\section*{Map to obj}
-\section*{Bounding Box}
+\begin{itemize}
+ \item http://en.wikipedia.org/wiki/OGRE
+\end{itemize}
+   
+
+\section*{Map Half-Life en .obj}
+\begin{itemize}
+ \item http://www.siteduzero.com/tutoriel-3-12988-decor-naturel-a-generer-un-terrain.html\#ss\_part\_1 (Gensurf)
+ 
+ \item http://nemesis.thewavelength.net/index.php?p=45 (ObjectViewer)
+\end{itemize}
+
+ 
+
+\section*{Heuristique et Bounding Box}
+\begin{itemize}
+ \item http://softsurfer.com/Archive/algorithm\_0107/algorithm\_0107.htm (bounding box)
+ 
+ \item http://www.faqs.org/faqs/graphics/algorithms-faq/  (bounding box)
+ 
+ \item http://local.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/ (inside polygone)
+\end{itemize} 
 
 \chapter{Conclusion}
 
 \subsection*{Bilan technique}
+
+Notre projet s'apparentait à un projet de recherche. Une grande partie du travail a donc consisté à explorer le domaine des environnements 3D, 
 
 \subsection*{Bilan personnel}
 
