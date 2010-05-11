@@ -1,0 +1,5 @@
+Pour mieux illustrer les déplacements possibles dans le graphe des way-points, nous avons implémenté la possibilité d'afficher et de déplacer un personnage en 3D.
+Pour charger le modèle ( en .obj ), nous nous servons du parser que nous avons initialement créé pour charger la scène et nous obtenons toujours un vecteur de formes.
+Toutes ces formes seront affichées en même temps que la scène et la position du personnage dépend du vertex qu'il a calculé avant de se déplacer.
+
+Pour choisir le vertex vers lequel le personnage va se deplacer, celui-ci calcule le chemin de coût minimal entre sa position et un vertex de distance d. Son voisin lui renvoyant le coût minimal sera sa prochaine destination.
