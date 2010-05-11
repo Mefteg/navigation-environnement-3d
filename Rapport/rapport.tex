@@ -77,7 +77,7 @@ Au final, nous n'avons pas retenue cette solution car le .obj obtenu n'était pa
 \paragraph{Division directement dans notre programme}
 
 Une autre solution que nous avons expérimentée, était de créer le maillage de notre scène par notre programme. Nous partions donc juste d'une forme carrée ou rectangulaire représentant le sol, puis nous la divisions en 4, ainsi de suite jusqu'à obtenir un maillage suffisant.
-L'avantage de cette solution c'est que ce n'est pas au designer de créer le maillage, il peut donc créer la scène qu'il veut sans trop de contraintes. Les inconvéniants de cette méthode est qu'elle offre un contrôle moins important sur la scène, elle rendait notre programme plus lourd et il fallait quand même passer par Blender pour créer la scène. Nous n'avons donc pas retenue cette solution.
+L'avantage de cette solution est que le designer n'est pas obligé de créer le maillage, il peut donc dessiner la scène qu'il veut sans trop de contraintes. Mais cette méthode présente des inconvénients : elle limite le contrôle sur la scène, elle rendait notre programme plus lourd et il fallait quand même passer par Blender pour créer la scène. Nous n'avons donc pas retenue cette solution.
 
 \paragraph{La solution avec Blender}
 
@@ -100,15 +100,15 @@ requises par les développeurs de jeux vidéo.
 Il fallait donc faire un choix, COLLADA étant plus conséquent que .obj, et le sujet de notre TER n'étant pas porté sur le format de notre scène, 
 nous avons donc choisi de faire simple et de choisir .obj. De plus le format XML nous obligeait à utiliser des librairies dédiées, complexes et non standardisées, qui nous aurait pris beaucoup plus de temps pour écrire le parser.
 
-\paragraph{WaveFront}
+\paragraph{Wavefront}
 
 OBJ est un format de fichier contenant la description d'une géométrie 3D. Il a été défini par la société Wavefront Technologies. Ce format de fichier est ouvert et a été adopté par d'autres logiciels 3D (tels que Maya, 3D Studio Max, Lightwave et bien sur Blender) pour des traitements d'import / export de données.
 
 Dans un fichier Wavefront (extension .obj), les formes sont stockées les unes après les autres. Les différentes entités sont écrites par bloc.
 Donc, pour chaque forme les informations qui la concerne sont stockées ligne par ligne. Nous savons à quoi chaque information correspond grâce à la lettre clef qui débute la ligne ( par exemple: ''v'' pour un vertex ).
 Les seules informations qui nous intéressent sont les vertex et les faces. 
-Une ligne pour un vertex fournit la position de ce vertex (x, y, z) écrit comme suit ''v x y z'' par exemple ''v 2.0 2.0 3.0'' pour un vertex de coordonnées (2.0, 2.0, 3.0)
-Une ligne pour une face fournit le numéro des vertex qui la composent écrit comme suit ``f num$_{1}$ ... num$_{n}$`` par exemple ``f 4 6 7 8 11 13``pour une face constituée des vetices numéros 4, 6, 7, 8 et 11. Le numéro d'un vertex n'est pas explicitement donné mais il se déduit par son ordre d'apparition dans le fichier Wavefront. C'est un identifiant unique.
+Une ligne pour un vertex fournit la position de ce vertex (x, y, z) décrite comme suit ''v x y z'' par exemple ''v 2.0 2.0 3.0'' pour un vertex de coordonnées (2.0, 2.0, 3.0)
+Une ligne pour une face fournit le numéro des vertex qui la composent écrit comme suit ``f num$_{1}$ ... num$_{n}$`` par exemple ``f 4 6 7 8 11 13`` pour une face constituée des vertices numéros 4, 6, 7, 8 et 11. Le numéro d'un vertex n'est pas explicitement donné mais il se déduit par son ordre d'apparition dans le fichier Wavefront. C'est un identifiant unique.
 
 Voici un exemple de code dans un fichier .obj.
 
@@ -127,11 +127,15 @@ Nous avons donc choisi ce format de fichier pour stocker notre scène 3D car il 
 
 \section{Récupérer notre scène en 3D}
  
-Une fois notre scène créée sous Blender s'est posé le problème de l'exploiter. Nous avons alors cherché du côté des librairies existantes, en C/C++ surtout. En effet, Blender nous proposait divers formats de fichier de sortie. Nous devions faire en sorte que les informations soient récupérables et exploitables pour nos algorithmes. L'idée générale est d'utiliser un parser qui va lire les données du fichier pour les transformer en données compréhensibles par notre programme.
+Une fois notre scène créée sous Blender s'est posé le problème de l'exploiter. Nous avons alors cherché du côté des librairies existantes, en C/C++ surtout. En effet, Blender nous proposait divers formats de fichier de sortie. Nous devions faire en sorte que les informations soient récupérables et exploitables pour nos algorithmes. L'idée générale était d'utiliser un parser qui va lire les données du fichier pour les transformer en données compréhensibles par notre programme.
 
 Voici les solutions que nous avons envisagées.
  
 \subsection{OpenSceneGraph}
+
+OpenSceneGraph est une extension d'OpenGL qui facilite le traitement d'une scène 3D. Elle permet de charger simplement des scènes dans des formats divers et de parcourir et d'agir sur les informations ainsi recuperées.
+Une fois chargée, cette scène est transformée en un graphe très complexe contenant une énorme quantité d'informations. Ce graphe met en relation les formes entre elles et entre leurs informations respectives (textures, transformations, etc).
+Cette solution n'a pas été retenue car nous n'avions pas le contrôle total de l'exécution d'OpenSceneGraph et la masse d'informations générée était plus une gène qu'un atout. Enfin la facilité de chargement de la scène réduisait l'intérêt de notre projet.
 
 \subsection{OpenGL avec nos propres structures de données}
 
@@ -171,7 +175,7 @@ Nous présenterons ici les éléments que nous avons effectivement implémentés
 
 \section{Principe général}
 
-Voici le principe général de notre programme. Ci-après les différentes étapes successives en considérant que l'on part d'une scène 3D en format WaveFront.
+Voici le principe général de notre programme. Ci-après les différentes étapes successives en considérant que l'on part d'une scène 3D en format Wavefront.
 
 \begin{itemize}
  \item Parser le fichier .obj de la scène 3D
@@ -227,8 +231,8 @@ Cette liste d'adjacence est donc remplie à l'appel de la méthode de générati
 
 \section{Un parser pour récupérer notre scène}
 
-Nous récupérons donc un fichier au format WaveFront. Il s'agit de remplir nos structures de données, un vecteur de forme que nous appelerons ici \textit{listeDeFormes}.
-Nous avons présenté précédemment la structure d'un fichier au format WaveFront. Ici nous présenterons le fonctionnement de notre parser.
+Nous récupérons donc un fichier au format Wavefront. Il s'agit de remplir nos structures de données, un vecteur de forme que nous appelerons ici \textit{listeDeFormes}.
+Nous avons présenté précédemment la structure d'un fichier au format Wavefront. Ici nous présenterons le fonctionnement de notre parser.
 
 \begin{algorithm}[h]
 \caption{Parser de fichier .obj}
@@ -577,7 +581,7 @@ L'agent se déplacera donc sur le voisin débutant un chemin de poids minimal.
  \item http://www.khronos.org/collada/
 \end{itemize}
 
-\subsection*{WaveFront (.obj)}
+\subsection*{Wavefront (.obj)}
 \begin{itemize}
  \item http://fr.wikipedia.org/wiki/Objet\_3D\_(format\_de\_fichier)
  
