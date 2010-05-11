@@ -15,6 +15,9 @@ using namespace std;
 class Forme {
 	private:
 		int num;
+		int r;
+		int v;
+		int b;
 		vector<Vertex> vertices;
 		vector<Face> faces;
 
@@ -31,6 +34,7 @@ class Forme {
 		void setNum(int n);
 		void setVertices( vector<Vertex> * vVertex );
 		void setFaces( vector<Face> * vFaces );
+		void setCouleur( int r, int v, int b );
 
 		void addVertex( Vertex v );
 		void addFace( Face f );

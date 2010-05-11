@@ -253,7 +253,7 @@ int Vertex::poidsParcours( int pas, int pere ) {
 	else {
 		//on change le vertex courant du personnage
 		int next=0;
-		int aux=1000;
+		int aux=100000;
 		for ( int i=0; i<voisins->size(); i++ ) {
 			if ( voisins->at(i)->getNum() != pere ) {
 				int p = voisins->at(i)->poidsParcours( pas-1, voisins->at(i)->getNum() );

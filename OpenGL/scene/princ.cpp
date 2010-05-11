@@ -181,9 +181,10 @@ void dessinerPerso( Forme * sol ) {
 	float z = vertexPerso->getZ();
 	glPushMatrix();
 	glTranslated( x, y, z );
+	glLineWidth( 5.0 );
 	glBegin( GL_LINES );
 	glPointSize( 5 );
-	glColor3ub( 255, 255, 255 );
+	glColor3ub( 102, 51, 102 );
 	glVertex3i( 0, 0, 0 );
 	glVertex3i( 0, 1, 0 );
 	glEnd();
@@ -195,12 +196,12 @@ void changerVertexPerso() {
 	//on change le vertex courant du personnage
 	int next=0;
 	int aux=1000;
-	int pas=1;
+	int pas=10;
 	for ( int i=0; i<voisins->size(); i++ ) {
 		int p = voisins->at(i)->poidsParcours( pas, vertexPerso->getNum() );
 		if ( p <= aux ) {
 			next = i;
-			aux = voisins->at(i)->getPoids();
+			aux = p;
 		}
 	}
 	vertexPerso = vertexPerso->getVoisins()->at(next);
@@ -228,6 +229,8 @@ void dessiner( Forme * sol, vector<Forme> * vFormes ) {
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity( );
 	gluPerspective( zoomScene, (double) SCREEN_WIDTH/SCREEN_HEIGHT, 1, 1000 );
+
+	glEnable(GL_DEPTH_TEST);
 
 	//efface le tampon d'affichage ( ? )
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -344,6 +347,7 @@ int main(int argc, char *argv[]){
 	parser( argv[1], &vFormes );
 	//On isole le sol des autres formes
 	Forme sol = isolerSol( &vFormes );
+	sol.setCouleur( 200, 200, 200 );
 
 	//zero pour l'instant, on prendra le premier point non isolé plus tard :)
 	vertexPerso = &(sol.getVertices()->at(0));

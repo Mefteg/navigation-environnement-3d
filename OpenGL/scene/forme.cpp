@@ -5,10 +5,16 @@ Forme::Forme() {
 	this->num = 0;
 	this->vertices = vector<Vertex>();
 	this->faces = vector<Face>();
+	this->r=255;
+	this->v=50;
+	this->b=150;
 }
 
 Forme::Forme( int num) {
 	this->num = num;
+	this->r=255;
+	this->v=153;
+	this->b=0;
 }
 
 int Forme::getNum() {
@@ -42,6 +48,12 @@ void Forme::setVertices( vector<Vertex> * vVertex ){
 
 void Forme::setFaces( vector<Face> * vFaces ){
 	this->faces = (* vFaces);
+}
+
+void Forme::setCouleur( int r, int v, int b ) {
+	this->r=r;
+	this->v=v;
+	this->b=b;
 }
 
 void Forme::addVertex(Vertex v){
@@ -231,7 +243,7 @@ void Forme::draw() {
 			float z = v->getZ();
 /*			cout << "( " << x << ", " << y << ", " << z << " )" << endl;*/
 			//on crée un glVert
-			glColor3ub( (int) ((y+4)*10)%255, 30, 30 );
+			glColor3ub( this->r, this->v, this->b );
 			glVertex3d( x, y, z );
 
 		}
