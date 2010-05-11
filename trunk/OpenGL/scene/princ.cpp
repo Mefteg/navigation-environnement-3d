@@ -33,7 +33,7 @@ vector<Forme> personnage;
 
 
 //savoir s'il faut afficher les formes ou non
-int afficherFormes=0;
+int afficherFormes=1;
 //savoir s'il faut afficher le graphe ou non
 int afficherGraphe=0;
 
@@ -199,6 +199,7 @@ void dessinerPerso( Forme * sol ) {
 	float z = vertexPerso->getZ();
 	glPushMatrix();
 	glTranslated( x, y, z );
+	glScalef(0.5,0.5,0.5);
 	//si aucun personnage n'a été chargé
 	if ( personnage.empty() ) {
 		glLineWidth( 5.0 );
@@ -220,7 +221,7 @@ void changerVertexPerso() {
 	//on change le vertex courant du personnage
 	int next=0;
 	int aux=1000;
-	int pas=10;
+	int pas=8;
 	for ( int i=0; i<voisins->size(); i++ ) {
 		int p = voisins->at(i)->poidsParcours( pas, vertexPerso->getNum() );
 		if ( p <= aux ) {
@@ -370,7 +371,7 @@ int main(int argc, char *argv[]){
 	parser( argv[1], &vFormes );
 	//On isole le sol des autres formes
 	Forme sol = isolerSol( &vFormes );
-	sol.setCouleur( 200, 200, 200 );
+	sol.setCouleur( 100, 100, 100 );
 
 	//zero pour l'instant, on prendra le premier point non isolé plus tard :)
 	vertexPerso = &(sol.getVertices()->at(0));
