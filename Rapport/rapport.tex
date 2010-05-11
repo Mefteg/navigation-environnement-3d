@@ -143,21 +143,21 @@ Une fois l'expérience OpenSceneGraph terminée et mise de côté, nous avons d�
 
 L'utilisation d'OpenGL (Open Graphics Library), conseillée par notre professeur encadrant, était un choix établi. C'est une spécification qui définit une API multi-plateforme pour la conception d'applications générant des images 3D (mais également 2D). Bien connue pour son ouverture, sa souplesse d'utilisation, sa stabilité et sa disponibilité sur toutes les plates-formes, OpenGL est de plus le sujet de nombreux tutoriaux. Elle est utilisée dans certains jeux-vidéo.
 
-OpenGL nous a permis d'afficher notre graphe en 3D avec les points, les arêtes, les formes. Grâce à la gestion des vertices nous avons pu avoir un rendu des formes, utiliser la coloration des objets et créer un élément mobile représentant un agent. La caméra, bien gérée par cette librairie, a permis un gain de précision et liberté d'observation dans notre affichage.
+OpenGL nous a permis d'afficher notre graphe en 3D avec les points, les arêtes, les formes. Grâce à la gestion des vertices nous avons pu avoir un rendu des formes, utiliser la coloration des objets et créer un élément mobile représentant un agent. La caméra, bien gérée par cette librairie, a permis un gain de précision et de liberté d'observation dans notre affichage.
 
-Enfin OpenGl est au programme de l'année prochaine : il est toujours intéressant de prendre un peu d'avance. 
+Enfin OpenGL est au programme de l'année prochaine : il est toujours intéressant de prendre un peu d'avance. 
 
 Au niveau du langage de programmation, coder en C++, pour la performance du programme, pour l'aspect objet intéressant dans notre contexte, pour l'utilisation d'OpenGL, était presque évident.
 
-Finalement nous avons donc implémenté notre propre parser pour remplir nos propres structures de données. En fait, on a recodé une partie des fonctionnalités des librairies que nous avions étudiées pour n'en garder que ce dont nous avons besoin et pour avoir des structures que nous maitrisons pleinement. Au final, cela nous a fait gagné du temps.
+Finalement nous avons donc implémenté notre propre parser pour remplir nos propres structures de données. En fait, nous avons recodé une partie des fonctionnalités des librairies que nous avions étudiées pour n'en garder que ce dont nous avons besoin et pour avoir des structures que nous maitrisions pleinement. Au final, cela nous a fait gagné du temps.
 
 \section{Test de validité des points : Bounding Box}
 
 Pour tester si un point est valide nous avons dû réfléchir à quelle méthode utiliser. Notre professeur encadrant nous avait parlé de Bounding Box.
 
-Les Bounding Box sont des objets invisibles générés à partir d'autres objets. Chaque Bounding Box est un cube (ou un prisme à base rectangulaire) et contient une forme. Elle représente l'objet représenté de manière simplifiée. Cela permet de réduire la complexité de différents calculs, tels que les collisions entre deux formes lors de recherche de chemins.
+Les Bounding Box sont des objets invisibles générés à partir d'autres objets. Chaque Bounding Box est un cube (ou un prisme à base rectangulaire) et contient une forme. Elle représente l'objet de manière simplifiée. Cela permet de réduire la complexité de différents calculs, tels que les collisions entre deux formes lors de la recherche de chemins.
 
-Dans notre cas elles sont utiles pour détecter les sommets invalides du graphe des way-points. On a commencé par faire abstraction de la hauteur, car lorsqu'on parcourt le graphe on ne sait pas quelles sont les caractéristiques des formes qui vont se déplacer. On ne connait ni la nature du sol (eau, terre, lave, etc...) ni les attributs de la forme ou de l'agent (taille, largeur, capacité à voler ou nager...). Comme il nous manque des éléments sur la hauteur pour affiner les opérations sur le graphe en fonction de qui parcourt ce graphe, on décide que, peu importe la hauteur (axe Y) d'un objet, on ne peut pas circuler sur l'espace où est projeté une forme sur le graphe. 
+Dans notre cas elles sont utiles pour détecter les sommets invalides du graphe des way-points. Nous avons commencé par faire abstraction de la hauteur, car lorsque nous parcourons le graphe nous ne savons pas quelles sont les caractéristiques des formes qui vont se déplacer.Nous ne connaissons ni la nature du sol (eau, terre, lave...) ni les attributs de la forme ou de l'agent (taille, largeur, capacité à voler ou nager...). Comme il nous manque des éléments sur la hauteur pour affiner les opérations sur le graphe en fonction de qui parcourt ce graphe, Nous avons décidé que, peu importe la hauteur (axe Y) d'un objet, il est impossible circuler sur l'espace où est projeté une forme sur le graphe. 
 
 \begin{figure}[!ht]
 \centering
@@ -166,8 +166,8 @@ Dans notre cas elles sont utiles pour détecter les sommets invalides du graphe 
 \end{figure}
 \vspace{0.5cm}
 
-
-De là on a besoin de seulement quatre points pour représenter notre Bounding Box. On utilise des vertex, comme cela, si on veut étendre notre modèle à des Bounding Box en trois dimensions il suffit de rajouter quatre autres vertex.
+\newpage
+De là nous avons besoin de seulement quatre points pour représenter notre Bounding Box. Nous utilisons des vertex, comme cela, si nous voulons étendre notre modèle à des Bounding Box en trois dimensions il suffit de rajouter quatre autres vertex.
 
 \chapter{Implémentation finale}
 
@@ -204,7 +204,7 @@ Les \textit{faces} possèdent une liste contenant les numéros des vertex qui le
 
  \item Bounding Box:
 
-Les \textit{Bounding Box} possèdent 4 vertices qui correspondent aux points de la projection en 2D de la Bounding Box sur le sol. La classe possède un constructeur qui prend une forme en paramètre, on y calcule une la bounding box d'une forme quelconque.
+Les \textit{Bounding Box} possèdent 4 vertices qui correspondent aux points de la projection en 2D de la Bounding Box sur le sol. La classe possède un constructeur qui prend une forme en paramètre, on y calcule la Bounding Box d'une forme quelconque.
 
 \end{itemize}
 
@@ -213,9 +213,9 @@ Les \textit{Bounding Box} possèdent 4 vertices qui correspondent aux points de 
 
 Reprécisons bien comment sont stockées les données.
 
-Notre scène, c'est à dire l'ensemble de tous les vertices et de toutes les formes, est stockée dans une liste de formes. On a donc, comme expliqué plus haut, une scène complète séparée en différentes formes : par exemple une forme qui correspond à tout le sol, une à un cube etc.
+Notre scène, c'est à dire l'ensemble de tous les vertices et de toutes les formes, est stockée dans une liste de formes. On a donc, comme expliqué plus haut, une scène complète séparée en différentes formes : par exemple une forme qui correspond à tout le sol, une à un cube, etc.
 
-C'est pourquoi nous avons une méthode qui permet d'identifier quelle forme est le sol. Dans notre cas, nous avons pu faire très simple : la forme correspondant au sol est celle qui possède le plus de points. On peut noter que notre sol peut contenir des points avec une hauteur différente de 0.
+C'est pourquoi nous avons une méthode qui permet d'identifier quelle forme est le sol. Dans notre cas, nous avons pu faire très simple : la forme correspondant au sol est celle qui possède le plus de points. On peut noter que notre sol peut contenir des points avec une hauteur différente de 0 (relief).
 
 \subsection{Le graphe généré}
 
@@ -253,16 +253,13 @@ Nous avons présenté précédemment la structure d'un fichier au format Wavefro
 
 \section{Génération du graphe correspondant au sol}
 
-Pour effectuer les traitements prévus nous avons donc décider de travailler sur un graphe. Nous partons d'un ensemble de points et de faces dans des formes séparées. Nous selectionnons la forme correspondant au sol avec notre méthode dédiée. Ensuite, sur cette forme nous appliquons une méthode qui va créer les liaisons entre sommets en fonction des faces de la forme. 
+Pour effectuer les traitements prévus nous avons donc décidé de travailler sur un graphe. Nous partons d'un ensemble de points et de faces dans des formes séparées. Nous sélectionnons la forme correspondant au sol avec notre méthode dédiée. Ensuite, sur cette forme nous appliquons une méthode qui va créer les liaisons entre sommets en fonction des faces de la forme. 
 
 Pour chaque face on lie ses vertices de manière à ce que chaque sommet prenne comme voisins son prédecesseur et son successeur dans leur ordre d'apparition de la liste des points de la face.
 
 Notre sol n'est composé que de carrés et chaque face possède une liste de 4 sommets A,B,C,D.
 
 voisins(A) = {B,D} ;  voisins(B) = {A,C} ; voisins(C) = {B,D} ; voisins(D) = {A,C}
-
-Le graphe peut contenir des points dont la hauteur est différente de 0. On peut avoir des reliefs.
-
 
 \section{Travaux effectués sur le graphe}
 
@@ -301,16 +298,16 @@ On considère comme valide :
 \end{itemize}
 
 Une arête, entre deux sommets, est valide si elle ne coupe pas une bounding box. Il nous a donc fallu implémenter deux méthodes renvoyant un prédicat pour savoir quels points et quelles arêtes supprimer. 
-Quand un point est non valide, on l'isole dans le graphe. On peut afficher tous les points, voir clairement les différences. Le parcours du graphe est quand a lui simplifié.
+Quand un point est non valide, on l'isole dans le graphe. On peut afficher tous les points pour voir clairement les différences. Le parcours du graphe est quand à lui simplifié.
 
 L'heuristique a été un pilier très important de ce projet et a été l'objet d'une réflexion assez poussée. Nous présenterons différentes méthode qui ont été envisagées.
 
 \paragraph{Méthode 1 }
-Cette solution, souvent utilisé en informatique, consiste à déterminer si un point (x,y) est à l'intérieur ou à l'extérieur d'un
+Cette solution, souvent utilisée en informatique, consiste à déterminer si un point (x,y) est à l'intérieur ou à l'extérieur d'un
 polygone sur un plan 2D. 
 Considérons un polygone, fait de n sommets (x$_{i}$,y$_{i}$) avec $i$ de $0$ à $n-1$. Le dernier sommet (x$_{n}$,y$_{n}$) est le même que le premier sommet, pour que le polygone soit fermé. 
-Pour déterminer le status d'un point (x$_{p}$,y$_{p}$), on trace une droite horizontale partant de (x$_{p}$,y$_{p}$). 
-Si le nombre d'intersection de la droite avec chaque arête du poylygone est impaire alors le point est à l'intérieur du polygone, sinon il n'est pas dedans.
+Pour déterminer le statut d'un point (x$_{p}$,y$_{p}$), on trace une droite horizontale partant de (x$_{p}$,y$_{p}$). 
+Si le nombre d'intersection de la droite avec chaque arête du poylygone est impair alors le point est à l'intérieur du polygone, sinon il n'est pas dedans.
 
 \begin{figure}[h]
 \centering
@@ -338,13 +335,13 @@ Il est bon de noter que cet algorithme marche avec des polygones troués, comme 
 Cette méthode est idéale pour les polygones non convexes mais comme nous utilisons des carrés, elle aurait été un peu lourde.
 
 \paragraph{Méthode 2 }
-Une autre solution, est de calculer la somme des angles fait entre le point test et chaque paires de points du polygone. Si la somme est égale à $2\pi$ alors le point est à l'intérieur, sinon le point est à l'extérieur. 
+Une autre solution est de calculer la somme des angles fait entre le point test et chaque paires de points du polygone. Si la somme est égale à $2\pi$ alors le point est à l'intérieur, sinon le point est à l'extérieur. 
 Cette méthode marche aussi avec les polygones troués.
 De même cette méthode est assez gourmande en calcul et n'a pas été retenue.
 
 \paragraph{Méthode 3 : retenue}
 La dernière solution que nous avons testé ne marche qu'avec les polygones convexes. Si un polygone est convexe alors on peut considérer ces arêtes comme un "chemin" partant du premier sommet pour y revenir. 
-Un point est à l'intérieur du polygone si il est toujours du même côté que tous les arêtes constituant le "chemin".
+Un point est à l'intérieur du polygone s'il est toujours du même côté que tous les arêtes constituant le ``chemin''.
 
 \begin{figure}[h]
 \centering
@@ -354,13 +351,13 @@ Un point est à l'intérieur du polygone si il est toujours du même côté que 
 \vspace{0.5cm}
 
 Soit un segment entre P0(x$_{0}$,y$_{0}$), P1(x$_{1}$,y$_{1}$) et un autre point P(x,y) alors on a la relation suivante : (y - y$_{0}$).(x$_{1}$ - x$_{0}$) - (x - x$_{0}$).(y$_{1}$ - y$_{0}$).
-Si le résultat est inférieur à 0 alors P est à droite du segment [P0,P1], si il est égale à 0 alors il est sur la droite (P0,P1) et s'il est supérieur à 0 alors il est à droite du segment [P0,P1].
+Si le résultat est inférieur à 0 alors P est à droite du segment [P0,P1], s'il est égale à 0 alors il est sur la droite (P0,P1) et s'il est supérieur à 0 alors il est à droite du segment [P0,P1].
 
-A noter que cet algorithme ne marche pas avec les polygones troués. 
+À noter que cet algorithme ne marche pas avec les polygones troués. 
 
 Il nous suffit donc de faire 4 tests, on teste la position du point par rapport à chacune des arêtes constituant le polygone, si le point est toujours du même côté alors le point est à l'intérieur du polygone.
 
-Nous avons choisi de retenir la solution 3 car c'est celle qui nous semblait marcher le mieux ainsi que la plus économe en ressources. Elle est parfaitement adaptée à notre projet.
+Nous avons choisi de retenir la solution 3 car c'est celle qui nous semblait fonctionner le mieux ainsi que la plus économe en ressources. Elle est parfaitement adaptée à notre projet.
 
 \paragraph{Méthode de test d'intersection d'une arête avec une bounding box }
 
@@ -377,11 +374,15 @@ Soit A,B,C,D des vecteurs. Alors on a les propriétés suivantes :
 
 $AB=A+r(B-A)$, $r \in [0,1]$
 
+
 $CD=C+s(D-C)$, $s \in [0,1]$
 
-$r = \frac{(A_{y}-C_{y})(D_{x}-C_{x})-(A_{x}-C_{x})(D_{y}-C_{y})}{(B_{x}-A_{x})(D_{y}-C_{y})-(B_{y}-A_{y})(D_{x}-C_{x})} (eqn 1)$
+\vspace*{3mm}
+$r = \frac{(A_{y}-C_{y})(D_{x}-C_{x})-(A_{x}-C_{x})(D_{y}-C_{y})}{(B_{x}-A_{x})(D_{y}-C_{y})-(B_{y}-A_{y})(D_{x}-C_{x})}$
+\vspace*{3mm}
 
-$s = \frac{(A_{y}-C_{y})(B_{x}-A_{x})-(A_{x}-C_{x})(B_{y}-A_{y})}{(B_{x}-A_{x})(D_{y}-C_{y})-(B_{y}-A_{y})(D_{x}-C_{x})} (eqn 2)$
+$s = \frac{(A_{y}-C_{y})(B_{x}-A_{x})-(A_{x}-C_{x})(B_{y}-A_{y})}{(B_{x}-A_{x})(D_{y}-C_{y})-(B_{y}-A_{y})(D_{x}-C_{x})}$
+\vspace*{3mm}
 
 Après, le test est simple : 
 \begin{itemize}
@@ -403,7 +404,9 @@ Voici une illustration de l'application de l'heuristique dans un cas complexe av
 \end{figure}
 \vspace{0.5cm}
 
-Enfin, comme on ne travaille que sur une projection 2D, les reliefs ne posent pas problème et sont bien pris en compte. En contre-partie le sol qui passerait au dessus d'un obstacle serait innaccessible.
+Enfin, comme on ne travaille que sur une projection 2D, les reliefs ne posent pas problème et sont bien pris en compte. En contre-partie le sol qui passerait au dessus d'un obstacle sera innaccessible.
+
+\newpage
 
 \subsection{Simplification du graphe des way-points : merging}
 
@@ -411,7 +414,7 @@ Pour limiter les calculs de recherche de chemins les graphes des way-points sont
 
 Nous n'avons pas eu le temps de développer un merging très évolué. Toutefois notre procédure de merging remplit son rôle en préservant la connexité du graphe. Il s'agit en fait d'isoler certains sommets dont l'entourage possède un grand nombre de voisins. 
 
-\begin{algorithm}[h]
+\begin{algorithm}[!h]
 \caption{Merging du graphe : merging(sommet)}
 \label{merging_graphe}
 \mbox{Algorithme lancé à partir d'un sommet non isolé}
@@ -430,7 +433,7 @@ Nous n'avons pas eu le temps de développer un merging très évolué. Toutefois
 \end{algorithmic}
 \end{algorithm}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \includegraphics[scale=0.6]{Images/maillage.png}
 \includegraphics[scale=0.6]{Images/merging.png}
@@ -463,7 +466,7 @@ Pour le rendu graphique 3D nous nous sommes donc servi d'OpenGL. Le résultat es
 
 Donc, en appuyant sur la touche ``d'' ou ``a'' nous pouvons masquer, ou plutôt isoler les sommets invalides. Voici un exemple (pour plus de lisibilité nous avons choisi de ne pas afficher les formes qui couvraient les points en question : 
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \includegraphics[scale=0.4]{Images/heuristique1.png}
 \includegraphics[scale=0.4]{Images/heuristique2.png}
@@ -472,6 +475,8 @@ Donc, en appuyant sur la touche ``d'' ou ``a'' nous pouvons masquer, ou plutôt 
 \caption{Notre graphe après l'application de l'heuristique (formes non affichées)}
 \end{figure}
 \vspace{0.5cm}
+
+\newpage
 
 \section{Merging}
  
@@ -484,6 +489,8 @@ Avec la touche ``m'' du clavier on peut lancer la procédure de merging. Voici l
 \caption{Notre graphe après application de l'heuristique, avec les formes masquées, avant et après la procédure de merging}
 \end{figure}
 \vspace{0.5cm}
+
+\newpage
 
 \section{Déplacement d'un agent}
 
@@ -526,7 +533,7 @@ Notre algorithme de déplacement est le suivant :
 
 L'agent se déplacera donc sur le voisin débutant un chemin de poids minimal.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[scale=0.5]{Images/merging3.png}
 \includegraphics[scale=0.5]{Images/parcours1.png}
@@ -534,8 +541,39 @@ L'agent se déplacera donc sur le voisin débutant un chemin de poids minimal.
 \end{figure}
 \vspace{0.5cm}
 
+\chapter{Conclusion}
 
-\chapter{Bibliographie - Webographie}
+\subsection*{Bilan technique}
+
+Notre projet s'apparentait à un projet de recherche. Une grande partie du travail a donc consisté à explorer le domaine des environnements 3D. Nos objectifs principaux ont été atteints : nous créons une scène 3D avec un logiciel dédié, Blender ; nous la chargeons dans notre programme ; nous y appliquons les traitements prévus c'est à dire l'heuristique pour la suppression des sommets non navigables et le merging pour simplifier le graphe des way-points obtenu. Enfin nous avons un agent qui utilise un algorithme d'exploration plutôt évolué.
+
+Nos structures de données, bien que parfaitement fonctionnelles, ne sont pas implémentées le plus ''proprement`` possible. Toutefois ce n'était pas l'objet principal du projet et nos avons fait le choix de nous concentrer sur d'autres points.
+
+Notre parser est très simple et ne gère que les fichier .obj de base (sans texture, normales etc.). Encore une fois cela était parfait pour notre travail.
+
+Les différents algorithmes par contre ont été le sujet de beaucoup d'attention. Les données pouvant être de très grande taille, en nombre de points et d'arêtes par exemple, nous avons été vigileant quand aux complexités.
+
+La génération des Bounding Box étant un problème très complexe, nous avons fait le choix, en correlation avec notre projet, de le réduire au calcul de Bounding Box non minimales et effectives sur un plan 2D.
+
+Le rendu à l'écran n'a pas été notre priorité mais il est clair, fonctionnel : largement suffisant pour y voir nos résultats.
+
+Au final, notre agent peut se déplacer dans un environnement 3D, avec reliefs et obstacles, sans problème de collision. Son graphe des way-point est cohérent et auto-généré.
+
+Nous avons pensé à une éventuelle amélioration du merging. Par exemple, lors de l'isolement d'un sommet, on pourrait relier ses voisins non connectés 2 à 2.
+
+\newpage
+
+\subsection*{Bilan personnel}
+Partis de rien nous avons pu, grâce à ce projet, découvrir l'univers de la 3D. Nous avons appris à nous servir d'un logiciel d'édition 3D : Blender logiciel libre, mais complet qui nous permettra par la suite d'aborder des logiciels professionnels tels que 3D Studio Max ou Maya plus sereinement. 
+
+L'apprentissage d'OpenGL était vraiment intéressant : il nous a permis de nous initier à la programmation de scène 3D. C'est un pas vers l'exploration d'autres librairies 3D telles que DirectX. Par ailleurs, nous avons pu prendre de l'avance sur le programme de l'année prochaine, ce qui est un plus indéniable.
+
+Nous avons retravaillé sur ces structures si importantes en informatique que les graphes sont.
+
+L'aspect humain et organisationnel a été très important. Ce n'était pas notre premier projet en équipe mais c'était la première fois que nous travaillions ensemble. C'était intéressant et enrichissant. Enfin cela a nécéssité une bonne organisation comme la mise en place d'un SVN, d'un Google Group etc.
+
+
+\chapter*{Bibliographie - Webographie}
 
 \section*{Moteur 3D}
 
@@ -623,33 +661,5 @@ L'agent se déplacera donc sur le voisin débutant un chemin de poids minimal.
  \item http://local.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  (inside polygone)
 \end{itemize} 
 
-\chapter{Conclusion}
-
-\subsection*{Bilan technique}
-
-Notre projet s'apparentait à un projet de recherche. Une grande partie du travail a donc consisté à explorer le domaine des environnements 3D. Nos objectifs principaux ont été atteints : nous créons une scène 3D avec un logiciel dédié, Blender ; nous la chargeons dans notre programme ; nous y appliquons les traitements prévus c'est à dire l'heuristique pour la suppression des sommets non navigables et le merging pour simplifier le graphe des way-points obtenu. Enfin nous avons un agent qui utilise un algorithme d'exploration plutôt évolué.
-
-Nos structures de données, bien que parfaitement fonctionnelles, ne sont pas implémentées le plus ''proprement`` possible. Toutefois ce n'était pas l'objet principal du projet et nos avons fait le choix de nous concentrer sur d'autres points.
-
-Notre parser est très simple et ne gère que les fichier .obj de base (sans texture, normales etc.). Encore une fois cela était parfait pour notre travail.
-
-Les différents algorithmes par contre ont été le sujet de beaucoup d'attention. Les données pouvant être de très grande taille, en nombre de points et d'arêtes par exemple, nous avons été vigileant quand aux complexités.
-
-La génération des Bounding Box étant un problème très complexe, nous avons fait le choix, en correlation avec notre projet, de le réduire au calcul de Bounding Box non minimales et effectives sur un plan 2D.
-
-Le rendu à l'écran n'a pas été notre priorité mais il est clair, fonctionnel : largement suffisant pour y voir nos résultats.
-
-Au final, notre agent peut se déplacer dans un environnement 3D, avec reliefs et obstacles, sans problème de collision. Son graphe des way-point est cohérent et auto-généré.
-
-Nous avons pensé à une éventuelle amélioration du merging. Par exemple, lors de l'isolement d'un sommet, on pourrait relier ses voisins non connectés 2 à 2.
-
-\subsection*{Bilan personnel}
-Partis de rien nous avons pu, grâce à ce projet, découvrir l'univers de la 3D. Nous avons appris à nous servir d'un logiciel d'édition 3D : Blender logiciel libre mais complet qui nous permettra par la suite d'aborder des logiciels professionnels tels que 3D Studio Max ou Maya plus sereinement. 
-
-L'apprentissage d'OpenGL était vraiment intéressant : il nous a permis de nous initier à la programmation de scène 3D. C'est un pas vers l'exploration d'autres librairies 3D telles que DirectX. Par ailleurs, nous avons pu prendre de l'avance sur le programme de l'année prochaine, ce qui est un plus indéniable.
-
-Nous avons retravaillé sur ces structures si importantes en informatique que sont les graphes.
-
-L'aspect humain et organisationnel a été très important. Ce n'était pas notre premier projet en équipe mais c'était la première fois que nous travaillions ensemble. C'était intéressant en enrichissant. Enfin cela a nécéssité une bonne organisation comme la mise en place d'un SVN, d'un Google Group etc.
 
 \end{document}
