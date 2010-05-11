@@ -243,7 +243,7 @@ void Forme::draw() {
 			float z = v->getZ();
 /*			cout << "( " << x << ", " << y << ", " << z << " )" << endl;*/
 			//on crée un glVert
-			glColor3ub( this->r, this->v, this->b );
+			glColor3ub( (y*20)+this->r, (y*20)+this->v, (y*20)+this->b );
 			glVertex3d( x, y, z );
 
 		}
