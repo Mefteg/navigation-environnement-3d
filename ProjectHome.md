@@ -1,0 +1,1 @@
+Projet de fin d'année de Master d'Informatique. A partir d'une scène en .obj créée avec Blender, on l'importe dans OpenGL et on construit le graphe des waypoints.
